@@ -3,7 +3,7 @@
   <xsl:output method="xml" indent="no" cdata-section-elements="DATA"/>
   <xsl:template match="Integration">
   <!-- **************************************************************************-->
-  <!-- ********************* Build Root Element Informaiton *********************-->
+  <!-- ********************* Build Root Element  ********************************-->
   <!-- **************************************************************************-->
     <OdysseyACISMessage>
       <xsl:attribute name="MessageGUID">
