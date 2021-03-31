@@ -637,6 +637,7 @@
   <!-- ****************** template for trailer record ***************************-->
   <!-- ********************************************************************-->
   <xsl:template name="TrailerRecord">
+  <Trailer>
     <xsl:variable name="TotalOffenseRecords">
       <xsl:value-of select="count(/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']) "/>
     </xsl:variable>
@@ -714,6 +715,7 @@
     <Data Position='9' Length='3' Segment='TotalDispositionRec'>000</Data>
     <Data Position='10' Length='3' Segment='TotalJudgementRec'>000</Data>
     <Data Position='11' Length='10' Segment='TotalVisionLinkCode'>0 </Data>
+  </Trailer>
   </xsl:template>
   <!-- ********************************************************************-->
   <!-- ****************** template for YYYYMMDD ***************************-->
@@ -889,6 +891,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
