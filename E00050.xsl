@@ -1,7 +1,5 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:strip-space elements="*"/>
-  <xsl:output method="xml" indent="no" cdata-section-elements="DATA"/>
-  <xsl:template match="Integration">
+  <xsl:template name="E00050">
   <!-- ********************************************************************-->
   <!-- **************** template for E00050 Case Add **********************-->
   <!-- ********************************************************************-->
@@ -326,6 +324,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
