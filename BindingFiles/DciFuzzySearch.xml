@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://castor.exolab.org/" xmlns:aoc-doc="http://aoc.state.nc.us/jxdm/3.0.2/aoc-document" 
+	xmlns:aoc="http://aoc.state.nc.us/jxdm/3.0.2/aoc" xmlns:j="http://www.it.ojp.gov/jxdm/3.0.2" 
+	xmlns:doj="http://jus.state.nc.us/doj">
+
+	<description>Basic mapping example</description>
+
+	<class name="org.nccourts.aware.bean.business.dci.DciPersonSearchBean" auto-complete="false">
+		<map-to xml="NameSearchDocument" />
+
+		<field name="header" type="org.nccourts.aware.bean.business.dci.DojHeaderBean" auto-complete="false">
+			<bind-xml name="doj:header" />
+		</field>
+
+		<field name="personSearchRequestBean" type="org.nccourts.aware.bean.business.dci.PersonSearchRequestBean" auto-complete="false">
+			<bind-xml name="aoc:SearchRequest" />
+		</field>
+		<field name="personSearchResult" collection="collection" type="org.nccourts.aware.bean.business.dci.DciPersonSearchResultRowBean" auto-complete="false">
+			<bind-xml name="aoc:MatchesFoundResults"/>
+		</field>
+		
+	</class>
+
+	<class name="org.nccourts.aware.bean.business.dci.DojHeaderBean" auto-complete="false">
+		<map-to xml="doj:header" ns-uri="http://jus.state.nc.us/doj" ns-prefix="doj" />
+		
+		<field name="messageType">
+			<bind-xml name="doj:messageType" />
+		</field>
+		<field name="messageNumber">
+			<bind-xml name="doj:messageNumber" />
+		</field>
+		<field name="originator">
+			<bind-xml name="doj:originator" />
+		</field>
+		<field name="destination">
+			<bind-xml name="doj:destination" />
+		</field>
+		<field name="correlationId">
+			<bind-xml name="doj:correlationId" />
+		</field>
+		<field name="userContext">
+			<bind-xml name="doj:userContext" />
+		</field>
+		<field name="completionCode">
+			<bind-xml name="doj:completionCode" />
+		</field>
+
+	</class>
+
+	<class name="org.nccourts.aware.bean.business.dci.PersonSearchRequestBean" auto-complete="false">
+
+		<map-to xml="aoc:SearchRequest" ns-uri="http://aoc.state.nc.us/jxdm/3.0.2/aoc" ns-prefix="aoc" />
+		<field name="middleName">
+			<bind-xml name="j:PersonMiddleName" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+
+		<field name="lastName">
+			<bind-xml name="j:PersonSurName" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+
+		<field name="firstName">
+			<bind-xml name="j:PersonGivenName" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		<field name="fullName">
+			<bind-xml name="j:PersonFullName" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		<field name="exactMatchInidcator">
+			<bind-xml name="aoc:ExactMatchIndicator" />
+		</field>
+		<field name="dateOfBirth">
+			<bind-xml name="j:PersonBirthDate" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		<field name="age">
+			<bind-xml name="j:PersonAgeMeasure" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		<field name="range">
+			<bind-xml name="aoc:AgeYearRange"/>
+		</field>
+		<field name="sexCode">
+			<bind-xml name="j:PersonSexCode" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		<field name="raceCode">
+			<bind-xml name="j:PersonRaceCode" ns-uri="http://www.it.ojp.gov/jxdm/3.0.2" ns-prefix="j" />
+		</field>
+		
+	</class>
+	
+	<class name="org.nccourts.aware.bean.business.dci.DciPersonSearchResultRowBean" auto-complete="false">
+		<map-to xml="aoc:MatchesFoundResults" ns-uri="http://aoc.state.nc.us/jxdm/3.0.2/aoc" ns-prefix="aoc" />
+
+		<field name="name">
+			<bind-xml name="aoc:PersonFullName"/>
+		</field>
+
+		<field name="names" collection="arraylist" type ="java.lang.String" auto-complete="false">
+			<bind-xml name="aoc:PersonAlternateName"/>
+		</field>
+		
+		<field name="streetAddress">
+			<bind-xml name="aoc:StreetFullText" />
+		</field>
+		
+		<field name="cityName">
+			<bind-xml name="aoc:LocationCityName" />
+		</field>
+
+		<field name="stateName">
+			<bind-xml name="aoc:LocationStateCode.fips5-2Alpha" />
+		</field>
+
+		<field name="zipCode">
+			<bind-xml name="aoc:LocationPostalCodeID" />
+		</field>
+
+		<field name="dateOfBirth">
+			<bind-xml name="aoc:PersonBirthDate"/>
+		</field>
+
+		<field name="dmvId">
+			<bind-xml name="aoc:DriverLicenseID"/>
+		</field>
+		<field name="stateId">
+			<bind-xml name="aoc:IDJurisdictionCode"/>
+		</field>
+
+		<field name="ssn">
+			<bind-xml name="aoc:PersonSSNID"/>
+		</field>
+
+		<field name="height">
+			<bind-xml name="aoc:personHeightUnitCode"/>
+		</field>
+
+		<field name="weight">
+			<bind-xml name="aoc:personWeightUnitCode"/>
+		</field>
+
+		<field name="eyeColor">
+			<bind-xml name="aoc:PersonEyeColorCode"/>
+		</field>
+
+		<field name="hairColor">
+			<bind-xml name="aoc:PersonHairColorCode"/>
+		</field>
+
+		<field name="sex">
+			<bind-xml name="aoc:PersonSexCode"/>
+		</field>
+
+		<field name="race">
+			<bind-xml name="aoc:PersonRaceCode"/>
+		</field>
+
+		<field name="smtIndicator">
+			<bind-xml name="aoc:SMTIndicator"/>
+		</field>
+		
+		<field name="smtDetails" collection="collection" type="org.nccourts.aware.bean.business.participant.person.PersonSmtBean" auto-complete="false">
+			<bind-xml name="aoc:PersonPhysicalFeature"/>
+		</field>
+
+		<field name="ethinicity">
+			<bind-xml name="aoc:PersonEthnicityText" />
+		</field>
+
+		<field name="immigrationStatus">
+			<bind-xml name="aoc:ImmigrationStatus"/>
+		</field>
+
+		<field name="processDetails" type="org.nccourts.aware.bean.business.dci.DciProcessSearchResultBean" auto-complete="false">
+			<bind-xml name="aoc:Offense"/>
+		</field>
+
+		<field name="notesDetails" collection="collection" type="org.nccourts.aware.bean.business.participant.NoteBean" auto-complete="false">
+			<bind-xml name="aoc:PrecautionaryNotes"/>
+		</field>
+
+		<field name="outstandingProcessCount">
+			<bind-xml name="aoc:OutstandingProcessNumber"/>
+		</field>
+		
+	   <field name="replyStatusMessage">
+			<bind-xml name="aoc:replyStatusMessage"/>
+		</field>
+		
+	</class>
+	<class name="org.nccourts.aware.bean.business.participant.person.PersonSmtBean" auto-complete="false">
+		<map-to xml="aoc:PersonPhysicalFeature" ns-uri="http://aoc.state.nc.us/jxdm/3.0.2/aoc" ns-prefix="aoc"/>
+
+		<field name="description">
+			<bind-xml name="aoc:PhysicalFeatureCategoryText" />
+		</field>
+		<field name="bodyPart">
+			<bind-xml name="aoc:PhysicalFeatureDescriptionText" />
+		</field>
+
+		<field name="location">
+			<bind-xml name="aoc:PhysicalFeatureLocationText" />
+		</field>
+
+	</class>
+
+	<class name="org.nccourts.aware.bean.business.participant.NoteBean" auto-complete="false">
+		<map-to xml="aoc:PrecautionaryNotes" ns-uri="http://aoc.state.nc.us/jxdm/3.0.2/aoc" ns-prefix="aoc" />
+		<field name="note">
+			<bind-xml name="aoc:Note" />
+		</field>
+	</class>
+
+	<class name="org.nccourts.aware.bean.business.dci.DciProcessSearchResultBean" auto-complete="false">
+	  <map-to xml="aoc:Offense" ns-uri="http://aoc.state.nc.us/jxdm/3.0.2/aoc" ns-prefix="aoc" />
+
+		<field name="fileNumber">
+			<bind-xml name="aoc:CaseDocketID" />
+		</field>
+		<field name="county">
+			<bind-xml name="aoc:LocationCountyName" />
+		</field>
+		
+		<field name="dateOfOffense">
+			<bind-xml name="aoc:ActivityDate" />
+		</field>
+	
+		<field name="timeOfOffense">
+			<bind-xml name="aoc:ActivityTime" />
+		</field>
+		
+		<field name="firstOffense">
+			<bind-xml name="aoc:ChargeDescriptionText" />
+		</field>
+		
+		<field name="agency">
+			<bind-xml name="aoc:OrganizationORIID" />
+		</field>
+		
+		<field name="severityText">
+			<bind-xml name="aoc:ChargeSeverityText" />
+		</field>
+
+	</class>
+
+</mapping>

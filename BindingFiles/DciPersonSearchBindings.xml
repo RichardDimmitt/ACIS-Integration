@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="http://castor.exolab.org/" xmlns:aoc="http://aoc.state.nc.us/aoc" xmlns:aware="http://aoc.state.nc.us/aware" xmlns:doj="http://jus.state.nc.us/doj" xmlns:aocinq="http://jus.state.nc.us/aocinq">
+	<description>Basic mapping example</description>
+	<class name="org.nccourts.aware.bean.business.dci.DciPersonSearchBean" auto-complete="false">
+		<map-to xml="AWARENameSearch"/>
+		<field name="header" type="org.nccourts.aware.bean.business.dci.DojHeaderBean" auto-complete="false">
+			<bind-xml name="doj:header"/>
+		</field>
+		<field name="personSearchBean" type="org.nccourts.aware.bean.business.participant.person.PersonSearchBean" auto-complete="false">
+			<bind-xml name="aocinq:DOJNameRequest"/>
+		</field>
+		<field name="personSearchResult" collection="collection" type="org.nccourts.aware.bean.business.dci.DciPersonSearchResultBean" auto-complete="false">
+			<bind-xml name="aware:AOCDefNameReply"/>
+		</field>
+	</class>
+	<class name="org.nccourts.aware.bean.business.dci.DojHeaderBean" auto-complete="false">
+		<map-to xml="doj:header" ns-uri="http://jus.state.nc.us/doj" ns-prefix="doj"/>
+		<field name="messageType">
+			<bind-xml name="doj:messageType"/>
+		</field>
+		<field name="messageNumber">
+			<bind-xml name="doj:messageNumber"/>
+		</field>
+		<field name="originator">
+			<bind-xml name="doj:originator"/>
+		</field>
+		<field name="destination">
+			<bind-xml name="doj:destination"/>
+		</field>
+		<field name="correlationId">
+			<bind-xml name="doj:correlationId"/>
+		</field>
+	</class>
+	<class name="org.nccourts.aware.bean.business.participant.person.PersonSearchBean" auto-complete="false">
+		<map-to xml="aocinq:DOJNameRequest" ns-uri="http://jus.state.nc.us/aocinq" ns-prefix="aocinq"/>
+		<field name="lastName">
+			<bind-xml name="aocinq:Name"/>
+		</field>
+		
+		<field name="dateOfBirth">
+			<bind-xml name="aocinq:DateOfBirth"/>
+		</field>
+		
+		<field name="dmvId">
+			<bind-xml name="aocinq:DmvId"/>
+		</field>
+		<field name="dmvIdStateKey">
+			<bind-xml name="aocinq:DmvIdStateKey"/>
+		</field>
+	</class>
+	<class name="org.nccourts.aware.bean.business.dci.DciPersonSearchResultBean" auto-complete="false">
+		<map-to xml="aware:AOCDefNameReply" ns-uri="http://aoc.state.nc.us/aware" ns-prefix="aware"/>
+		<field name="personResultRowBean" type="org.nccourts.aware.bean.business.dci.DciPersonSearchResultRowBean" auto-complete="false">
+			<bind-xml name="aware:MultiHitReply"/>
+		</field>
+		<field name="smtIndicator">
+			<bind-xml name="aware:smtIndicator"/>
+		</field>
+		<field name="smtDetails" collection="collection" type="org.nccourts.aware.bean.business.participant.person.PersonSmtBean" auto-complete="false">
+			<bind-xml name="aware:SmtDetails"/>
+		</field>
+		<field name="notesDetails" collection="collection" type="org.nccourts.aware.bean.business.participant.NoteBean" auto-complete="false">
+			<bind-xml name="aware:NotesDetails"/>
+		</field>
+		<field name="processDetails" type="org.nccourts.aware.bean.business.process.ProcessSearchResultBean" auto-complete="false">
+			<bind-xml name="aware:ProcessDetails"/>
+		</field>
+	</class>
+	
+	<class name="org.nccourts.aware.bean.business.dci.DciPersonSearchResultRowBean" auto-complete="false">
+		<map-to xml="aware:MultiHitReply" ns-uri="http://aoc.state.nc.us/aware" ns-prefix="aware"/>
+		
+		<field name="name">
+			<bind-xml name="aware:Name"/>
+		</field>
+		
+		<field name="nameType">
+			<bind-xml name="aware:NameType"/>
+		</field>
+		
+		<field name="address">
+			<bind-xml name="aware:Address"/>
+		</field>
+		
+		<field name="dateOfBirth">
+			<bind-xml name="aware:DateOfBirth"/>
+		</field>
+		
+		<field name="race">
+			<bind-xml name="aware:PersonRaceCode"/>
+		</field>
+		
+		<field name="sex">
+			<bind-xml name="aware:PersonSexCode"/>
+		</field>
+		
+		<field name="height">
+			<bind-xml name="aware:Height"/>
+		</field>
+		
+		<field name="weight">
+			<bind-xml name="aware:Weight"/>
+		</field>
+		
+		<field name="hairColor">
+			<bind-xml name="aware:HairColor"/>
+		</field>
+		
+		<field name="hairStyle">
+			<bind-xml name="aware:HairStyle"/>
+		</field>
+		<field name="eyeColor">
+			<bind-xml name="aware:EyeColor"/>
+		</field>
+		
+		<field name="ethinicity">
+			<bind-xml name="aware:Ethinicity"/>
+		</field>
+		
+		<field name="immigrationStatus">
+			<bind-xml name="aware:ImmigrationStatus"/>
+		</field>
+		
+		<field name="dmvId">
+			<bind-xml name="aware:PersonDriverLicenseID"/>
+		</field>
+		<field name="stateId">
+			<bind-xml name="aware:PersonStateID"/>
+		</field>
+		<field name="ssn">
+			<bind-xml name="aware:PersonSSNID"/>
+		</field>
+		<field name="outstandingProcessCount">
+			<bind-xml name="aware:OutstandingProcessCount"/>
+		</field>
+	</class>
+	<class name="org.nccourts.aware.bean.business.participant.person.PersonSmtBean" auto-complete="false">
+		<map-to xml="aware:SmtDetails" ns-uri="http://aoc.state.nc.us/aware" ns-prefix="aware"/>
+		<field name="markType">
+			<bind-xml name="aware:MarkType"/>
+		</field>
+		<field name="markTypeCode">
+			<bind-xml name="aware:MarkTypeCode"/>
+		</field>
+		<field name="markSubtype">
+			<bind-xml name="aware:MarkSubtype"/>
+		</field>
+		<field name="markSubtypeCode">
+			<bind-xml name="aware:MarkSubtypeCode"/>
+		</field>
+		<field name="description">
+			<bind-xml name="aware:Description"/>
+		</field>
+		<field name="bodyPart">
+			<bind-xml name="aware:BodyPart"/>
+		</field>
+		<field name="bodyPartCode">
+			<bind-xml name="aware:BodyPartCode"/>
+		</field>
+		<field name="location">
+			<bind-xml name="aware:Location"/>
+		</field>
+		<field name="locationCode">
+			<bind-xml name="aware:LocationCode"/>
+		</field>
+	</class>
+	
+	<class name="org.nccourts.aware.bean.business.participant.NoteBean" auto-complete="false">
+		<map-to xml="aware:NotesDetails" ns-uri="http://aoc.state.nc.us/aware" ns-prefix="aware"/>
+		<field name="note">
+			<bind-xml name="aware:Note"/>
+		</field>
+	</class>
+	
+	<class name="org.nccourts.aware.bean.business.process.ProcessSearchResultBean" auto-complete="false">
+		<map-to xml="aware:ProcessDetails" ns-uri="http://aoc.state.nc.us/aware" ns-prefix="aware"/>
+		<field name="processNumber">
+			<bind-xml name="aware:ProcessNumber"/>
+		</field>
+		<field name="firstOffense">
+			<bind-xml name="aware:FirstOffense"/>
+		</field>
+	</class>
+	
+</mapping>
