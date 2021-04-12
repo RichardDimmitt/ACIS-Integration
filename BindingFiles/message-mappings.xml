@@ -1,0 +1,1012 @@
+<message-mappings>
+    <action messageType="nameSearch" 
+        qcf = "jms/AocMQConnectionFactory" queue-name = "jms/DciNameReqQueue"
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "true" validate-out ="true"
+    	helper-class-name="org.nccourts.common.messaging.helper.BaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.BaseMessageTranslator"
+       	translator-bean-name= "org.nccourts.aware.bean.business.dci.DciPersonSearchBean" 
+       	validate-schema-name = "workspace/EMIWeb/WebContent/schemas/DCI/SpinoffInquiry/document-schema.xsd"
+       	in-translate-stylesheet="org/nccourts/aware/xml/styles/DciSpinoffRequest.xslt"
+       	bindings-file="/xml/DciSpinoffBindings.xml" 
+       	mode= "unMarshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/BaseSessionBeanLocalHome" 
+       	business-process-key="DciPerson.search"
+       	save-errorMessage = "true" non-jms-system = "true" 
+       	application-name = "AWARE" source-agency-name="doj">
+       	
+       	<queues 
+       	       name="jms/DojNameReplyQueue"
+       	       style="org/nccourts/aware/xml/styles/DciSpinoff.xslt"/>
+       	
+       	<queues 
+       	       name="jms/DojNameReplyQueue1"
+       	       style="org/nccourts/aware/xml/styles/DciSpinoff.xslt"/>  	  
+    </action>
+    <action messageType="PROCESS_ISSUEDFORWARD" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.pif"
+       	bindings-file="/xml/WFACaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+    
+    <action messageType="fuzzySearch" 
+         qcf = "jms/AocMQConnectionFactory" queue-name = "jms/DciFuzzyFileReq"
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "true" validate-out ="true"
+    	helper-class-name="org.nccourts.common.messaging.helper.BaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.BaseMessageTranslator"
+       	translator-bean-name= "org.nccourts.aware.bean.business.dci.DciPersonSearchBean" 
+       	validate-schema-name = "workspace/EMIWeb/WebContent/schemas/DCI/InquiryByName/document-schema.xsd"
+       	in-translate-stylesheet="org/nccourts/aware/xml/styles/DciFuzzyRequest.xslt"
+       	bindings-file="/xml/DciFuzzySearch.xml" 
+       	mode= "unMarshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/BaseSessionBeanLocalHome" 
+       	business-process-key="DciPerson.fuzzy.search"
+       	save-errorMessage = "true" non-jms-system = "true" 
+       	application-name = "AWARE" source-agency-name="doj">
+       	
+       	<queues 
+       	       name="jms/DojNameReplyQueue"
+       	       style="org/nccourts/aware/xml/styles/DciFuzzyReply.xslt"/>
+       	
+       	<queues 
+       	       name="jms/DojNameReplyQueue1"
+       	       style="org/nccourts/aware/xml/styles/DciFuzzyReply.xslt"/>  	  
+    </action>
+       	
+     <action messageType="personSearchResult" 
+         qcf = "jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.common.messaging.helper.BaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.BaseMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.dci.DciPersonSearchBean"
+       	validate-schema-name = "/org/nccourts/common/xml/schemas/ACISDefNameSearch.xsd"
+       	bindings-file="/xml/DciPersonSearchBindings.xml" 
+       	mode="unMarshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/BaseSessionBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+       	
+       	<queues 
+       	       name="jms/DojNameReplyQueue1"
+       	       style="org/nccourts/aware/xml/styles/DciPersonSearch.xslt"/>
+       	       
+       	<queues 
+       	       name="jms/DojNameReplyQueue"
+       	       style="org/nccourts/aware/xml/styles/DciPersonSearch.xslt"/>
+       	
+     </action>
+     <action messageType="RO_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roIssue"
+       	bindings-file="/xml/ReleaseOrderIssueMessageToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="OFA_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisOfaProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ofaIssue"
+       	bindings-file="/xml/OFAIssue.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="Reset_Case_ACIS" 
+         qcf = "jms/AocMQConnectionFactory"
+         
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseResetHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.caseReset"
+       	bindings-file="/xml/CaseReset.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/ConvToAcisNotify" />
+   	    
+     </action>
+     <action messageType="OFA_Issue_Synch_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisOfaProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ofaIssueSynch"
+       	bindings-file="/xml/OFAIssue.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="OFA_Serve_Synch_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ofaServeSynch"
+       	bindings-file="/xml/OFAServeSynch.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="RO_Delete_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.roDelete"
+       	bindings-file="/xml/RODelete.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="RO_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="RO_Update_Court_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderCourtUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="RO_Update_Interpreter_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderInterpreterUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="RO_Update_Court_Interpreter_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderCourtInterpreterUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="RO_Update_Bond_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderReleaseConditionsUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="RO_Update_Summary_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSubsequentProcessMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.aggregates.AggregateProcessBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisRo.xsd" 
+     	business-process-key="Aware.acis.roUpdate"
+       	bindings-file="/xml/ReleaseOrderSummaryUpdateToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="WFA_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.wfaCaseAdd"
+       	bindings-file="/xml/WFACaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="NCAWARE_ACIS_Synch" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSynchMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.synch"
+       	bindings-file="/xml/WFACaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="WFAMWC_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseAdd"
+       	bindings-file="/xml/WFAMWCAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="CS_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSummonsMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.SummonsCaseAdd"
+       	bindings-file="/xml/CSCaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="CSMWC_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisSummonsMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.SummonsCaseAdd"
+       	bindings-file="/xml/CSMWCCaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+    <action messageType="BOI_Serve_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseUpdateMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.BOICaseUpdate"
+       	bindings-file="/xml/BOICaseUpdate.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MO_Serve_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOGC_Serve_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOGCAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOGC_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOGCAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOWC_Serve_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOWCAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOABCALE_Serve_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOABCALEAwareToAcisCaseAdd.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="WFA_Delete_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.NCAToAcisDeleteMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseDelete"
+       	bindings-file="/xml/CaseDeleteNCAToACIS.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MO_Delete_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.NCAToAcisDeleteMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseDelete"
+       	bindings-file="/xml/CaseDeleteNCAToACIS.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="SMNS_Delete_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.NCAToAcisDeleteMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseDelete"
+       	bindings-file="/xml/CaseDeleteNCAToACIS.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     
+     <action messageType="Warrant_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseUpdateMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseUpdate"
+       	bindings-file="/xml/warrantUpdates.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="Summons_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseUpdateMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseUpdate"
+       	bindings-file="/xml/summonsUpdates.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MO_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseUpdateMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseUpdate"
+       	bindings-file="/xml/MOUpdates.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="FO_Update_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisCaseUpdateMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.caseUpdate"
+       	bindings-file="/xml/FOUpdates.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+      <action messageType="FW_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.fwCaseAdd"
+       	bindings-file="/xml/FWCaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="FO_Issue_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/FOCaseAddToAcis.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     
+     <action messageType="PT_OFA_Forward_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+          
+     <action messageType="PT_NONOFA_Forward_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcisForward.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+          
+     <action messageType="PT_OFA_Recall_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+          
+     <action messageType="PT_NONOFA_Recall_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+               
+     <action messageType="PT_OFA_Reset_To_Unserved_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+     <action messageType="PT_OFA_Reset_To_UNSVD_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingOnOFAMessageHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ptOfaResetUnsvd"
+       	bindings-file="/xml/PTResetToUnserveOnOFA.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+   	    <!--queues name="jms/AwareToAcisBusinessLog" /-->
+   	    
+     </action> 
+     <action messageType="PT_OFA_RE_CALL_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+         error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingOnOFAMessageHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ptOfaRecall"
+       	bindings-file="/xml/PTRecallOnOFA.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+   	    <!--queues name="jms/AwareToAcisBusinessLog" /-->
+   	    
+     </action>       
+     <action messageType="PT_OFA_SRV_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingOnOFAMessageHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ptOfaServe"
+       	bindings-file="/xml/PTServeOnOFA.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+   	    <!--queues name="jms/AwareToAcisBusinessLog" /-->
+   	    
+     </action>       
+     <action messageType="PT_OFA_STRK_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingOnOFAMessageHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcisOfa.xsd" 
+     	business-process-key="Aware.acis.ptOfaStrike"
+       	bindings-file="/xml/PTStrikeOnOFA.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+   	    <!--queues name="jms/AwareToAcisBusinessLog" /-->
+   	    
+     </action>                
+     <action messageType="PT_NONOFA_Reset_To_Unserved_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                    
+     <action messageType="PT_OFA_Return_To_Clerk_Redelivery_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                    
+     <action messageType="PT_NONOFA_Return_To_Clerk_Redelivery_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                         
+     <action messageType="PT_OFA_Return_To_Clerk_Unserved_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                         
+     <action messageType="PT_NONOFA_Return_To_Clerk_Unserved_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcisReturnToClerkUnserve.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                              
+     <action messageType="PT_OFA_Serve_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+     
+     <action messageType="PT_NONOFA_Serve_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingServeHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.service.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcisServiceRecord.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                              
+     <action messageType="PT_OFA_Strike_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                              
+     <action messageType="PT_NONOFA_Strike_ACIS" 
+        qcf= "jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                                   
+     <action messageType="PT_OFA_Unverified_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ofa.ptAction"
+       	bindings-file="/xml/PTOFAActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>
+                                   
+     <action messageType="PT_NONOFA_Unverified_ACIS" 
+        qcf="jms/AocMQConnectionFactory" 
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in="false" validate-out="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisProcessTrackingHelper"
+     	translator-class-name="org.nccourts.emi.message.helper.translator.AcisProcessTrackingMessageTranslator"
+     	translator-bean-name="org.nccourts.aware.pt.bean.ProcessActionMessageBean"
+     	validate-schema-name="/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.ptAction"
+       	bindings-file="/xml/PTActionsAwareToAcis.xml"
+       	mode="marshall"
+       	session-bean-name="java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage="true" non-jms-system="true" application-name="AWARE" source-agency-name="aoc">
+        <queues name="jms/AwareToAcisNotify" />
+     </action>       	
+    <!-- 
+    	validate-schema-name = "workspace/EMIWeb/WebContent/schemas/DCI/SpinoffInquiry/document-schema.xsd"
+        validate-schema-name = "/u/WASV510/devcell/AppServer/installedApps/devcell/EMI.ear/EMIWeb.war/schemas/DCI/SpinoffInquiry/document-schema.xsd"  
+       -->
+       <action messageType="MO_Denied_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOAwareToAcisCaseAddDenied.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOGC_Denied_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOGCAwareToAcisCaseAddDenied.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     
+     <action messageType="MOWC_Denied_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisMagistrateOrderMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOWCAwareToAcisCaseAddDenied.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+     <action messageType="MOABCALE_Denied_ACIS" 
+         qcf = "jms/AocMQConnectionFactory" 
+        
+        error-queue-name="jms/AwareToAcisUnHandled  " validate-in = "false" validate-out ="false"
+    	helper-class-name="org.nccourts.emi.message.helper.AcisBaseMessageHelper"
+     	translator-class-name="org.nccourts.common.messaging.helper.AocMessageTranslator"
+     	translator-bean-name= "org.nccourts.aware.bean.business.process.archive.ProcessArchiveBean"
+     	validate-schema-name = "/org/nccourts/common/xml/schemas/AwareToAcis.xsd" 
+     	business-process-key="Aware.acis.MOCaseAdd"
+       	bindings-file="/xml/MOABCALEAwareToAcisCaseAddDenied.xml"
+       	mode ="marshall"
+       	session-bean-name= "java:comp/env/ejb/org/nccourts/common/sessionbean/support/AwareToAcisBeanLocalHome" 
+       	save-errorMessage = "true" non-jms-system = "true" application-name = "AWARE" source-agency-name="aoc">
+        <queues 
+   	       name="jms/AwareToAcisNotify" />
+   	    
+     </action>
+       	
+</message-mappings>
