@@ -7,7 +7,7 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E50001.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00740.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10161.xsl"/>
-  <xsl:import href="Trailer.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/Trailer.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
