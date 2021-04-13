@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!-- ********************************************************************-->
+  <!-- ******** template for E00660 Defendant Name and Alias Name**********-->
+  <!-- ********************************************************************-->
  <xsl:template name="E00660">
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/Charge[1]/@InternalPartyID"/>
@@ -7,6 +10,9 @@
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E00660</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="TrailerRecord">
+        <xsl:text>TotalAliasRec</xsl:text>
       </xsl:attribute>
       <!--Flag-->
       <Data Position="1" Length="1" Segment="Flag">
@@ -24,6 +30,9 @@
         <xsl:attribute name="EventID">
           <xsl:text>E00660</xsl:text>
         </xsl:attribute>
+      <xsl:attribute name="TrailerRecord">
+        <xsl:text>TotalAliasRec</xsl:text>
+      </xsl:attribute>
         <!--Flag-->
         <Data Position="1" Length="1" Segment="Flag">
           <xsl:text>A</xsl:text>
@@ -38,5 +47,6 @@
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
