@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!-- ********************************************************************-->
+  <!-- ************* template for E50001 Offense Record *******************-->
+  <!-- ********************************************************************-->
   <xsl:template name="E50001">
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E50001</xsl:text>
+        </xsl:attribute>
+        <xsl:attribute name="TrailerRecord">
+          <xsl:text>TotalOffenseRec</xsl:text>
         </xsl:attribute>
         <!--Flag-->
         <Data Position="1" Length="1" Segment="Flag">
@@ -39,11 +45,17 @@
           <xsl:value-of select="Statute/StatuteNumber"/>
         </Data>
         <!--Worthless Check Amount-->
-        <Data Position='8' Length='7' Segment='CRIWCA-X' />
+        <Data Position='8' Length='7' Segment='CRIWCA-X' >
+          <xsl:value-of select="Additional/NCWorthlessCheck/CheckAmount"/>
+        </Data>
         <!--Charged Speed-->
-        <Data Position='9' Length='3' Segment='CRICSP' />
+        <Data Position='9' Length='3' Segment='CRICSP' >
+          <xsl:value-of select="Additional//Speed[1]"/>
+        </Data>
         <!--Posted Speed-->
-        <Data Position='10' Length='2' Segment='CRICSZ' />
+        <Data Position='10' Length='2' Segment='CRICSZ'  >
+          <xsl:value-of select="Additional//SpeedLimit[1]"/>
+        </Data>
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true" />
         <!--NA Vision Link Code-->
@@ -91,7 +103,7 @@
   <xsl:template name="PaddWithZeros">
     <xsl:param name="Value"/>
     <xsl:param name="Length"/>
-  <!-- ********************************************************************-->
+    <!-- ********************************************************************-->
   <!-- ****************** template for padding zeros **********************-->
   <!-- ********************************************************************-->
     <xsl:variable name="PaddingNeeded" select="$Length - string-length($Value)"/>
@@ -113,5 +125,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
