@@ -58,6 +58,8 @@
       <Data Position="20" Length="6" Segment="CraiHdrCourtroomFiller">
         <xsl:value-of select="/Integration/@MessageID"/>
       </Data>
+      <!-- Filler to create total required length -->
+      <Data Position='21' Length='9' Segment='Filler' AlwaysNull="true"/>
     </Header>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -176,6 +178,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

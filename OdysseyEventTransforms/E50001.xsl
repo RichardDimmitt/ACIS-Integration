@@ -62,6 +62,8 @@
         <Data Position='12' Length='13' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
         <!--Civil Revocation End Date-->
         <Data Position='13' Length='8' Segment='UNK-CvrEndDate' AlwaysNull="true" />
+        <!-- Padding at the end to form the total length -->
+        <Data Position='13' Length='92' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:for-each>
   </xsl:template>
@@ -125,6 +127,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

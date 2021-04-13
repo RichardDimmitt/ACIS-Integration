@@ -25,10 +25,13 @@
         <Data Position='5' Length='15' Segment='CRRCMPN'>
           <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='LECN']/CrossCaseNumber"/>
         </Data>
+        <!-- Padding at the end to form the total length -->
+        <Data Position='6' Length='160' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

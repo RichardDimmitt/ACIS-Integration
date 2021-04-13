@@ -43,10 +43,13 @@
         </Data>
         <!--NA Vision Link Code-->
         <Data Position='3' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
+        <!-- Padding at the end to form the total length -->
+        <Data Position='4' Length='36' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

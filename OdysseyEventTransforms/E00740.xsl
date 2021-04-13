@@ -25,10 +25,13 @@
         <Data Position='5' Length='15' Segment='CRRLID'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=/Integration/Case/Charge[1]/@InternalPartyID]/OtherID[OtherIDAgency/@Word='LID']/OtherIDNumber"/>
         </Data>
+        <!-- Padding at the end to form the total length -->
+        <Data Position='6' Length='160' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

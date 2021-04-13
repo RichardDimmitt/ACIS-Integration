@@ -81,9 +81,12 @@
       <Data Position='18' Length='3' Segment='NA-VISIONLINKNUMBER' AlwaysNull="true" />
       <!--Witness Line Number-->
       <Data Position='19' Length='2' Segment='CRWLNO' AlwaysNull="true" />
+      <!-- Padding at the end to form the total length -->
+      <Data Position='20' Length='47' Segment='Filler' AlwaysNull="true"/>
     </Event>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

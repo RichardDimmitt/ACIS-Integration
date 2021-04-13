@@ -177,6 +177,8 @@
       <Data Position="41" Length="1" Segment="NA-FILLER-1" AlwaysNull="true"/>
       <!--NA-FILLER-1-->
       <Data Position="42" Length="1" Segment="NA-FILLER-1" AlwaysNull="true"/>
+      <!-- Filler to create total required length -->
+      <Data Position='43' Length='0' Segment='Filler' AlwaysNull="true"/>
     </Event>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -353,6 +355,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
