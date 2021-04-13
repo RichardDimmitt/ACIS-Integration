@@ -8,6 +8,9 @@
         <xsl:attribute name="EventID">
           <xsl:text>E00740</xsl:text>
         </xsl:attribute>
+        <xsl:attribute name="TrailerRecord">
+          <xsl:text>TotalEventRec</xsl:text>
+        </xsl:attribute>
         <!--Flag-->
         <Data Position="1" Length="6" Segment="Flag">
           <xsl:text>E00740</xsl:text>
@@ -26,5 +29,6 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
