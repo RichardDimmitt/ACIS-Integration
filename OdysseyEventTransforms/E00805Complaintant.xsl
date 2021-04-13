@@ -1,4 +1,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!-- ********************************************************************-->
+  <!-- ******** template for E00805 Complainant *****************-->
+  <!-- ********************************************************************-->
   <xsl:template name="E00805Complaintant">
     <xsl:variable name="complainantID">
       <xsl:value-of select="/Integration/Case/CaseParty[Connection/@Word='CMPL']/@InternalPartyID"/>
@@ -6,6 +9,9 @@
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E00805</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="TrailerRecord">
+        <xsl:text>TotalWitnessRec</xsl:text>
       </xsl:attribute>
       <!--Flag-->
       <Data Position='1' Length='1' Segment='Flag'>
@@ -78,5 +84,7 @@
     </Event>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
