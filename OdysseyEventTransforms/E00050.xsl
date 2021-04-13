@@ -1,4 +1,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:strip-space elements="*"/>
+  <xsl:output method="xml" indent="no"/>
   <xsl:template name="E00050">
   <!-- ********************************************************************-->
   <!-- **************** template for E00050 Case Add **********************-->
@@ -137,11 +139,38 @@
       <!--Vision Link Code-->
       <Data Position="36" Length="10" Segment="NA-VISIONLINKCODE" AlwaysNull="true"/>
       <!--Domestic Violence Indicator-->
-      <Data Position="37" Length="1" Segment="CRRDOMVL"/>
+      <Data Position="37" Length="1" Segment="CRRDOMVL">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Case/Charge//Additional/NCDomesticViolence/IsDomesticViolence='true')">
+            <xsl:value-of select="'Y'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'N'"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Fingerprint Required Indicator-->
-      <Data Position="38" Length="1" Segment="UNK-CraiFingerprintInd"/>
+      <Data Position="38" Length="1" Segment="UNK-CraiFingerprintInd">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Case/Charge//Additional//IsFingerprintRequired='true')">
+            <xsl:value-of select="'Y'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'N'"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Victim Rights Indicator-->
-      <Data Position="39" Length="1" Segment="CRRVRA"/>
+      <Data Position="39" Length="1" Segment="CRRVRA">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Case/Charge//Additional/NCVictimsRights/IsVictimsRights='true')">
+            <xsl:value-of select="'Y'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'N'"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--NA-FILLER-97-->
       <Data Position="40" Length="97" Segment="NA-FILLER-97" AlwaysNull="true"/>
       <!--NA-FILLER-1-->
@@ -324,6 +353,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
