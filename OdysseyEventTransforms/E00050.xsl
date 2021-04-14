@@ -1,6 +1,4 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:strip-space elements="*"/>
-  <xsl:output method="xml" indent="no"/>
   <xsl:template name="E00050">
   <!-- ********************************************************************-->
   <!-- **************** template for E00050 Case Add **********************-->
@@ -44,8 +42,12 @@
       <Data Position="7" Length="2" Segment="CRRDST">
         <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
       </Data>
-      <!--Citation Issue date-->
-      <Data Position="8" Length="8" Segment="CRRIDT" AlwaysNull="true"/>
+      <!--Issue date-->
+      <Data Position="8" Length="8" Segment="CRRIDT">
+        <xsl:call-template name="formatDateYYYYMMDD">
+          <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+        </xsl:call-template>
+      </Data>
       <!--NA-FILLER-20-->
       <Data Position="9" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
       <!--Defendant Address Line 1 -->
@@ -355,6 +357,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
