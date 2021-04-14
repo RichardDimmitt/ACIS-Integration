@@ -75,7 +75,7 @@
         </xsl:choose>
       </Data>
       <!-- Padding at the end to form the total length -->
-      <Data Position='6' Length='27' Segment='Filler' AlwaysNull="true"/>
+      <Data Position='13' Length='27' Segment='Filler' AlwaysNull="true"/>
     </Event>
   </xsl:template>
   <!-- ********************************************************************-->
