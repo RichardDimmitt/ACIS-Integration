@@ -15,7 +15,7 @@
       <!--Service Date-->
       <Data Position='2' Length='8' Segment='CRRDTS'>
         <xsl:call-template name="formatDateYYYYMMDD">
-          <xsl:with-param name="date" select="/Integration/Case/CaseEvent/EventType[@Word='OFARS' or @Word='WFARS' or @Word='CSS' or @Word='EWRS']/../@Date[last()]"/>
+           <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
         </xsl:call-template>
       </Data>
       <!--Hearing Date-->
@@ -114,6 +114,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
