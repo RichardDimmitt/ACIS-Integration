@@ -3,6 +3,11 @@
   <!-- ********************************************************************-->
   <!-- ********** template for Header Record for Update Messages **********-->
   <!-- ********************************************************************-->
+    <xsl:variable name="UpdateTimeStamp">
+      <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
+        <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
+      </xsl:call-template>
+    </xsl:variable>
     <Header>
       <Data Position="1" Length="1" Segment="Flag">
         <xsl:text>H</xsl:text>
@@ -28,9 +33,7 @@
         </xsl:call-template>
       </Data>
       <Data Position="8" Length="14" Segment="CraiUpdatedDtTs">
-        <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
-          <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
-        </xsl:call-template>
+        <xsl:value-of select="$UpdateTimeStamp+1"/>
       </Data>
       <Data Position="9" Length="9" Segment="CraiOperatorId">
         <xsl:text>AWAR101</xsl:text>
@@ -180,6 +183,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
