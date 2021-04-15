@@ -24,7 +24,7 @@
         </Data>
         <!--Witness Type-->
         <Data Position='3' Length='1' Segment='CRWTYP'>
-          <xsl:text>C</xsl:text>
+          <xsl:text>S</xsl:text>
         </Data>
         <!--Witness Address Line 1-->
         <Data Position='4' Length='35' Segment='CRWAD'>
@@ -88,6 +88,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
