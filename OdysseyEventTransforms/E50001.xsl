@@ -46,15 +46,37 @@
         </Data>
         <!--Worthless Check Amount-->
         <Data Position='8' Length='7' Segment='CRIWCA-X' >
-          <xsl:value-of select="Additional/NCWorthlessCheck/CheckAmount"/>
+          <xsl:variable name="CheckAmount">
+            <xsl:value-of select="Additional/NCWorthlessCheck/CheckAmount"/>
+          </xsl:variable>
+          <xsl:choose>
+            <xsl:when test="contains($CheckAmount,'.')='true'">
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="translate($CheckAmount,'.','')"/>
+                <xsl:with-param name="Length" select="7"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="concat($CheckAmount,'00')"/>
+                <xsl:with-param name="Length" select="7"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Charged Speed-->
         <Data Position='9' Length='3' Segment='CRICSP' >
-          <xsl:value-of select="Additional//Speed[1]"/>
+          <xsl:call-template name="PaddWithZeros">
+            <xsl:with-param name="Value" select="Additional//Speed[1]"/>
+            <xsl:with-param name="Length" select="3"/>
+          </xsl:call-template>
         </Data>
         <!--Posted Speed-->
         <Data Position='10' Length='2' Segment='CRICSZ'  >
-          <xsl:value-of select="Additional//SpeedLimit[1]"/>
+          <xsl:call-template name="PaddWithZeros">
+            <xsl:with-param name="Value" select="Additional//SpeedLimit[1]"/>
+            <xsl:with-param name="Length" select="2"/>
+          </xsl:call-template>
         </Data>
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true" />
@@ -100,12 +122,12 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- ********************************************************************-->
+  <!-- ****************** template for padding zeros **********************-->
+  <!-- ********************************************************************-->
   <xsl:template name="PaddWithZeros">
     <xsl:param name="Value"/>
     <xsl:param name="Length"/>
-    <!-- ********************************************************************-->
-  <!-- ****************** template for padding zeros **********************-->
-  <!-- ********************************************************************-->
     <xsl:variable name="PaddingNeeded" select="$Length - string-length($Value)"/>
     <xsl:choose>
       <xsl:when  test="($PaddingNeeded &gt; 0)">
@@ -118,6 +140,18 @@
         <xsl:if test="($PaddingNeeded = 3)">
           <xsl:value-of  select="concat('000',$Value)"/>
         </xsl:if>
+        <xsl:if test="($PaddingNeeded = 4)">
+          <xsl:value-of  select="concat('0000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 5)">
+          <xsl:value-of  select="concat('00000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 6)">
+          <xsl:value-of  select="concat('000000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 7)">
+          <xsl:value-of  select="concat('0000000',$Value)"/>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of  select="$Value"/>
@@ -125,6 +159,12 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
+
 
 
 
