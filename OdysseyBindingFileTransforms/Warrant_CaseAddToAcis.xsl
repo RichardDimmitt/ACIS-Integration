@@ -8,6 +8,7 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E50001.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00740.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10161.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00660CurrentName.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -36,11 +37,13 @@
       <xsl:call-template name="HeaderForAddMessage"/>
       <xsl:call-template name="E00050"/>
       <xsl:call-template name="E00805Complaintant"/>
-      <xsl:call-template name="E00660"/>
+      <xsl:call-template name="E00660CurrentName"/>
       <xsl:call-template name="E50001"/>
       </AddMessage>
       <UpdateMessage>
       <xsl:call-template name="HeaderForUpdateMessage"/>
+      <xsl:call-template name="E00805Witness"/>
+      <xsl:call-template name="E00660"/>
       <xsl:call-template name="E00740"/>
       <xsl:call-template name="E10161"/>
       </UpdateMessage>
