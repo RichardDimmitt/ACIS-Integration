@@ -28,12 +28,12 @@
         <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,2)"/>
       </Data>
       <Data Position="7" Length="14" Segment="CraiCreatedDtTs">
+        <xsl:value-of select="$UpdateTimeStamp+1"/>
+      </Data>
+      <Data Position="8" Length="14" Segment="CraiUpdatedDtTs">
         <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
           <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
         </xsl:call-template>
-      </Data>
-      <Data Position="8" Length="14" Segment="CraiUpdatedDtTs">
-        <xsl:value-of select="$UpdateTimeStamp-1"/>
       </Data>
       <Data Position="9" Length="9" Segment="CraiOperatorId">
         <xsl:text>AWAR101</xsl:text>
