@@ -34,41 +34,6 @@
       </Event>
    </xsl:for-each>
   </xsl:template>
-  <!-- ********************************************************************-->
-  <!-- ****************** template for YYYYMMDD ***************************-->
-  <!-- ********************************************************************-->
-  <xsl:template name="formatDateYYYYMMDD">
-    <xsl:param name="date"/>
-    <xsl:if test="$date!=''">
-      <xsl:variable name="month">
-        <xsl:call-template name="GetLeadZero">
-          <xsl:with-param name="Nbr" select="substring-before($date,'/')"/>
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="daytemp" select="substring-after($date,'/')"/>
-      <xsl:variable name="day">
-        <xsl:call-template name="GetLeadZero">
-          <xsl:with-param name="Nbr" select="substring-before($daytemp,'/')"/>
-        </xsl:call-template>
-      </xsl:variable>
-      <xsl:variable name="year" select="substring-after($daytemp,'/')"/>
-      <xsl:value-of select="concat($year,$month,$day)"/>
-    </xsl:if>
-  </xsl:template>
-  <!-- ********************************************************************-->
-  <!-- ****************** template for leading zeros **********************-->
-  <!-- ********************************************************************-->
-  <xsl:template name="GetLeadZero">
-    <xsl:param name="Nbr"/>
-    <xsl:choose>
-      <xsl:when  test="(string-length($Nbr) &lt; 2)">
-        <xsl:value-of  select="concat('0',$Nbr)"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of  select="$Nbr"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
 </xsl:stylesheet>
 
 
