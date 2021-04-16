@@ -23,9 +23,9 @@
         <!--CraiOtherNumber-->
         <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
         <!-- Defendant Address Line 1 Old -->
-        <Data Position='2' Length='20' Segment='CRRADD-OLD' AlwaysNull="true"/>
+        <Data Position='4' Length='20' Segment='CRRADD-OLD' AlwaysNull="true"/>
         <!-- Defendant Address Line 1 -->
-        <Data Position='3' Length='20' Segment='CRRADD'>
+        <Data Position='5' Length='20' Segment='CRRADD'>
         <xsl:choose>
           <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
             <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
@@ -38,6 +38,7 @@
           </xsl:otherwise>
         </xsl:choose>
         </Data>
+      <!-- Filler -->
         <Data Position='6' Length='150' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>

@@ -24,28 +24,29 @@
         <!--CraiOtherNumber-->
         <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
         <!-- Defendant Address City Old -->
-        <Data Position='2' Length='15' Segment='CRRCTY-OLD' AlwaysNull="true"/>
+        <Data Position='4' Length='15' Segment='CRRCTY-OLD' AlwaysNull="true"/>
         <!-- Defendant Address State Old -->
-        <Data Position='4' Length='2' Segment='CRRDST-OLD' AlwaysNull="true"/>
+        <Data Position='5' Length='2' Segment='CRRDST-OLD' AlwaysNull="true"/>
         <!-- Defendant Address Zip Old -->
         <Data Position='6' Length='5' Segment='CRRZIP-OLD' AlwaysNull="true"/>
         <!-- Defendant Address Zip+4 Old -->
-        <Data Position='8' Length='4' Segment='CRREZP-OLD' AlwaysNull="true"/>
+        <Data Position='7' Length='4' Segment='CRREZP-OLD' AlwaysNull="true"/>
         <!-- Defendant Address City 2 -->
-        <Data Position='3' Length='15' Segment='CRRCTY'>
+        <Data Position='8' Length='15' Segment='CRRCTY'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City"/>
         </Data>
         <!-- Defendant Address State -->
-        <Data Position='5' Length='2' Segment='CRRDST'>
+        <Data Position='9' Length='2' Segment='CRRDST'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
         </Data>
         <!-- Defendant Address Zip -->
-        <Data Position='7' Length='5' Segment='CRRZIP'>
+        <Data Position='10' Length='5' Segment='CRRZIP'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip"/>
         </Data>
         <!-- Defendant Address Zip+4 -->
-        <Data Position='9' Length='4' Segment='CRRZIP' AlwaysNull="true"/>
-        <Data Position='6' Length='138' Segment='Filler' AlwaysNull="true"/>
+        <Data Position='11' Length='4' Segment='CRRZIP' AlwaysNull="true"/>
+        <!-- Filler -->
+        <Data Position='12' Length='138' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
