@@ -40,7 +40,7 @@
       </Data>
 
       <!-- Padding at the end to form the total length 200 -->
-      <Data Position='6' Length='186' Segment='Filler' AlwaysNull="true"/>
+      <Data Position='6' Length='172' Segment='Filler' AlwaysNull="true"/>
     </Event>
 
     </xsl:if>
