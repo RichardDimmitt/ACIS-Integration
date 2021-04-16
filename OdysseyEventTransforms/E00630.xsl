@@ -16,7 +16,7 @@
           <xsl:text>TotalEventRec</xsl:text>
         </xsl:attribute>
         <!-- Flag -->
-        <Data Position="1" Length="1" Segment="Flag">
+        <Data Position="1" Length="6" Segment="Flag">
           <xsl:text>E00630</xsl:text>
         </Data>
         <!--CraiOffenseNumber-->
