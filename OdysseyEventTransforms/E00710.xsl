@@ -32,7 +32,7 @@
 
 
       <!--Defendant SSN Old-->
-      <Data Position='4' Length='9' Segment='CRRSSNOLD' AlwaysNull="true"/>
+      <Data Position='4' Length='9' Segment='CRRSSN-OLD' AlwaysNull="true"/>
 
       <!--Defendant SSN-->
       <Data Position='5' Length='9' Segment='CRRSSN'>
@@ -40,7 +40,7 @@
       </Data>
 
       <!-- Padding at the end to form the total length 200 -->
-      <Data Position='6' Length='182' Segment='Filler' AlwaysNull="true"/>
+      <Data Position='6' Length='186' Segment='Filler' AlwaysNull="true"/>
     </Event>
 
     </xsl:if>
