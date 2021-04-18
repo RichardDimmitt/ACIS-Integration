@@ -13,7 +13,7 @@
           <xsl:text>TotalEventRec</xsl:text>
         </xsl:attribute>
         <!--Flag-->
-        <Data Position="1" Length="1" Segment="Flag">
+        <Data Position="1" Length="6" Segment="Flag">
           <xsl:text>E10227</xsl:text>
         </Data>
         <Data Position='2' Length='2' Segment='CraiServiceDateOLD' AlwaysNull="true"/>
