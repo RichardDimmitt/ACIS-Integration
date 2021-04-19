@@ -3,6 +3,7 @@
 <!-- *** This templae addresses the binding files below                          ***-->
 <!-- *** CaseDeleteNCAToACIS.xml                                                 ***-->
 <!-- ****************************************************************************** -->
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00015.xsl"/>
   <xsl:strip-space elements="*"/>
@@ -28,6 +29,7 @@
         <xsl:value-of select="/Integration/Case/CaseNumber"/>
       </xsl:attribute>
       <AddMessage>
+      <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
         <xsl:call-template name="HeaderForUpdateMessage"/>
@@ -36,5 +38,6 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
