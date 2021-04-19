@@ -27,8 +27,6 @@
       <xsl:attribute name="CaseNumber">
         <xsl:value-of select="/Integration/Case/CaseNumber"/>
       </xsl:attribute>
-      <AddMessage>
-      </AddMessage>
       <UpdateMessage>
         <xsl:call-template name="HeaderForUpdateMessage"/>
         <xsl:call-template name="E00015"/>
