@@ -13,19 +13,19 @@
         <xsl:text>R</xsl:text>
       </Data>
       <!--Hold Reason-->
-      <Data Position='1' Length='25' Segment='UNK-HOLDREASON'>
+      <Data Position='2' Length='25' Segment='UNK-HOLDREASON'>
         <xsl:text>OTHER</xsl:text>
       </Data>
       <!--Hold Text-->
-      <Data Position='2' Length='20' Segment='UNK-HOLDTEXT' AlwaysNull="true" />
+      <Data Position='3' Length='20' Segment='UNK-HOLDTEXT' AlwaysNull="true" />
       <!--Hold Comment-->
-      <Data Position='3' Length='255' Segment='UNK-HOLDCOMMENT'>
+      <Data Position='4' Length='255' Segment='UNK-HOLDCOMMENT'>
         <xsl:text>PROCESS DELETED FROM ELECTRONIC WARRANTS</xsl:text>
       </Data>
       <!--Filler - 19 Characters-->
-      <Data Position='4' Length='19' Segment='NA-FILLER-19' AlwaysNull="true" />
+      <Data Position='5' Length='19' Segment='NA-FILLER-19' AlwaysNull="true" />
       <!-- Padding at the end to form the total length -->
-      <Data Position='5' Length='0' Segment='Filler' AlwaysNull="true"/>
+      <Data Position='6' Length='0' Segment='Filler' AlwaysNull="true"/>
     </Event>
   </xsl:template>
 </xsl:stylesheet>
