@@ -20,9 +20,9 @@
       <Data Position='2' Length='2' Segment='CraiServiceDateOLD' AlwaysNull="true"/>
       <Data Position='3' Length='2' Segment='CraiServiceDate' AlwaysNull="true"/>
       <!--Defendant Race Old-->
-      <Data Position="4" Length="1" Segment="CRRACE-OLD"/>
+      <Data Position="4" Length="1" Segment="CRRACE-OLD" AlwaysNull="true"/>
       <!--Defendant Sex Old-->
-      <Data Position="5" Length="1" Segment="CRRSEX-OLD"/>
+      <Data Position="5" Length="1" Segment="CRRSEX-OLD" AlwaysNull="true"/>
       <!--Defendant Race-->
       <Data Position="6" Length="1" Segment="CRRACE">
         <xsl:call-template name="GetACISRaceCode">
@@ -98,5 +98,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
