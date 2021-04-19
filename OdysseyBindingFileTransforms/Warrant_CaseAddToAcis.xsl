@@ -33,6 +33,7 @@
       </xsl:attribute>
       <!-- Note* The order the events are provided must match the associated binding file -->
       <!-- <xsl:call-template name=""/>  -->
+
       <AddMessage>
       <xsl:call-template name="HeaderForAddMessage"/>
       <xsl:call-template name="E00050"/>
@@ -40,6 +41,7 @@
       <xsl:call-template name="E00660CurrentName"/>
       <xsl:call-template name="E50001"/>
       </AddMessage>
+
       <UpdateMessage>
       <xsl:call-template name="HeaderForUpdateMessage"/>
       <xsl:call-template name="E00805Witness"/>
@@ -47,9 +49,11 @@
       <xsl:call-template name="E00740"/>
       <xsl:call-template name="E10161"/>
       </UpdateMessage>
+
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
