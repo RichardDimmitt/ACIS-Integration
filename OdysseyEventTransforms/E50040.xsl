@@ -16,25 +16,24 @@
         <Data Position="1" Length="6" Segment="Flag">
           <xsl:text>E50040</xsl:text>
         </Data>
-        <Data Position="2" Length="0" Segment="ImpliedConsent" AlwaysNull="true"/>
         <!--Offense Number-->
-        <Data Position='3' Length='2' Segment='CROLNO'>
+        <Data Position='2' Length='2' Segment='CROLNO'>
           <xsl:call-template name="GetLeadZero">
             <xsl:with-param name="Nbr" select="../../ChargeNumber"/>
           </xsl:call-template>
         </Data>
         <!--CraiOtherNumber-->
-        <Data Position='4' Length='2' Segment='CraiOtherNumber'>
+        <Data Position='3' Length='2' Segment='CraiOtherNumber'>
           <xsl:text>00</xsl:text>
         </Data>
         <!-- CriduiBefore -->
-        <Data Position="5" Length="2" Segment="CRIDUI-BEFORE" AlwaysNull="true"/>
-        <!-- CriduiAfter  -->
-        <Data Position="6" Length="2" Segment="CRIDUI">
+        <Data Position="4" Length="2" Segment="CRIDUI-BEFORE" AlwaysNull="true"/>
+        <!-- Charged Blood Alcohol Content  -->
+        <Data Position="5" Length="2" Segment="CRIDUI">
           <xsl:value-of select="substring-after(BreathTestResult,'.')"/>
         </Data>
         <!-- Padding at the end to form the total length -->
-        <Data Position='7' Length='186' Segment='Filler' AlwaysNull="true"/>
+        <Data Position='6' Length='186' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:for-each>
   </xsl:template>
@@ -53,4 +52,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
