@@ -15,7 +15,7 @@
       <!--Service Date-->
       <Data Position='2' Length='8' Segment='CRRDTS'>
         <xsl:call-template name="formatDateYYYYMMDD">
-           <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+          <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
         </xsl:call-template>
       </Data>
       <!--Hearing Date-->
@@ -48,7 +48,19 @@
       </Data>
       <!--FingerPrint Reason Code-->
       <Data Position='9' Length='2' Segment='CRRREA'>
-        <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+        <xsl:choose>
+        <!-- No charges have a finger print number -->
+          <xsl:when test="(/Integration/Case/Charge[not (ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber)])">
+        <!-- No charges have a fingerprint override reason -->
+            <xsl:if test="/Integration/Case/Charge[not(ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word)]">
+               <!-- Provide default value -->
+              <xsl:value-of select="'NF'"/>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--NA Vision Link Code-->
       <Data Position='10' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
@@ -114,6 +126,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
