@@ -9,8 +9,8 @@
       <xsl:attribute name="EventID">
         <xsl:text>E00015</xsl:text>
       </xsl:attribute>
-      <Data Position="1" Length="6" Segment="Flag">
-        <xsl:text>E00015</xsl:text>
+      <Data Position="1" Length="1" Segment="Flag">
+        <xsl:text>R</xsl:text>
       </Data>
       <!--Hold Reason-->
       <Data Position='2' Length='25' Segment='UNK-HOLDREASON'>
