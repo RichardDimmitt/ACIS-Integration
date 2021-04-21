@@ -71,7 +71,7 @@
             <xsl:value-of select="'Y'"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="'N'"/>
+            <xsl:value-of select="' '"/>
           </xsl:otherwise>
         </xsl:choose>
       </Data>
@@ -82,7 +82,7 @@
             <xsl:value-of select="'Y'"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="'N'"/>
+            <xsl:value-of select="' '"/>
           </xsl:otherwise>
         </xsl:choose>
       </Data>
@@ -126,6 +126,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
