@@ -9,7 +9,7 @@
       </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="RelatedCaseNumber">
-      <xsl:value-of select="/message/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@CurrentIterator='True']/CrossCaseNumber"/>
+      <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@CurrentIterator='True']/CrossCaseNumber"/>
     </xsl:variable>
     <Header>
       <Data Position="1" Length="1" Segment="Flag">
@@ -186,6 +186,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
