@@ -16,7 +16,11 @@
       <Data Position="1" Length="6" Segment="Flag">
         <xsl:text>E11410</xsl:text>
       </Data>
-      <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true"/>
+      <Data Position='2' Length='2' Segment='CraiOffenseNumber'>
+          <xsl:call-template name="GetLeadZero">
+            <xsl:with-param name="Nbr" select="ChargeNumber"/>
+          </xsl:call-template>
+        </Data>
       <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true"/>
       <!-- Order for Arrest Date Before -->
       <Data Position='4' Length='8' Segment='CRIODT-OLD' AlwaysNull="true"/>
@@ -26,6 +30,20 @@
       <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
     </Event>
     </xsl:for-each>
+  </xsl:template>
+  <!-- ********************************************************************-->
+  <!-- ****************** template for leading zeros **********************-->
+  <!-- ********************************************************************-->
+  <xsl:template name="GetLeadZero">
+    <xsl:param name="Nbr"/>
+    <xsl:choose>
+      <xsl:when  test="(string-length($Nbr) &lt; 2)">
+        <xsl:value-of  select="concat('0',$Nbr)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of  select="$Nbr"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
 
