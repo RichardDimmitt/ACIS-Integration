@@ -2,6 +2,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- ********************************************************************-->
   <!-- ************* template for E50001 Offense Record *******************-->
+  <!-- *** Change Log:                                                  ***-->
+  <!-- 4-23-2020: Updated the check amount to be the total amount       ***-->
   <!-- ********************************************************************-->
   <xsl:template name="E50001">
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
@@ -47,7 +49,7 @@
         <!--Worthless Check Amount-->
         <Data Position='8' Length='7' Segment='CRIWCA-X' >
           <xsl:variable name="CheckAmount">
-            <xsl:value-of select="Additional/NCWorthlessCheck/CheckAmount"/>
+            <xsl:value-of select="Additional/NCWorthlessCheck/TotalAmount"/>
           </xsl:variable>
           <xsl:choose>
             <xsl:when test="contains($CheckAmount,'.')='true'">
@@ -159,6 +161,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
