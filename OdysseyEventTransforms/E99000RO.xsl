@@ -3,7 +3,7 @@
   <!-- **** template for E99000 Release Order Related Case Comment Information ****-->
   <!-- ****************************************************************************-->
   <xsl:template name="E99000RO">
-    <xsl:for-each select="/Integration/Case/CaseCrossReference/CaseCrossReferenceType[contains('REL RELLD',@Word)]/..">
+    <xsl:for-each select="/Integration/Case/CaseCrossReference/CaseCrossReferenceType[contains('REL RELLD',@Word) and not(@CurrentIterator)]/..">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E99000</xsl:text>
@@ -33,6 +33,7 @@
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
