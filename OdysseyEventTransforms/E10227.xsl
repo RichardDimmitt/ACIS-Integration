@@ -89,7 +89,7 @@
     </xsl:choose>
   </xsl:template>
   <!-- *******************************************************************-->
-  <!-- ************** template for mapping bond type codes ***************-->
+  <!-- ********* template for mapping ACIS bond type codes ***************-->
   <!-- *** CSH Cash                                                    ***-->
   <!-- *** CUS Custody Release                                         ***-->
   <!-- *** PTR Pretrial Release                                        ***-->
@@ -106,7 +106,7 @@
       </xsl:when>
       <!--Secured Bond - Property by Accommodation-->
       <xsl:when test="($code='SECPA')">
-        <xsl:value-of select="''SEC'"/>
+        <xsl:value-of select="'SEC'"/>
       </xsl:when>
       <!--Custody Release-->
       <xsl:when test="($code='CUS')">
