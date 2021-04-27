@@ -16,7 +16,7 @@
           <xsl:text>TotalEventRec</xsl:text>
         </xsl:attribute>
         <!--Flag-->
-        <Data Position="1" Length="1" Segment="Flag">
+        <Data Position="1" Length="6" Segment="Flag">
           <xsl:text>E00725</xsl:text>
         </Data>
         <!--CraiOffenseNumber-->
@@ -26,17 +26,17 @@
         <!--Defendant DL Number Old-->
         <Data Position='4' Length='25' Segment='CRRDLNOLD' AlwaysNull="true"/>
         <!--Defendant DL State Old-->
-        <Data Position='4' Length='2' Segment='CRRSILOLD' AlwaysNull="true"/>
+        <Data Position='5' Length='2' Segment='CRRSILOLD' AlwaysNull="true"/>
         <!--Defendant DL Number-->
         <Data Position='5' Length='25' Segment='CRRDLN'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber"/>
         </Data>
         <!--Defendant DL State-->
-        <Data Position='6' Length='2' Segment='CRRSIL'>
+        <Data Position='7' Length='2' Segment='CRRSIL'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseState/@Word"/>
         </Data>
         <!-- Padding at the end to form the total length 200 -->
-        <Data Position='7' Length='136' Segment='Filler' AlwaysNull="true"/>
+        <Data Position='8' Length='136' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
@@ -83,6 +83,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
