@@ -88,15 +88,14 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  <!-- Current Bond Types -->
-  <!-- CSH Cash -->
-  <!-- CUS Custody Release -->
-  <!-- PTR Pretrial Release -->
-  <!-- SEC Secured -->
-  <!-- UNS Unsecured -->
-  <!-- WPA Written Promise to Appear -->
   <!-- *******************************************************************-->
   <!-- ************** template for mapping bond type codes ***************-->
+  <!-- *** CSH Cash                                                    ***-->
+  <!-- *** CUS Custody Release                                         ***-->
+  <!-- *** PTR Pretrial Release                                        ***-->
+  <!-- *** SEC Secured                                                 ***-->
+  <!-- *** UNS Unsecured                                               ***-->
+  <!-- *** WPA Written Promise to Appear                               ***-->
   <!-- *******************************************************************-->
   <xsl:template name="GetACISBondTypeCode">
     <xsl:param name ="code"/>
