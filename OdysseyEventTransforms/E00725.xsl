@@ -76,13 +76,14 @@
         <xsl:if test="($PaddingNeeded = 9)">
           <xsl:value-of  select="concat('000000000',$Value)"/>
         </xsl:if>
-        <xsl:otherwise>
-          <xsl:value-of  select="$Value"/>
-        </xsl:otherwise>
       </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of  select="$Value"/>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
