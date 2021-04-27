@@ -4,73 +4,54 @@
 	<!-- ************* template for E10227 Bond Amount / Type Change **********-->
 	<!-- ********************************************************************-->
   <xsl:template name="E10227">
-    <xsl:if test="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingDetails/BondSettingDetail/Amount">
-      <Event>
-        <xsl:attribute name="EventID">
-          <xsl:text>E10227</xsl:text>
-        </xsl:attribute>
-        <xsl:attribute name="TrailerRecord">
-          <xsl:text>TotalEventRec</xsl:text>
-        </xsl:attribute>
-        <!--Flag-->
-        <Data Position="1" Length="6" Segment="Flag">
-          <xsl:text>E10227</xsl:text>
-        </Data>
-        <Data Position='2' Length='2' Segment='CraiServiceDateOLD' AlwaysNull="true"/>
-        <Data Position='3' Length='2' Segment='CraiServiceDate' AlwaysNull="true"/>
-        <!-- Bond Type Old -->
-        <Data Position='4' Length='3' Segment='CRRBONDT-OLD' AlwaysNull="true"/>
-        <!-- Bond Amount Old -->
-        <Data Position='5' Length='7' Segment='CRRBONDA-OLD' AlwaysNull="true"/>
-        <!-- Bond Type -->
-        <Data Position='6' Length='3' Segment='CRRBONDT'>
-          <xsl:value-of select="/Integration/Case/Charge[1]/ChargeHistory[@Stage='Case Filing']/BondType/@Word"/>
-          <xsl:choose>
-          <!-- Secured -->
-            <xsl:when test="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingConditions/BondSettingCondition/ConditionType/@Word='RSECBD'">
-              <xsl:text>SEC</xsl:text>
-            </xsl:when>
-            <!-- Unsecured -->
-            <xsl:when test="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingConditions/BondSettingCondition/ConditionType/@Word='RUNSCBD'">
-              <xsl:text>UNS</xsl:text>
-            </xsl:when>
-            <!-- Written Promise To Appear -->
-            <xsl:when test="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingConditions/BondSettingCondition/ConditionType/@Word='RWRPRM'">
-              <xsl:text>WPA</xsl:text>
-            </xsl:when>
-            <!-- Custody Release -->
-            <xsl:when test="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingConditions/BondSettingCondition/ConditionType/@Word='RCUSREL'">
-              <xsl:text>CUS</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:text/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </Data>
-        <!-- Bond Amount -->
-        <xsl:variable name="BondAmount">
-          <xsl:value-of select="/Integration/BondSetting/BondSettingHistories/BondSettingHistory[last()]/BondSettingDetails/BondSettingDetail/Amount"/>
-        </xsl:variable>
-        <Data Position='7' Length='7' Segment='CRRBONDA'>
-          <xsl:choose>
-            <xsl:when test="contains($BondAmount,'.')='true'">
-              <xsl:call-template name="PaddWithZeros">
-                <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
-                <xsl:with-param name="Length" select="7"/>
-              </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:call-template name="BondAmount">
-                <xsl:with-param name="Value" select="$BondAmount"/>
-                <xsl:with-param name="Length" select="7"/>
-              </xsl:call-template>
-            </xsl:otherwise>
-          </xsl:choose>
-        </Data>
-        <!-- Padding at the end to form the total length 200 -->
-        <Data Position='8' Length='170' Segment='Filler' AlwaysNull="true"/>
-      </Event>
-    </xsl:if>
+    <Event>
+      <xsl:attribute name="EventID">
+        <xsl:text>E10227</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="TrailerRecord">
+        <xsl:text>TotalEventRec</xsl:text>
+      </xsl:attribute>
+      <!--Flag-->
+      <Data Position="1" Length="6" Segment="Flag">
+        <xsl:text>E10227</xsl:text>
+      </Data>
+      <!--CraiOffenseNumber-->
+      <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
+      <!--CraiOtherNumber-->
+      <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+      <!-- Bond Type Old -->
+      <Data Position='4' Length='3' Segment='CRRBONDT-OLD' AlwaysNull="true"/>
+      <!-- Bond Amount Old -->
+      <Data Position='5' Length='7' Segment='CRRBONDA-OLD' AlwaysNull="true"/>
+      <!-- Bond Type -->
+      <Data Position='6' Length='3' Segment='CRRBONDT'>
+        <xsl:call-template name="GetACISBondTypeCode">
+          <xsl:with-param name="code" select ="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType/@Word"/>
+        </xsl:call-template>
+      </Data>
+      <!-- Bond Amount -->
+      <xsl:variable name="BondAmount">
+        <xsl:value-of select="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/Amount"/>
+      </xsl:variable>
+      <Data Position='7' Length='7' Segment='CRRBONDA'>
+         <xsl:choose>
+          <xsl:when test="contains($BondAmount,'.')='true'">
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="translate($BondAmount,'.','')"/>
+              <xsl:with-param name="Length" select="7"/>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="concat($BondAmount,'00')"/>
+              <xsl:with-param name="Length" select="7"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
+      <!-- Padding at the end to form the total length 200 -->
+      <Data Position='8' Length='170' Segment='Filler' AlwaysNull="true"/>
+    </Event>
   </xsl:template>
   <!-- ********************************************************************-->
   <!-- ****************** template for padding zeros **********************-->
@@ -108,6 +89,108 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- Current Bond Types -->
+  <!-- CSH Cash -->
+  <!-- CUS Custody Release -->
+  <!-- PTR Pretrial Release -->
+  <!-- SEC Secured -->
+  <!-- UNS Unsecured -->
+  <!-- WPA Written Promise to Appear -->
+  <!-- *******************************************************************-->
+  <!-- ************** template for mapping bond type codes ***************-->
+  <!-- *******************************************************************-->
+  <xsl:template name="GetACISBondTypeCode">
+    <xsl:param name ="code"/>
+    <xsl:choose>
+      <!--Corporate Surety Bond  - Civil and Probate-->
+      <xsl:when test="($code='COR')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Secured Bond - Property by Accommodation-->
+      <xsl:when test="($code='SECPA')">
+        <xsl:value-of select="''SEC"/>
+      </xsl:when>
+      <!--Custody Release-->
+      <xsl:when test="($code='CUS')">
+        <xsl:value-of select="'CUS'"/>
+      </xsl:when>
+      <!--Secured Bond - Property by Defendant-->
+      <xsl:when test="($code='SECPD')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Secured Bond - Cash by Accommodation-->
+      <xsl:when test="($code='SECCA')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Pre-Trial Release Program-->
+      <xsl:when test="($code='PTR')">
+        <xsl:value-of select="'PTR'"/>
+      </xsl:when>
+      <!--Secured Bond - Cash by Defendant-->
+      <xsl:when test="($code='SECCD')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Unsecured Bond-->
+      <xsl:when test="($code='UNS')">
+        <xsl:value-of select="'UNS'"/>
+      </xsl:when>
+      <!--Written Promise to Appear-->
+      <xsl:when test="($code='WPA')">
+        <xsl:value-of select="'WPA'"/>
+      </xsl:when>
+      <!--Deed of Trust-  Civil and Probate-->
+      <xsl:when test="($code='DOT')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Secured Bond - Professional Surety-->
+      <xsl:when test="($code='SECPS')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Cash - Civil and Probate-->
+      <xsl:when test="($code='CSH')">
+        <xsl:value-of select="'CSH'"/>
+      </xsl:when>
+      <!--Bond to Stay Summary Ejectment-->
+      <xsl:when test="($code='BTSSE')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Appeal Bond-->
+      <xsl:when test="($code='APPB')">
+        <xsl:value-of select="'UNS'"/>
+      </xsl:when>
+      <!--Bond to Discharge Claim of Lien-->
+      <xsl:when test="($code='BDCL')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Defendant Bond to Claim and Delivery-->
+      <xsl:when test="($code='DBCD')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Bond to Keep Possession of Motor Vehicle Taken Lienor-->
+      <xsl:when test="($code='BMV')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Bond to Stay Execution on Possession Judgment-->
+      <xsl:when test="($code='BSEJ')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Bond to Secure Pretrial Release of Motor Vehicle-->
+      <xsl:when test="($code='BPTMV')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <!--Secured Legacy-->
+      <xsl:when test="($code='SECL')">
+        <xsl:value-of select="'SEC'"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'SEC'"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
