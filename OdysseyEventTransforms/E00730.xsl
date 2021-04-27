@@ -4,42 +4,44 @@
   <!-- *** template for E00730 FingerPrint Number, Date of Arrest Change *********-->
   <!-- ***************************************************************************-->
   <xsl:template name="E00730">
-    <Event>
-      <xsl:attribute name="EventID">
-        <xsl:text>E00730</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="TrailerRecord">
-        <xsl:text>TotalEventRec</xsl:text>
-      </xsl:attribute>
-      <!-- Flag -->
-      <Data Position="1" Length="6" Segment="Flag">
-        <xsl:text>E00730</xsl:text>
-      </Data>
-      <!--CraiOffenseNumber-->
-      <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
-      <!--CraiOtherNumber-->
-      <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
-      <!-- Fingerprint Number Old -->
-      <Data Position='4' Length='7' Segment='CRSCDT-OLD' AlwaysNull="true"/>
-      <!-- Date of Arrest Old -->
-      <Data Position='5' Length='8' Segment='CRSDOA-OLD' AlwaysNull="true"/>
-      <!-- Fingerprint Number -->
-      <Data Position='6' Length='7' Segment='CRSCDT'>
-        <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
-      </Data>
-      <!-- Date of Arrest -->
-      <Data Position='7' Length='8' Segment='CRSDOA'>
-        <xsl:call-template name="formatDateYYYYMMDD">
-          <xsl:with-param name="date" select="/Integration/Case/Charge[BookingAgency/ArrestDate][1]/BookingAgency/ArrestDate"/>
-        </xsl:call-template>
-      </Data>
-      <!-- Filler -->
-      <Data Position='8' Length='160' Segment='Filler' AlwaysNull="true"/>
-    </Event>
+    <xsl:if test="/Integration/Case/Charge[BookingAgency/ArrestDate][1]/BookingAgency/ArrestDate">
+      <Event>
+        <xsl:attribute name="EventID">
+          <xsl:text>E00730</xsl:text>
+        </xsl:attribute>
+        <xsl:attribute name="TrailerRecord">
+          <xsl:text>TotalEventRec</xsl:text>
+        </xsl:attribute>
+        <!-- Flag -->
+        <Data Position="1" Length="6" Segment="Flag">
+          <xsl:text>E00730</xsl:text>
+        </Data>
+        <!--CraiOffenseNumber-->
+        <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
+        <!--CraiOtherNumber-->
+        <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+        <!-- Fingerprint Number Old -->
+        <Data Position='4' Length='7' Segment='CRSCDT-OLD' AlwaysNull="true"/>
+        <!-- Date of Arrest Old -->
+        <Data Position='5' Length='8' Segment='CRSDOA-OLD' AlwaysNull="true"/>
+        <!-- Fingerprint Number -->
+        <Data Position='6' Length='7' Segment='CRSCDT'>
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+        </Data>
+        <!-- Date of Arrest -->
+        <Data Position='7' Length='8' Segment='CRSDOA'>
+          <xsl:call-template name="formatDateYYYYMMDD">
+            <xsl:with-param name="date" select="/Integration/Case/Charge[BookingAgency/ArrestDate][1]/BookingAgency/ArrestDate"/>
+          </xsl:call-template>
+        </Data>
+        <!-- Filler -->
+        <Data Position='8' Length='160' Segment='Filler' AlwaysNull="true"/>
+      </Event>
+    </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
-	<!-- ****************** template for YYYYMMDD ***************************-->
-	<!-- ********************************************************************-->
+  <!-- ****************** template for YYYYMMDD ***************************-->
+  <!-- ********************************************************************-->
   <xsl:template name="formatDateYYYYMMDD">
     <xsl:param name="date"/>
     <xsl:if test="$date!=''">
@@ -73,5 +75,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
