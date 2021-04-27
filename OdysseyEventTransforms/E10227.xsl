@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<!-- ********************************************************************-->
-	<!-- ************* template for E10227 Bond Amount / Type Change **********-->
-	<!-- ********************************************************************-->
+<!-- ********************************************************************-->
+<!-- ************* template for E10227 Bond Amount / Type Change **********-->
+<!-- ********************************************************************-->
   <xsl:template name="E10227">
     <Event>
       <xsl:attribute name="EventID">
@@ -108,7 +107,7 @@
       </xsl:when>
       <!--Secured Bond - Property by Accommodation-->
       <xsl:when test="($code='SECPA')">
-        <xsl:value-of select="''SEC"/>
+        <xsl:value-of select="''SEC'"/>
       </xsl:when>
       <!--Custody Release-->
       <xsl:when test="($code='CUS')">
@@ -188,6 +187,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
