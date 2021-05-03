@@ -7,7 +7,7 @@
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/CaseParty[./Connection/@BaseConnection='DF']/@InternalPartyID"/>
     </xsl:variable>
-    <xsl:if test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']">
+    <xsl:if test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false'">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E00630</xsl:text>
@@ -51,5 +51,6 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
