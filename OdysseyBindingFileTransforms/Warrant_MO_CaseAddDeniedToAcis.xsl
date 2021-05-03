@@ -8,7 +8,7 @@
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00050Denied.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00050.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00805Complaintant.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00660CurrentName.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E50001.xsl"/>
@@ -42,7 +42,7 @@
       </xsl:attribute>
       <AddMessage>
         <xsl:call-template name="HeaderForAddMessage"/>
-        <xsl:call-template name="E00050Denied"/>
+        <xsl:call-template name="E00050"/>
         <xsl:call-template name="E00805Complaintant"/>
         <xsl:call-template name="E00660CurrentName"/>
         <xsl:call-template name="E50001"/>
@@ -59,6 +59,7 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
