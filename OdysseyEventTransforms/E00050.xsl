@@ -44,44 +44,56 @@
       </Data>
       <!--Issue date-->
       <Data Position="8" Length="8" Segment="CRRIDT">
-        <xsl:call-template name="formatDateYYYYMMDD">
-          <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="(/Integration/IntegrationConditions/IntegrationCondition/ProcessActionType='MOREJ')">
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--NA-FILLER-20-->
       <Data Position="9" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
+      <!-- Note, do not send address information for foreign addresses -->
+      <xsl:if test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false')">
       <!--Defendant Address Line 1 -->
-      <Data Position="10" Length="20" Segment="CRRADD">
-        <xsl:choose>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-          </xsl:when>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine1"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </Data>
-      <!--Defendant Address Line 2-->
-      <Data Position="11" Length="15" Segment="CRREAD">
-        <xsl:choose>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
-          </xsl:when>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </Data>
-      <!--Defendant Address ZIP-->
-      <Data Position="12" Length="5" Segment="CRRZIP">
-        <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip"/>
-      </Data>
+        <Data Position="10" Length="20" Segment="CRRADD">
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine1"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <!--Defendant Address Line 2-->
+        <Data Position="11" Length="15" Segment="CRREAD">
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <!--Defendant Address ZIP-->
+        <Data Position="12" Length="5" Segment="CRRZIP">
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip"/>
+        </Data>
+      </xsl:if>
       <!--Defendant Address ZIP + 4-->
       <Data Position="13" Length="4" Segment="CRREZP" AlwaysNull="true"/>
       <!--Defendant SSN-->
@@ -98,10 +110,21 @@
       <Data Position="16" Length="6" Segment="CRRCTM" AlwaysNull="true"/>
       <!--NA-FILLER-20-->
       <Data Position="17" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
-      <!--Citation Number-->
-      <Data Position="18" Length="8" Segment="CRRWNO" AlwaysNull="true"/>
+      <!--Citation Number / Warrant Number-->
+      <Data Position="18" Length="8" Segment="CRRWNO">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Citation[1]/CitationNumber)">
+            <xsl:value-of select="/Integration/Citation[1]/CitationNumber"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="translate(/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='PROC']/CrossCaseNumber,'-','')"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Citation Validation Character-->
-      <Data Position="19" Length="1" Segment="CRRWCDT" AlwaysNull="true"/>
+      <Data Position="19" Length="1" Segment="CRRWCDT">
+        <xsl:value-of select="/Integration/Citation[1]/CheckDigit"/>
+      </Data>
       <!--Jail Indicator-->
       <Data Position="20" Length="1" Segment="CRRJAIL" AlwaysNull="true"/>
       <!--Defendant Age-->
@@ -115,29 +138,93 @@
         <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseState/@Word"/>
       </Data>
       <!--Citation Commerical DL Indicator-->
-      <Data Position="24" Length="1" Segment="CRRCDL" AlwaysNull="true"/>
+      <Data Position="24" Length="1" Segment="CRRCDL">
+        <xsl:call-template name="GetACISCDLCode">
+          <xsl:with-param name="code" select ="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
+        </xsl:call-template>
+      </Data>
       <!--Citation Commerical Vehicle Indicator-->
-      <Data Position="25" Length="1" Segment="CRRCMV" AlwaysNull="true"/>
+      <Data Position="25" Length="1" Segment="CRRCMV">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Citation[1]/Vehicle/CommercialVehicleFlag='true')">
+            <xsl:value-of select="'Y'"/>
+          </xsl:when>
+          <xsl:when test="(/Integration/Citation[1]/Vehicle/CommercialVehicleFlag='false')">
+            <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="''"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Citation Hazardous Materials Indicator-->
-      <Data Position="26" Length="1" Segment="CRRHAZ" AlwaysNull="true"/>
+      <Data Position="26" Length="1" Segment="CRRHAZ">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Citation[1]/Vehicle/HazardousVehicleFlag='true')">
+            <xsl:value-of select="'Y'"/>
+          </xsl:when>
+          <xsl:when test="(/Integration/Citation[1]/Vehicle/HazardousVehicleFlag='false')">
+            <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="''"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Citation SHP Troop-->
-      <Data Position="27" Length="1" Segment="CRRTRP" AlwaysNull="true"/>
+      <Data Position="27" Length="1" Segment="CRRTRP">
+        <xsl:value-of select="substring(/Integration/Citation[1]/Incident/SHPTroop,1,1)"/>
+      </Data>
       <!--Citation SHP District-->
-      <Data Position="28" Length="1" Segment="CRRARE" AlwaysNull="true"/>
+      <Data Position="28" Length="1" Segment="CRRTRP">
+        <xsl:value-of select="substring(/Integration/Citation[1]/Incident/SHPDistrict,1,1)"/>
+      </Data>
       <!--Citation Accident Indicator-->
-      <Data Position="29" Length="1" Segment="CRRACC" AlwaysNull="true"/>
+      <Data Position="29" Length="1" Segment="CRRACC">
+        <xsl:choose>
+          <xsl:when test="(/Integration/Citation/Incident/Fatalities)">
+            <xsl:value-of select="'F'"/>
+            <!-- Fatality -->
+      </xsl:when>
+          <xsl:when test="(/Integration/Citation/Incident/NumberOfInjuries)">
+            <xsl:value-of select="'I'"/>
+            <!-- Personal Injury -->
+      </xsl:when>
+          <xsl:when test="(/Integration/Citation/Incident/Property)">
+            <xsl:value-of select="'P'"/>
+            <!-- Property Damage -->
+      </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'N'"/>
+            <!-- Near Accident or No Accident -->
+      </xsl:otherwise>
+        </xsl:choose>
+      </Data>
       <!--Citation Highway-->
-      <Data Position="30" Length="6" Segment="CRRROD" AlwaysNull="true"/>
-      <!--Citation SHP Agency-->
-      <Data Position="31" Length="2" Segment="UNK-CraiShpCode" AlwaysNull="true"/>
+      <Data Position="30" Length="6" Segment="CRRROD">
+        <xsl:value-of select="/Integration/Citation[1]/Incident/HighwayType/@Word"/>
+        <xsl:value-of select="/Integration/Citation[1]/Incident/StreetType/@Word"/>
+      </Data>
+      <!--Citation SHP Area-->
+      <Data Position="31" Length="2" Segment="CRRARE">
+        <xsl:value-of select="/Integration/Citation[1]/Incident/SHPAreaType/@Word"/>
+      </Data>
       <!--Citation Vehicle License Plate-->
-      <Data Position="32" Length="10" Segment="CRRVLN" AlwaysNull="true"/>
+      <Data Position="32" Length="10" Segment="CRRVLN">
+        <xsl:value-of select="/Integration/Citation[1]/Vehicle/LicensePlate"/>
+      </Data>
       <!--Citation Vehicle State-->
-      <Data Position="33" Length="2" Segment="CRRVLS" AlwaysNull="true"/>
+      <Data Position="33" Length="2" Segment="CRRVLS">
+        <xsl:value-of select="/Integration/Citation[1]/Vehicle/LicenseState/@Word"/>
+      </Data>
       <!--Citation Vehicle Type-->
-      <Data Position="34" Length="4" Segment="CRRVTY" AlwaysNull="true"/>
+      <Data Position="34" Length="4" Segment="CRRVTY">
+        <xsl:value-of select="/Integration/Citation[1]/Vehicle/VehicleType/@Word"/>
+      </Data>
       <!--Citation Tailer Type-->
-      <Data Position="35" Length="4" Segment="CRRTTY" AlwaysNull="true"/>
+      <Data Position="35" Length="4" Segment="CRRTTY">
+        <xsl:value-of select="/Integration/Citation[1]/Vehicle/TrailerType/@Word"/>
+      </Data>
       <!--Vision Link Code-->
       <Data Position="36" Length="10" Segment="NA-VISIONLINKCODE" AlwaysNull="true"/>
       <!--Domestic Violence Indicator-->
@@ -356,7 +443,67 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- *******************************************************************-->
+  <!-- **************** template for mapping DL Type codes ***************-->
+  <!-- *******************************************************************-->
+  <xsl:template name="GetACISCDLCode">
+    <xsl:param name ="code"/>
+    <xsl:choose>
+      <xsl:when test="($code='CDLA')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='CDLB')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='CDLC')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='CDLP')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='CDLU')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='SBB')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='SBC')">
+        <xsl:value-of select="'Y'"/>
+      </xsl:when>
+      <xsl:when test="($code='ID')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='LP')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='MC')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='MLP')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='OCU')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='RCA')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='RCB')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:when test="($code='RGC')">
+        <xsl:value-of select="'N'"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'N'"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
 
