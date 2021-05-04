@@ -3,7 +3,7 @@
   <!-- ******** template for E00805 Witness *****************-->
   <!-- ********************************************************************-->
   <xsl:template name="E00805Witness">
-    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('WIT D VIC CMPLNW S CMPL',@Word)]]">
+    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT V',@Word)]]">
       <xsl:variable name="complainantID">
         <xsl:value-of select="@InternalPartyID"/>
       </xsl:variable>
@@ -24,37 +24,39 @@
         </Data>
         <!--Witness Type-->
         <Data Position='3' Length='1' Segment='CRWTYP'>
-          <xsl:value-of select="Connection/@Word"/>-<xsl:value-of select="Connection/Description"/>
+          <xsl:call-template name="GetACISWitness">
+            <xsl:with-param name="code" select ="Connection[1]/@Word"/>
+          </xsl:call-template>
         </Data>
         <!--Witness Address Line 1 Note, do not send address information for foreign addresses-->
-          <Data Position='4' Length='35' Segment='CRWAD'>
-            <xsl:choose>
-              <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              </xsl:when>
-              <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              </xsl:when>
-              <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="''"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </Data>
-          <!--Witness Address City-->
-          <Data Position='5' Length='15' Segment='CRWCTY'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
-          </Data>
-          <!--Witness Address State-->
-          <Data Position='6' Length='2' Segment='CRWSTX'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
-          </Data>
-          <!--Witness Address ZIP-->
-          <Data Position='7' Length='5' Segment='CRWZIP'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
-          </Data>
+        <Data Position='4' Length='35' Segment='CRWAD'>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <!--Witness Address City-->
+        <Data Position='5' Length='15' Segment='CRWCTY'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
+        </Data>
+        <!--Witness Address State-->
+        <Data Position='6' Length='2' Segment='CRWSTX'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
+        </Data>
+        <!--Witness Address ZIP-->
+        <Data Position='7' Length='5' Segment='CRWZIP'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
+        </Data>
         <!--Address ZIP + 4-->
         <Data Position='8' Length='4' Segment='CRWEZP' AlwaysNull="true" />
         <!--Witness Home Phone Number-->
@@ -78,8 +80,8 @@
         <!--Witness Method of Service-->
         <Data Position='15' Length='1' Segment='CRWMSV' AlwaysNull="true" />
         <!--Witness Business Phone Number-->
-        <Data Position='16' Length='10' Segment='CRWWPN'>S
-          <!-- <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/Phone[@Current='true' and Type/@Word='WORK']/Number,'-','')"/> -->
+        <Data Position='16' Length='10' Segment='CRWWPN'>
+          <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/Phone[@Current='true' and Type/@Word='WORK']/Number,'-','')"/>
         </Data>
         <!--NA Vision Link Code-->
         <Data Position='17' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
@@ -159,7 +161,36 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- ********************************************************************-->
+  <!-- ************ template for mapping witness types ********************-->
+  <!-- *** D-Witness for the defense              ***-->
+  <!-- *** S-Witness for the State                ***-->
+  <!-- *** WIT-Witness                            ***-->
+  <!-- *** VIC-Victim                             ***-->
+  <!-- ********************************************************************-->
+  <xsl:template name="GetACISWitness">
+    <xsl:param name ="code"/>
+    <xsl:choose>
+      <xsl:when test="($code='VIC')">
+        <xsl:value-of select="'V'"/>
+      </xsl:when>
+      <xsl:when test="($code='S')">
+        <xsl:value-of select="'S'"/>
+      </xsl:when>
+      <xsl:when test="($code='D')">
+        <xsl:value-of select="'D'"/>
+      </xsl:when>
+      <xsl:when test="($code='WIT')">
+        <xsl:value-of select="'S'"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="'S'"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
