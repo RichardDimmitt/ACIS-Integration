@@ -13,7 +13,9 @@
         <xsl:text>H</xsl:text>
       </Data>
       <Data Position="2" Length="3" Segment="CraiKeyCounty">
-        <xsl:value-of select="substring-after(/Integration/Case/CaseNumber,'-')"/>
+        <xsl:call-template name="FormatCountyKey">
+          <xsl:with-param name="KeyValue" select="/Integration/Case/CaseNumber"/>
+        </xsl:call-template>
       </Data>
       <Data Position="3" Length="2" Segment="CraiKeyCentury">
         <xsl:text>20</xsl:text>
@@ -182,7 +184,24 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  <!-- ********************************************************************-->
+  <!-- *************** template for formating County Key ******************-->
+  <!-- ********************************************************************-->
+  <xsl:template name="FormatCountyKey">
+    <xsl:param name="KeyValue"/>
+    <xsl:variable name="StartValue" select="substring-after($KeyValue,'-')"/>
+    <xsl:variable name="CountyNumber" select="substring-before($StartValue,'-')"/>
+    <xsl:variable name="FinalValue">
+      <xsl:call-template name="PaddWithZeros">
+        <xsl:with-param name="Value" select="$CountyNumber"/>
+        <xsl:with-param name="Length" select="3"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:value-of  select="$FinalValue"/>
+  </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
