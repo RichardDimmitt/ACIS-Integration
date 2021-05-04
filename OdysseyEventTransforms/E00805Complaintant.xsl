@@ -33,35 +33,35 @@
         <Data Position='3' Length='1' Segment='CRWTYP'>
           <xsl:text>C</xsl:text>
         </Data>
-        <!-- Note, do not send address information for foreign addresses -->
-        <xsl:if test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Foreign='false')">
-      <!--Witness Address Line 1-->
-          <Data Position='4' Length='35' Segment='CRWAD'>
-            <xsl:choose>
-              <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              </xsl:when>
-              <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1"/>
-              </xsl:otherwise>
-            </xsl:choose>
-          </Data>
-          <!--Witness Address City-->
-          <Data Position='5' Length='15' Segment='CRWCTY'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
-          </Data>
-          <!--Witness Address State-->
-          <Data Position='6' Length='2' Segment='CRWSTX'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
-          </Data>
-          <!--Witness Address ZIP-->
-          <Data Position='7' Length='5' Segment='CRWZIP'>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
-          </Data>
-        </xsl:if>
+        <!--Witness Address Line 1 Note, do not send address information for foreign addresses-->
+        <Data Position='4' Length='35' Segment='CRWAD'>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <!--Witness Address City-->
+        <Data Position='5' Length='15' Segment='CRWCTY'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
+        </Data>
+        <!--Witness Address State-->
+        <Data Position='6' Length='2' Segment='CRWSTX'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
+        </Data>
+        <!--Witness Address ZIP-->
+        <Data Position='7' Length='5' Segment='CRWZIP'>
+          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
+        </Data>
         <!--Address ZIP + 4-->
         <Data Position='8' Length='4' Segment='CRWEZP' AlwaysNull="true" />
         <!--Witness Home Phone Number-->
@@ -167,6 +167,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 

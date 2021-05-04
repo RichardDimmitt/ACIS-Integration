@@ -59,9 +59,8 @@
       </Data>
       <!--NA-FILLER-20-->
       <Data Position="9" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
-      <!-- Note, do not send address information for foreign addresses -->
       <xsl:if test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false')">
-      <!--Defendant Address Line 1 -->
+      <!--Defendant Address Line 1 Note, do not send address information for foreign addresses-->
         <Data Position="10" Length="20" Segment="CRRADD">
           <xsl:choose>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
@@ -70,12 +69,15 @@
             <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
             </xsl:when>
-            <xsl:otherwise>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine1"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
             </xsl:otherwise>
           </xsl:choose>
         </Data>
-        <!--Defendant Address Line 2-->
+        <!--Defendant Address Line 2 Note, do not send address information for foreign addresses-->
         <Data Position="11" Length="15" Segment="CRREAD">
           <xsl:choose>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
@@ -84,8 +86,11 @@
             <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
             </xsl:when>
-            <xsl:otherwise>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
             </xsl:otherwise>
           </xsl:choose>
         </Data>
@@ -500,6 +505,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
