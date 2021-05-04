@@ -27,7 +27,7 @@
           <xsl:text>S</xsl:text>
         </Data>
         <!-- Note, do not send address information for foreign addresses -->
-        <xsl:if test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false')">
+        <xsl:if test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Foreign='false')">
 
         <!--Witness Address Line 1-->
           <Data Position='4' Length='35' Segment='CRWAD'>
