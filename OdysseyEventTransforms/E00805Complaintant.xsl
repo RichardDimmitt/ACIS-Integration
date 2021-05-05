@@ -1,4 +1,4 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:CMCodeQueryHelper="urn:CMCodeQueryHelper" xmlns:ExternalReference="urn:ExternalReference" exclude-result-prefixes="xsl msxsl CMCodeQueryHelper ExternalReference">
   <!-- ********************************************************************-->
   <!-- ******** template for E00805 Complainant *****************-->
   <!-- ********************************************************************-->
@@ -36,6 +36,9 @@
         <!--Witness Address Line 1 Note, do not send address information for foreign addresses-->
         <Data Position='4' Length='35' Segment='CRWAD'>
           <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word)">
+              <xsl:value-of select="CMCodeQueryHelper:GetCodeAttributeByWord('Justice', 'uAgency', string(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word), '0', 'street1')"/>
+            </xsl:when>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
             </xsl:when>
@@ -52,15 +55,36 @@
         </Data>
         <!--Witness Address City-->
         <Data Position='5' Length='15' Segment='CRWCTY'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word)">
+              <xsl:value-of select="CMCodeQueryHelper:GetCodeAttributeByWord('Justice', 'uAgency', string(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word), '0', 'city')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/City"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Witness Address State-->
         <Data Position='6' Length='2' Segment='CRWSTX'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word)">
+              <xsl:value-of select="CMCodeQueryHelper:GetCodeAttributeByWord('Justice', 'uAgency', string(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word), '0', 'st')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/State"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Witness Address ZIP-->
         <Data Position='7' Length='5' Segment='CRWZIP'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word)">
+              <xsl:value-of select="CMCodeQueryHelper:GetCodeAttributeByWord('Justice', 'uAgency', string(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word), '0', 'zip')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Address ZIP + 4-->
         <Data Position='8' Length='4' Segment='CRWEZP' AlwaysNull="true" />
@@ -86,7 +110,14 @@
         <Data Position='15' Length='1' Segment='CRWMSV' AlwaysNull="true" />
         <!--Witness Business Phone Number-->
         <Data Position='16' Length='10' Segment='CRWWPN'>
-          <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/Phone[@Current='true' and Type/@Word='WORK']/Number,'-','')"/>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word)">
+              <xsl:value-of select="translate(CMCodeQueryHelper:GetCodeAttributeByWord('Justice', 'uAgency', string(/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency/@Word), '0', 'phone'),'-','')"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/Phone[@Current='true' and Type/@Word='WORK']/Number,'-','')"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--NA Vision Link Code-->
         <Data Position='17' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
@@ -167,6 +198,11 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
 
 
 
