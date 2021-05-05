@@ -1,4 +1,13 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:CMCodeQueryHelper="urn:CMCodeQueryHelper" xmlns:ExternalReference="urn:ExternalReference" exclude-result-prefixes="xsl msxsl CMCodeQueryHelper ExternalReference">
+<!-- ****************************************************************************** -->
+<!-- *** This templae addresses the binding files below                          ***-->
+<!-- *** WFACaseAddToAcis.xml                                                    ***-->
+<!-- *** WFAMWCAwareToAcisCaseAdd.xml                                            ***-->
+<!-- *** CSMWCCaseAddToAcis.xml                                                  ***-->
+<!-- *** CSCaseAddToAcis.xml                                                     ***-->
+<!-- *** FWCaseAddToAcis.xml                                                     ***-->
+<!-- *** FOCaseAddToAcis.xml                                                     ***-->
+<!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00050.xsl"/>
@@ -31,9 +40,6 @@
       <xsl:attribute name="CaseNumber">
         <xsl:value-of select="/Integration/Case/CaseNumber"/>
       </xsl:attribute>
-      <!-- Note* The order the events are provided must match the associated binding file -->
-      <!-- <xsl:call-template name=""/>  -->
-
       <AddMessage>
       <xsl:call-template name="HeaderForAddMessage"/>
       <xsl:call-template name="E00050"/>
@@ -41,7 +47,6 @@
       <xsl:call-template name="E00660CurrentName"/>
       <xsl:call-template name="E50001"/>
       </AddMessage>
-
       <UpdateMessage>
       <xsl:call-template name="HeaderForUpdateMessage"/>
       <xsl:call-template name="E00805Witness"/>
@@ -49,10 +54,11 @@
       <xsl:call-template name="E00740"/>
       <xsl:call-template name="E10161"/>
       </UpdateMessage>
-
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
