@@ -112,19 +112,23 @@
         </xsl:call-template>
       </Data>
       <!--Offense Time-->
-      <Data Position="16" Length="6" Segment="CRRCTM" AlwaysNull="true"/>
-      <!--NA-FILLER-20-->
-      <Data Position="17" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
-      <!--Citation Number / Warrant Number-->
-      <Data Position="18" Length="8" Segment="CRRWNO">
+      <Data Position="16" Length="6" Segment="CRRCTM">
         <xsl:choose>
-          <xsl:when test="(/Integration/Citation[1]/CitationNumber)">
-            <xsl:value-of select="/Integration/Citation[1]/CitationNumber"/>
+          <xsl:when test="(/Integration/Case/Charge/ChargeOffenseTime)">
+            <xsl:call-template name="formatTimeHHMMAMPM">
+              <xsl:with-param name="time" select="translate(/Integration/Case/Charge/ChargeOffenseTime,':','')"/>
+            </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="translate(/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='PROC']/CrossCaseNumber,'-','')"/>
+            <xsl:text>0001MM</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
+      </Data>
+      <!--NA-FILLER-20-->
+      <Data Position="17" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
+      <!--Citation Number-->
+      <Data Position="18" Length="8" Segment="CRRWNO">
+        <xsl:value-of select="/Integration/Citation[1]/CitationNumber"/>
       </Data>
       <!--Citation Validation Character-->
       <Data Position="19" Length="1" Segment="CRRWCDT">
@@ -136,7 +140,17 @@
       <Data Position="21" Length="3" Segment="CRRAGE" AlwaysNull="true"/>
       <!--Defendant DL Number-->
       <Data Position="22" Length="25" Segment="CRRDLN">
-        <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber"/>
+        <xsl:choose>
+          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber)">
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber"/>
+              <xsl:with-param name="Length" select="8"/>
+            </xsl:call-template>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="''"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Defendant DL State-->
       <Data Position="23" Length="2" Segment="CRRSIL">
@@ -353,6 +367,21 @@
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
+  <!-- ****************** template for formatting time **********************-->
+  <!-- ********************************************************************-->
+  <xsl:template name="formatTimeHHMMAMPM">
+    <xsl:param name="time"/>
+    <xsl:variable name="timetemp" select="substring-before($time,' ')"/>
+    <xsl:variable name="AMPM" select="substring-after($time,' ')"/>
+    <xsl:variable name="finalTime">
+      <xsl:call-template name="PaddWithZeros">
+        <xsl:with-param name="Value" select="$timetemp"/>
+        <xsl:with-param name="Length" select="4"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:value-of select="concat($finalTime,$AMPM)"/>
+  </xsl:template>
+  <!-- ********************************************************************-->
   <!-- ****************** template for leading zeros **********************-->
   <!-- ********************************************************************-->
   <xsl:template name="GetLeadZero">
@@ -383,6 +412,21 @@
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 3)">
           <xsl:value-of  select="concat('000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 4)">
+          <xsl:value-of  select="concat('0000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 5)">
+          <xsl:value-of  select="concat('00000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 6)">
+          <xsl:value-of  select="concat('000000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 7)">
+          <xsl:value-of  select="concat('0000000',$Value)"/>
+        </xsl:if>
+        <xsl:if test="($PaddingNeeded = 8)">
+          <xsl:value-of  select="concat('00000000',$Value)"/>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
@@ -505,6 +549,12 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
+
 
 
 
