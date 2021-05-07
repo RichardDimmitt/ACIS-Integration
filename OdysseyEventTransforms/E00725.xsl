@@ -29,27 +29,21 @@
         <Data Position='5' Length='2' Segment='CRRSILOLD' AlwaysNull="true"/>
         <!--Defendant DL Number-->
         <Data Position='5' Length='25' Segment='CRRDLN'>
-
-        <xsl:choose>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber)">
-            <xsl:call-template name="PaddWithZeros">
-              <xsl:with-param name="Value" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber"/>
-              <xsl:with-param name="Length" select="8"/>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="''"/>
-          </xsl:otherwise>
-        </xsl:choose>
-
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber)">
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseNumber"/>
+                <xsl:with-param name="Length" select="8"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
-
-
         <!--Defendant DL State-->
         <Data Position='7' Length='2' Segment='CRRSIL'>
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseState/@Word"/>
-
-
         </Data>
         <!-- Padding at the end to form the total length 200 -->
         <Data Position='8' Length='136' Segment='Filler' AlwaysNull="true"/>
