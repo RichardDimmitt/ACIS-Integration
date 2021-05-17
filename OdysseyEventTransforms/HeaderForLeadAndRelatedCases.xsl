@@ -15,15 +15,11 @@
       <Data Position="1" Length="1" Segment="Flag">
         <xsl:text>H</xsl:text>
       </Data>
-
-
       <Data Position="2" Length="3" Segment="CraiKeyCounty">
         <xsl:call-template name="FormatCountyKey">
           <xsl:with-param name="KeyValue" select="$RelatedCaseNumber"/>
         </xsl:call-template>
       </Data>
-
-
       <Data Position="3" Length="2" Segment="CraiKeyCentury">
         <xsl:text>20</xsl:text>
       </Data>
@@ -54,7 +50,7 @@
         <xsl:value-of select="/Integration/Party[@InternalPartyID=/Integration/Case/Charge[1]/@InternalPartyID]/OtherID[OtherIDAgency/@Word='LID']/OtherIDNumber"/>
       </Data>
       <Data Position="12" Length="8" Segment="CraiWarrantNumber">
-        <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='PROC']/CrossCaseNumber"/>
+        <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='EWWRNTNUM']/CrossCaseNumber"/>
       </Data>
       <Data Position="13" Length="8" Segment="CraiOfaWarrantNumber" AlwaysNull="true"/>
       <Data Position="14" Length="10" Segment="CraiArrestNumber">
@@ -207,6 +203,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
