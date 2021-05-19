@@ -46,9 +46,7 @@
       <Data Position="11" Length="15" Segment="CraiLidNo">
         <xsl:value-of select="/Integration/Party[@InternalPartyID=/Integration/Case/Charge[1]/@InternalPartyID]/OtherID[OtherIDAgency/@Word='LID']/OtherIDNumber"/>
       </Data>
-      <Data Position="12" Length="8" Segment="CraiWarrantNumber">
-        <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@Word='EWWRNTNUM']/CrossCaseNumber"/>
-      </Data>
+      <Data Position="12" Length="8" Segment="CraiWarrantNumber" AlwaysNull="true"/>
       <Data Position="13" Length="8" Segment="CraiOfaWarrantNumber" AlwaysNull="true"/>
       <Data Position="14" Length="10" Segment="CraiArrestNumber">
         <xsl:value-of select="/Integration/Case/Charge/BookingAgency/ControlNumber[1]"/>
@@ -200,6 +198,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
