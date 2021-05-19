@@ -59,7 +59,6 @@
       </Data>
       <!--NA-FILLER-20-->
       <Data Position="9" Length="20" Segment="NA-FILLER-20" AlwaysNull="true"/>
-      <xsl:if test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false')">
       <!--Defendant Address Line 1 Note, do not send address information for foreign addresses-->
         <Data Position="10" Length="20" Segment="CRRADD">
           <xsl:choose>
@@ -98,7 +97,6 @@
         <Data Position="12" Length="5" Segment="CRRZIP">
           <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip"/>
         </Data>
-      </xsl:if>
       <!--Defendant Address ZIP + 4-->
       <Data Position="13" Length="4" Segment="CRREZP" AlwaysNull="true"/>
       <!--Defendant SSN-->
@@ -549,6 +547,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
