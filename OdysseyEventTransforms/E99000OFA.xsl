@@ -52,7 +52,7 @@
   <!-- ********** template for Related Cases               ****************-->
   <!-- ********************************************************************-->
   <xsl:template name="RelatedCaseNumbers">
-    <xsl:for-each select="/Integration/Case/CaseCrossReference/CaseCrossReferenceType[contains('REL',@Word) and not(@CurrentIterator)]/..">
+    <xsl:for-each select="/Integration/Case/CaseCrossReference/CaseCrossReferenceType[@Word='REL' and not(@CurrentIterator)]/..">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E99000</xsl:text>
