@@ -4,7 +4,7 @@
   <!-- ***************************************************************************-->
   <xsl:template name="E99000OFA">
     <xsl:choose>
-      <xsl:when test="/Integration/Case[not(CaseCrossReference/CaseCrossReferenceType/(@CurrentIterator)]">
+      <xsl:when test="/Integration/Case[not(CaseCrossReference/CaseCrossReferenceType/@CurrentIterator)]">
         <xsl:call-template name="RelatedCaseNumbers"/>
       </xsl:when>
       <xsl:otherwise>
@@ -86,6 +86,7 @@
     </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
