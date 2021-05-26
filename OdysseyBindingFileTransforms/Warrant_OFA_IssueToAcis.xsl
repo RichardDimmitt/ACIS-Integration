@@ -4,12 +4,12 @@
 <!-- *** OFAIssue.xml                                                           *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
+<xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30100.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00630.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00620.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00621.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410OFA.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410OFAReset.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E99000OFA.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
@@ -37,7 +37,7 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
+        <xsl:call-template name="HeaderForUpdateMessage"/>
         <xsl:call-template name="E30100"/>
         <xsl:call-template name="E00630"/>
         <xsl:call-template name="E00620"/>
@@ -45,12 +45,14 @@
         <!-- <xsl:call-template name="E50001"/> This is optional and can only be sent once for the lead case It represents the probation violation if applicable-->
         <!--  <xsl:call-template name="E11410"/> There is an order for arrest data message specific to the probation violation offense.-->
         <xsl:call-template name="E99000OFA"/>
-        <xsl:call-template name="E11410OFA"/>
+        <xsl:call-template name="E11410OFAReset"/>
         <!-- <xsl:call-template name="E20200"/>  This is the FTA date which is not recorded in eWarrants-->
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
