@@ -4,7 +4,7 @@
 <!-- *** PTResetToUnserveOnOFA.xml                                              *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30010.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30060.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30300.xsl"/>
@@ -37,19 +37,15 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForUpdateMessage.xsl"/>
+        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
         <xsl:call-template name="E30010"/>
         <xsl:call-template name="E30060"/>
-        <xsl:call-template name="E30300"/>
-        <xsl:call-template name="E30310"/>
-        <xsl:call-template name="E30320"/>
         <xsl:call-template name="E11410OFA"/>
         <!-- <xsl:call-template name="E20200"/>  This is the FTA date which is not recorded in eWarrants-->
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
-
 
 
 
