@@ -1,6 +1,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
@@ -28,13 +28,12 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForUpdateMessage"/>
+        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
         <xsl:call-template name="E11410"/>
         <!-- <xsl:call-template name="E20200"/>  This is the FTA date which is not recorded in eWarrants-->
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
-
 
 
