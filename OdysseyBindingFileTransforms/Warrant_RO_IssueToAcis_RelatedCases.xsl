@@ -4,7 +4,7 @@
 <!-- *** ReleaseOrderIssueMessageToAcis.xml                                     *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00635.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00630.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00620.xsl"/>
@@ -54,7 +54,7 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForUpdateMessage"/>
+        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
         <xsl:call-template name='E00635'/>
         <xsl:call-template name='E00630'/>
         <xsl:call-template name='E00620'/>
@@ -83,7 +83,6 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
-
 
 
 
