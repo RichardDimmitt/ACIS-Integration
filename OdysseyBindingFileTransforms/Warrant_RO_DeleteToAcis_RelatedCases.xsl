@@ -4,7 +4,7 @@
 <!-- *** RODelete.xml                                                           *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10227.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00730.xsl"/>
   <xsl:strip-space elements="*"/>
@@ -33,7 +33,7 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForUpdateMessage"/>
+        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
         <xsl:call-template name="E10227"/>
         <xsl:call-template name="E00730"/>
       </UpdateMessage>
@@ -60,5 +60,4 @@
     </Event>
   </xsl:template>
 </xsl:stylesheet>
-
 
