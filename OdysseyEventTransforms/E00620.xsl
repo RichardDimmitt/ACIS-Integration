@@ -26,24 +26,24 @@
         <Data Position='4' Length='20' Segment='CRRADD-OLD' AlwaysNull="true"/>
         <!-- Defendant Address Line 1 -->
         <Data Position='5' Length='20' Segment='CRRADD'>
-        <xsl:choose>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-          </xsl:when>
-          <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine1"/>
-          </xsl:otherwise>
-        </xsl:choose>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine1"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Foreign')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+          </xsl:choose>
         </Data>
-      <!-- Filler -->
+        <!-- Filler -->
         <Data Position='6' Length='150' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
-
-
-

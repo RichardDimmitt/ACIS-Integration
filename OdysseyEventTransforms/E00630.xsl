@@ -7,6 +7,7 @@
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/CaseParty[./Connection/@BaseConnection='DF']/@InternalPartyID"/>
     </xsl:variable>
+    <xsl:variable name="ZIP" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip,1,5)"/>
     <xsl:if test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false'">
       <Event>
         <xsl:attribute name="EventID">
@@ -41,16 +42,29 @@
         </Data>
         <!-- Defendant Address Zip -->
         <Data Position='10' Length='5' Segment='CRRZIP'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip"/>
+          <xsl:choose>
+            <xsl:when  test="($ZIP='00000')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$ZIP"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!-- Defendant Address Zip+4 -->
-        <Data Position='11' Length='4' Segment='CRRZIP' AlwaysNull="true"/>
+        <Data Position='11' Length='4' Segment='CRRZIP'>
+          <xsl:choose>
+            <xsl:when  test="($ZIP='00000')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring-after(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip,'-')"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
         <!-- Filler -->
         <Data Position='12' Length='138' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
-
-
-

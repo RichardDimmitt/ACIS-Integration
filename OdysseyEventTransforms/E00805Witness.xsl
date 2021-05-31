@@ -3,10 +3,11 @@
   <!-- ******** template for E00805 Witness *****************-->
   <!-- ********************************************************************-->
   <xsl:template name="E00805Witness">
-    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT V',@Word)]]">
+    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT V',@Word) and not(RemovedDate)]]">
       <xsl:variable name="complainantID">
         <xsl:value-of select="@InternalPartyID"/>
       </xsl:variable>
+      <xsl:variable name="ZIP" select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip,1,5)"/>
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E00805</xsl:text>
@@ -28,29 +29,56 @@
             <xsl:with-param name="code" select ="Connection[1]/@Word"/>
           </xsl:call-template>
         </Data>
-        <!--Witness Address Line 1 Note, do not send address information for foreign addresses-->
-        <Data Position='4' Length='35' Segment='CRWAD'>
+        <!--Witness Address Note, do not send address information for foreign addresses-->
+          <!-- Note, this is being broken into two parts in order to handle multipart addresses per NCAOC requirments. -->
+        <Data Position='4' Length='20' Segment='CRWADPart1'>
           <xsl:choose>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
-              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              <xsl:if test="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3">
-                <xsl:value-of select="' / '"/>
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3"/>
-              </xsl:if>
+              <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,1,20)"/>
             </xsl:when>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
-              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-              <xsl:if test="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3">
-                <xsl:value-of select="' / '"/>
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3"/>
+              <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,1,20)"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
+              <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1,1,20)"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Foreign')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="''"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <Data Position='4' Length='15' Segment='CRWADPart2'>
+          <xsl:choose>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard')">
+              <xsl:if test="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,21,15)">
+                <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,21,15)"/>
+                <xsl:value-of select="' '"/>
+              </xsl:if>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
+              <xsl:if test="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,21,15)">
+                <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2,21,15)"/>
+                <xsl:value-of select="' '"/>
+              </xsl:if>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine3"/>
+              <xsl:if test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Attention)">
+                <xsl:value-of select="' / C/O '"/>
+                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Attention"/>
               </xsl:if>
             </xsl:when>
             <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
-              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1"/>
-              <xsl:if test="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2">
-                <xsl:value-of select="' / '"/>
-                <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+              <xsl:if test="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1,21,15)">
+                <xsl:value-of select="substring(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine1,21,15)"/>
+                <xsl:value-of select="' '"/>
               </xsl:if>
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/AddressLine2"/>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/@Type='Foreign')">
+              <xsl:value-of select="''"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="''"/>
@@ -67,10 +95,26 @@
         </Data>
         <!--Witness Address ZIP-->
         <Data Position='7' Length='5' Segment='CRWZIP'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip"/>
+          <xsl:choose>
+            <xsl:when  test="($ZIP='00000')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$ZIP"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Address ZIP + 4-->
-        <Data Position='8' Length='4' Segment='CRWEZP' AlwaysNull="true" />
+        <Data Position='8' Length='4' Segment='CRWEZP'>
+          <xsl:choose>
+            <xsl:when  test="($ZIP='00000')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="substring-after(/Integration/Party[@InternalPartyID=$complainantID]/Address[@PartyCurrent='true']/Zip,'-')"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
         <!--Witness Home Phone Number-->
         <Data Position='9' Length='10' Segment='CRWPNO'  AlwaysNull="true" />
         <!--Witness Officer Agency-->
@@ -201,17 +245,3 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

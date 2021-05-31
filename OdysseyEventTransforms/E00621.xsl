@@ -33,9 +33,12 @@
             <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Standard With Attention')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine3"/>
             </xsl:when>
-            <xsl:otherwise>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Non Standard')">
               <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/AddressLine2"/>
-            </xsl:otherwise>
+            </xsl:when>
+            <xsl:when test="(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Foreign')">
+              <xsl:value-of select="''"/>
+            </xsl:when>
           </xsl:choose>
         </Data>
         <!-- Filler -->
@@ -44,6 +47,3 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
