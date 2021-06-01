@@ -14,6 +14,7 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30320.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410OFAReset.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30100.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E20200.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -50,11 +51,12 @@
         <xsl:call-template name="E30320"/>
         <xsl:call-template name="E11410OFAReset"/>
         <xsl:call-template name="E30100"/>
-        <!-- <xsl:call-template name="E20200"/>  This is the FTA date which is not recorded in eWarrants-->
+        <xsl:call-template name="E20200"/>
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

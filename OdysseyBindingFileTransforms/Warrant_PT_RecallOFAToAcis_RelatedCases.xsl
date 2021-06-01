@@ -1,7 +1,12 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!-- ****************************************************************************** -->
+<!-- *** This templae addresses the binding files below                         *** -->
+<!-- *** PTRecallOnOFA.xml                                                      *** -->
+<!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E20200.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -30,10 +35,11 @@
       <UpdateMessage>
         <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
         <xsl:call-template name="E11410"/>
-        <!-- <xsl:call-template name="E20200"/>  This is the FTA date which is not recorded in eWarrants-->
+        <xsl:call-template name="E20200"/>
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
