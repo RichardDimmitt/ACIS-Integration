@@ -3,7 +3,8 @@
   <!-- ********************************************************************-->
   <!-- ************* template for E50001 Offense Record *******************-->
   <!-- *** Change Log:                                                  ***-->
-  <!-- 4-23-2020: Updated the check amount to be the total amount       ***-->
+  <!-- 4-23-2021: Updated the check amount to be the total amount       ***-->
+  <!-- 6-01-2021: Updated check amount logic ref ODY-345442             ***-->
   <!-- ********************************************************************-->
   <xsl:template name="E50001">
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
@@ -49,18 +50,58 @@
         <!--Worthless Check Amount-->
         <Data Position='8' Length='7' Segment='CRIWCA-X' >
           <xsl:variable name="CheckAmount">
+            <xsl:choose>
+              <xsl:when test="Additional/NCWorthlessCheck/CheckAmount">
+                <xsl:value-of select="Additional/NCWorthlessCheck/CheckAmount"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="'0'"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="ServiceFee">
+            <xsl:choose>
+              <xsl:when test="Additional/NCWorthlessCheck/ServiceFee">
+                <xsl:value-of select="Additional/NCWorthlessCheck/ServiceFee"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="'0'"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="ProcessingFee">
+            <xsl:choose>
+              <xsl:when test="Additional/NCWorthlessCheck/ProcessingFee">
+                <xsl:value-of select="Additional/NCWorthlessCheck/ProcessingFee"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="'0'"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="TotalAmount">
             <xsl:value-of select="Additional/NCWorthlessCheck/TotalAmount"/>
           </xsl:variable>
+          <xsl:variable name="ACISAmount">
+            <xsl:choose>
+              <xsl:when test="Additional/NCWorthlessCheck/TotalAmount">
+                <xsl:value-of select="$TotalAmount"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="$CheckAmount+$ServiceFee+$ProcessingFee"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
           <xsl:choose>
-            <xsl:when test="contains($CheckAmount,'.')='true'">
+            <xsl:when test="contains($ACISAmount,'.')='true'">
               <xsl:call-template name="PaddWithZeros">
-                <xsl:with-param name="Value" select="translate($CheckAmount,'.','')"/>
+                <xsl:with-param name="Value" select="translate($ACISAmount,'.','')"/>
                 <xsl:with-param name="Length" select="7"/>
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
               <xsl:call-template name="PaddWithZeros">
-                <xsl:with-param name="Value" select="concat($CheckAmount,'00')"/>
+                <xsl:with-param name="Value" select="concat($ACISAmount,'00')"/>
                 <xsl:with-param name="Length" select="7"/>
               </xsl:call-template>
             </xsl:otherwise>
@@ -161,6 +202,9 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 
