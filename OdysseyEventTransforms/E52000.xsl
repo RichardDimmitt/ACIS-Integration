@@ -1,9 +1,13 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ***************************************************************************-->
-  <!-- ************* template for E52000 No Probable Cause Record ****************-->
-  <!-- ***************************************************************************-->
+  <!-- *************************************************************************(**-->
+  <!-- ************* template for E52000 No Probable Cause Record *****************-->
+  <!-- 06-01-2021: RED Updated logic to look at the case disposition history   *** -->
+  <!--                 as opposed to having a hard coded value for each charge *** -->
+  <!--                 Reference ODY-345421                                    *** -->
+  <!-- ****************************************************************************-->
   <xsl:template name="E52000">
-    <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
+    <xsl:for-each select="/Integration/Case/DispositionEvent/Disposition[DispositionType/@Word='NPCF']">
+      <xsl:variable name="ChargeID" select="@InternalChargeID"/>
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E52000</xsl:text>
@@ -16,29 +20,29 @@
           <xsl:text>N</xsl:text>
         </Data>
         <!--Offense Number-->
-        <Data Position='1' Length='2' Segment='CROLNO'>
+        <Data Position='2' Length='2' Segment='CROLNO'>
           <xsl:call-template name="GetLeadZero">
-            <xsl:with-param name="Nbr" select="ChargeNumber"/>
+            <xsl:with-param name="Nbr" select="/Integration/Case/Charge[@InternalChargeID=$ChargeID]/ChargeHistory[@Stage='Case Filing']/ChargeNumber"/>
           </xsl:call-template>
         </Data>
         <!--Charged Offense Code-->
-        <Data Position='2' Length='6' Segment='CROFFC'>
-          <xsl:value-of select="Statute/StatuteCode/@Word"/>
+        <Data Position='3' Length='6' Segment='CROFFC'>
+          <xsl:value-of select="/Integration/Case/Charge[@InternalChargeID=$ChargeID]/ChargeHistory[@Stage='Case Filing']/Statute/StatuteCode/@Word"/>
         </Data>
         <!--No Probable Cause Method of Disposition-->
-        <Data Position='3' Length='2' Segment='CRDMOD'>
+        <Data Position='4' Length='2' Segment='CRDMOD'>
           <xsl:text>NP</xsl:text>
         </Data>
         <!--Disposition Date-->
-        <Data Position='8' Length='8' Segment='CRDDDT'>
+        <Data Position='5' Length='8' Segment='CRDDDT'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+            <xsl:with-param name="date" select="../DispositionEventDate"/>
           </xsl:call-template>
         </Data>
         <!-- NPCFiller -->
-        <Data Position='9' Length='31' Segment='NPCFiller' AlwaysNull="true"/>
+        <Data Position='6' Length='31' Segment='NPCFiller' AlwaysNull="true"/>
         <!-- Padding at the end to form the total length -->
-        <Data Position='6' Length='0' Segment='Filler' AlwaysNull="true"/>
+        <Data Position='7' Length='0' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:for-each>
   </xsl:template>
@@ -114,7 +118,3 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
