@@ -43,7 +43,7 @@
   <!-- **** a Node that is not live on Odyssey and not the AOC Expunction Unit ****-->
   <!-- **** This exclusion list will grow as more Odyssey courts go live       ****-->
   <!-- **** Ideally, this template should check the Get Odyssey Live           ****-->
-  <!-- **** orgchart attribute                                                 ****-->
+  <!-- **** orgchart attribute.                                                 ****-->
   <!-- ****************************************************************************-->
   <xsl:template name="OdysseyNodeCheck">
     <xsl:if test="$NodeID!='104000000'">
