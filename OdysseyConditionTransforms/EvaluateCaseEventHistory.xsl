@@ -26,7 +26,7 @@
           <xsl:if test="$CheckCourtNode='X'">
             <ProcessType>$ProcessType</ProcessType>
             <ProcessActionType>
-              <xsl:value-of select="$ProcessActionEvent"/>
+              <xsl:value-of select="$ProcessType"/>
             </ProcessActionType>
             <ProcessActionDate>
               <xsl:value-of select="/Integration/Case/CaseEvent[EventType[contains(concat(' ', $EventTypeList, ' '), concat(' ', @Word, ' '))] and Deleted='false' and @InternalEventID &lt; $PipelineCompleteEventID][last()]/EventType[@Word=$ProcessActionEvent]/../EventDate"/>
