@@ -29,7 +29,7 @@
         <!--Failure to Appear Date After-->
         <Data Position='5' Length='8' Segment='CRDVIO'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[EventType/@Word='EWFTA'][last()]/EventDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[EventType[contains('EWFTA FTA', @Word)] and Deleted='false'][last()]/EventDate"/>
           </xsl:call-template>
         </Data>
         <!-- Padding at the end to form the total length -->
@@ -73,6 +73,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
