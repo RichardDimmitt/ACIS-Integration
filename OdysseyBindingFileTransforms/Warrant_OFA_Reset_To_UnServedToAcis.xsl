@@ -38,7 +38,7 @@
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForUpdateMessage.xsl"/>
+        <xsl:call-template name="HeaderForUpdateMessage"/>
         <xsl:call-template name="E30010"/>
         <xsl:call-template name="E30060"/>
         <xsl:call-template name="E30300"/>
