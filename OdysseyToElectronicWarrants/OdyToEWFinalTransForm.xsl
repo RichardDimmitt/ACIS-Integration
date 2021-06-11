@@ -27,6 +27,9 @@
       <deletionReason>
         <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/deletionReason"/>
       </deletionReason>
+      <reason>
+        <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/reason"/>
+      </reason>
     </OdysseyEWUpdateMessage>
   </xsl:template>
 </xsl:stylesheet>
