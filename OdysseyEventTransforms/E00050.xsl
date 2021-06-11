@@ -1,7 +1,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ********************************************************************-->
-  <!-- **************** template for E00050 Case Add **********************-->
-  <!-- ********************************************************************-->
+	<!-- ********************************************************************-->
+	<!-- **************** template for E00050 Case Add **********************-->
+	<!-- ********************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/Charge[1]/@InternalPartyID"/>
@@ -26,13 +26,13 @@
       <!--Defendant Race-->
       <Data Position="4" Length="1" Segment="CRRACE">
         <xsl:call-template name="GetACISRaceCode">
-          <xsl:with-param name="code" select ="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
+          <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
         </xsl:call-template>
       </Data>
       <!--Defendant Sex-->
       <Data Position="5" Length="1" Segment="CRRSEX">
         <xsl:call-template name="GetACISSexCode">
-          <xsl:with-param name="code" select ="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
+          <xsl:with-param name="code" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
         </xsl:call-template>
       </Data>
       <!--Defendant Address City-->
@@ -97,7 +97,7 @@
       <!--Defendant Address ZIP-->
       <Data Position="12" Length="5" Segment="CRRZIP">
         <xsl:choose>
-          <xsl:when  test="($ZIP='00000')">
+          <xsl:when test="($ZIP='00000')">
             <xsl:value-of select="''"/>
           </xsl:when>
           <xsl:otherwise>
@@ -108,7 +108,7 @@
       <!--Defendant Address ZIP + 4-->
       <Data Position="13" Length="4" Segment="CRREZP">
         <xsl:choose>
-          <xsl:when  test="($ZIP='00000')">
+          <xsl:when test="($ZIP='00000')">
             <xsl:value-of select="''"/>
           </xsl:when>
           <xsl:otherwise>
@@ -174,7 +174,7 @@
       <!--Citation Commerical DL Indicator-->
       <Data Position="24" Length="1" Segment="CRRCDL">
         <xsl:call-template name="GetACISCDLCode">
-          <xsl:with-param name="code" select ="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
+          <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
         </xsl:call-template>
       </Data>
       <!--Citation Commerical Vehicle Indicator-->
@@ -219,19 +219,19 @@
           <xsl:when test="(/Integration/Citation/Incident/Fatalities)">
             <xsl:value-of select="'F'"/>
             <!-- Fatality -->
-      </xsl:when>
+					</xsl:when>
           <xsl:when test="(/Integration/Citation/Incident/NumberOfInjuries)">
             <xsl:value-of select="'I'"/>
             <!-- Personal Injury -->
-      </xsl:when>
+					</xsl:when>
           <xsl:when test="(/Integration/Citation/Incident/Property)">
             <xsl:value-of select="'P'"/>
             <!-- Property Damage -->
-      </xsl:when>
+					</xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="'N'"/>
             <!-- Near Accident or No Accident -->
-      </xsl:otherwise>
+					</xsl:otherwise>
         </xsl:choose>
       </Data>
       <!--Citation Highway-->
@@ -267,8 +267,11 @@
           <xsl:when test="(/Integration/Case/Charge//Additional/NCDomesticViolence/IsDomesticViolence='true')">
             <xsl:value-of select="'Y'"/>
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="(/Integration/Case/Charge//Additional/NCDomesticViolence/IsDomesticViolence='false')">
             <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="''"/>
           </xsl:otherwise>
         </xsl:choose>
       </Data>
@@ -289,8 +292,11 @@
           <xsl:when test="(/Integration/Case/Charge//Additional/NCVictimsRights/IsVictimsRights='true')">
             <xsl:value-of select="'Y'"/>
           </xsl:when>
-          <xsl:otherwise>
+          <xsl:when test="(/Integration/Case/Charge//Additional/NCVictimsRights/IsVictimsRights='false')">
             <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="''"/>
           </xsl:otherwise>
         </xsl:choose>
       </Data>
@@ -305,8 +311,8 @@
     </Event>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for YYYYMMDD ***************************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for YYYYMMDD ***************************-->
+	<!-- ********************************************************************-->
   <xsl:template name="formatDateYYYYMMDD">
     <xsl:param name="date"/>
     <xsl:if test="$date!=''">
@@ -326,8 +332,8 @@
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for YYYYMMDDHHMMSS *********************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for YYYYMMDDHHMMSS *********************-->
+	<!-- ********************************************************************-->
   <xsl:template name="formatDateYYYYMMDDHHMMSS">
     <xsl:param name="dateTime"/>
     <xsl:if test="($dateTime!='')">
@@ -382,8 +388,8 @@
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for formatting time **********************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for formatting time **********************-->
+	<!-- ********************************************************************-->
   <xsl:template name="formatTimeHHMMAMPM">
     <xsl:param name="time"/>
     <xsl:variable name="timetemp" select="substring-before($time,' ')"/>
@@ -397,63 +403,63 @@
     <xsl:value-of select="concat($finalTime,$AMPM)"/>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for leading zeros **********************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for leading zeros **********************-->
+	<!-- ********************************************************************-->
   <xsl:template name="GetLeadZero">
     <xsl:param name="Nbr"/>
     <xsl:choose>
-      <xsl:when  test="(string-length($Nbr) &lt; 2)">
-        <xsl:value-of  select="concat('0',$Nbr)"/>
+      <xsl:when test="(string-length($Nbr) &lt; 2)">
+        <xsl:value-of select="concat('0',$Nbr)"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of  select="$Nbr"/>
+        <xsl:value-of select="$Nbr"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for padding zeros **********************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for padding zeros **********************-->
+	<!-- ********************************************************************-->
   <xsl:template name="PaddWithZeros">
     <xsl:param name="Value"/>
     <xsl:param name="Length"/>
     <xsl:variable name="PaddingNeeded" select="$Length - string-length($Value)"/>
     <xsl:choose>
-      <xsl:when  test="($PaddingNeeded &gt; 0)">
+      <xsl:when test="($PaddingNeeded &gt; 0)">
         <xsl:if test="($PaddingNeeded = 1)">
-          <xsl:value-of  select="concat('0',$Value)"/>
+          <xsl:value-of select="concat('0',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 2)">
-          <xsl:value-of  select="concat('00',$Value)"/>
+          <xsl:value-of select="concat('00',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 3)">
-          <xsl:value-of  select="concat('000',$Value)"/>
+          <xsl:value-of select="concat('000',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 4)">
-          <xsl:value-of  select="concat('0000',$Value)"/>
+          <xsl:value-of select="concat('0000',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 5)">
-          <xsl:value-of  select="concat('00000',$Value)"/>
+          <xsl:value-of select="concat('00000',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 6)">
-          <xsl:value-of  select="concat('000000',$Value)"/>
+          <xsl:value-of select="concat('000000',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 7)">
-          <xsl:value-of  select="concat('0000000',$Value)"/>
+          <xsl:value-of select="concat('0000000',$Value)"/>
         </xsl:if>
         <xsl:if test="($PaddingNeeded = 8)">
-          <xsl:value-of  select="concat('00000000',$Value)"/>
+          <xsl:value-of select="concat('00000000',$Value)"/>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of  select="$Value"/>
+        <xsl:value-of select="$Value"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for mapping race codes *****************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for mapping race codes *****************-->
+	<!-- ********************************************************************-->
   <xsl:template name="GetACISRaceCode">
-    <xsl:param name ="code"/>
+    <xsl:param name="code"/>
     <xsl:choose>
       <xsl:when test="($code='A')">
         <xsl:value-of select="'A'"/>
@@ -485,10 +491,10 @@
     </xsl:choose>
   </xsl:template>
   <!-- ********************************************************************-->
-  <!-- ****************** template for mapping sex codes *****************-->
-  <!-- ********************************************************************-->
+	<!-- ****************** template for mapping sex codes *****************-->
+	<!-- ********************************************************************-->
   <xsl:template name="GetACISSexCode">
-    <xsl:param name ="code"/>
+    <xsl:param name="code"/>
     <xsl:choose>
       <xsl:when test="($code='F')">
         <xsl:value-of select="'F'"/>
@@ -508,10 +514,10 @@
     </xsl:choose>
   </xsl:template>
   <!-- *******************************************************************-->
-  <!-- **************** template for mapping DL Type codes ***************-->
-  <!-- *******************************************************************-->
+	<!-- **************** template for mapping DL Type codes ***************-->
+	<!-- *******************************************************************-->
   <xsl:template name="GetACISCDLCode">
-    <xsl:param name ="code"/>
+    <xsl:param name="code"/>
     <xsl:choose>
       <xsl:when test="($code='CDLA')">
         <xsl:value-of select="'Y'"/>
@@ -559,8 +565,9 @@
         <xsl:value-of select="'N'"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="'N'"/>
+        <xsl:value-of select="''"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
