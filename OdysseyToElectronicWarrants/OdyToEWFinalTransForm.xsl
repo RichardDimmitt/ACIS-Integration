@@ -24,21 +24,14 @@
       <updateType>
         <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/updateType"/>
       </updateType>
-      <deletionReason>
-        <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/deletionReason"/>
-      </deletionReason>
+      <xsl:if test="/Integration/IntegrationConditions/IntegrationCondition/deletionReason">
+        <deletionReason>
+          <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/deletionReason"/>
+        </deletionReason>
+      </xsl:if>
       <reason>
         <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/reason"/>
       </reason>
     </OdysseyEWUpdateMessage>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
-
-
-
-
-
