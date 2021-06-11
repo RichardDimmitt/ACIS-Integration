@@ -3,7 +3,7 @@
   <!-- ******** template for E00805 Witness *****************-->
   <!-- ********************************************************************-->
   <xsl:template name="E00805Witness">
-    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT V',@Word) and not(RemovedDate)]]">
+    <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT VIC',@Word) and not(RemovedDate)]]">
       <xsl:variable name="complainantID">
         <xsl:value-of select="@InternalPartyID"/>
       </xsl:variable>
