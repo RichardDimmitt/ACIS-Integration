@@ -37,11 +37,31 @@
       </Data>
       <!--Defendant Address City-->
       <Data Position="6" Length="15" Segment="CRRCTY">
-        <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City"/>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Foreign'">
+            <xsl:value-of select="''"/>
+          </xsl:when>
+          <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City">
+            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'UNKNOWN'"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Defendant Address State-->
       <Data Position="7" Length="2" Segment="CRRDST">
-        <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/@Type='Foreign'">
+            <xsl:value-of select="''"/>
+          </xsl:when>
+          <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State">
+            <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="'OT'"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Issue date-->
       <Data Position="8" Length="8" Segment="CRRIDT">
@@ -570,4 +590,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
