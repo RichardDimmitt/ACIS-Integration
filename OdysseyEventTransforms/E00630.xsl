@@ -8,7 +8,7 @@
       <xsl:value-of select="/Integration/Case/CaseParty[./Connection/@BaseConnection='DF']/@InternalPartyID"/>
     </xsl:variable>
     <xsl:variable name="ZIP" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip,1,5)"/>
-    <xsl:if test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Foreign='false'">
+    <xsl:if test="/Integration/Party[@InternalPartyID=$DefendantID and not(Address[@PartyCurrent='true']/Foreign='true')]">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E00630</xsl:text>
@@ -34,11 +34,25 @@
         <Data Position='7' Length='4' Segment='CRREZP-OLD' AlwaysNull="true"/>
         <!-- Defendant Address City 2 -->
         <Data Position='8' Length='15' Segment='CRRCTY'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City"/>
+          <xsl:choose>
+            <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/City"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="'UNKNOWN'"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!-- Defendant Address State -->
         <Data Position='9' Length='2' Segment='CRRDST'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
+          <xsl:choose>
+            <xsl:when test="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State">
+              <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/State"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="'OT'"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!-- Defendant Address Zip -->
         <Data Position='10' Length='5' Segment='CRRZIP'>
@@ -68,3 +82,6 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
