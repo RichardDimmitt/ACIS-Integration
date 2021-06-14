@@ -35,6 +35,18 @@
             </deletionReason>
           </xsl:if>
           <!-- *************************************************************** -->
+          <!-- *** Check for E50100 Disposition Change Event               *** -->
+          <!-- *** NS, Disposition to delete                               *** -->
+          <!-- *************************************************************** -->
+          <xsl:if test="/Integration/Case/CaseEvent[@Op='A']/EventType[@Word='ACISMODNS']">
+            <updateType>
+              <xsl:text>delete</xsl:text>
+            </updateType>
+            <deletionReason>
+              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+            </deletionReason>
+          </xsl:if>
+          <!-- *************************************************************** -->
           <!-- *** Check for E11410 OFA Date Change Event                  *** -->
           <!-- *************************************************************** -->
           <xsl:if test="/Integration/Case/CaseEvent[@Op='A']/EventType[@Word='ACISOFA']">
@@ -79,5 +91,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
