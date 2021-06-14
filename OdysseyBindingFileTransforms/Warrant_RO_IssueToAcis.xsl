@@ -2,6 +2,11 @@
 <!-- ****************************************************************************** -->
 <!-- *** This templae addresses the binding files below                         *** -->
 <!-- *** ReleaseOrderIssueMessageToAcis.xml                                     *** -->
+<!-- *** 6/13/21: Removed the following events per ODY-346620                   *** -->
+<!-- ***          E30010 Trial Court Session Information Change                 *** -->
+<!-- ***          E30060 Superior Court Session Information Change              *** -->
+<!-- ***          E00730 Fingerprint Number, Date of Arrest Change              *** -->
+<!-- ***          E10110 Service Date Change                                    *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
@@ -64,13 +69,13 @@
         <xsl:call-template name='E00640'/>
         <xsl:call-template name='E00725'/>
         <xsl:call-template name='E00660'/>
-        <xsl:call-template name='E30010'/>
-        <xsl:call-template name='E30060'/>
-        <xsl:call-template name='E00732'/>
-        <xsl:call-template name='E00730'/>
+        <!-- <xsl:call-template name='E30010'/>  -->
+        <!-- <xsl:call-template name='E30060'/>  -->
+        <!-- <xsl:call-template name='E00732'/>  -->
+        <!-- <xsl:call-template name='E00730'/>  -->
         <xsl:call-template name='E00705'/>
         <xsl:call-template name='E10227'/>
-        <xsl:call-template name='E10110'/>
+        <!-- <xsl:call-template name='E10110'/>  -->
         <xsl:call-template name='E00740'/>
         <xsl:call-template name='E30300'/>
         <xsl:call-template name='E30310'/>
@@ -84,10 +89,3 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
-
-
-
