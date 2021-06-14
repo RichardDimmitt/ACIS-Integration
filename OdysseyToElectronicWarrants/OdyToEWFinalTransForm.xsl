@@ -24,6 +24,11 @@
       <updateType>
         <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/updateType"/>
       </updateType>
+      <xsl:if test="/Integration/IntegrationConditions/IntegrationCondition/offenseCount">
+        <offenseCount>
+          <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/offenseCount"/>
+        </offenseCount>
+      </xsl:if>
       <xsl:if test="/Integration/IntegrationConditions/IntegrationCondition/deletionReason">
         <deletionReason>
           <xsl:value-of select="/Integration/IntegrationConditions/IntegrationCondition/deletionReason"/>
@@ -35,3 +40,13 @@
     </OdysseyEWUpdateMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
+
+
+
+
+
