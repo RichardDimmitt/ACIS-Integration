@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- *********************************************************************-->
-  <!-- ************* template for E50001 Offense Record ********************-->
-  <!-- *** Change Log:                                                   ***-->
-  <!-- 4-23-2021: Updated the check amount to be the total amount        ***-->
-  <!-- 6-01-2021: Updated check amount logic ref ODY-345442              ***-->
-  <!-- 6-7-2021: Updated to include offense 9955 to reflect CVR INT-5646 *** -->
-  <!-- *********************************************************************-->
+  <!-- **************************************************************************-->
+  <!-- ************* template for E50001 Offense Record ************************-->
+  <!-- *** Change Log:                                                        ***-->
+  <!-- *** 4-23-2021: Updated the check amount to be the total amount         ***-->
+  <!-- *** 6-01-2021: Updated check amount logic ref ODY-345442               ***-->
+  <!-- *** 6-07-2021: Updated to include offense 9955 to reflect CVR INT-5646 ***-->
+  <!-- *** 6-18-2021: Update the CVR CROCDT value to tbe the first charge     ***-->
+  <!-- ***            offense date instead of the case event date INT-5755    ***-->
+  <!-- **************************************************************************-->
   <xsl:template name="E50001">
-  <xsl:variable name="maxChargeNumber">
-    <xsl:for-each select="/Integration/Case/Charge/ChargeHistory">
-      <xsl:sort select="ChargeNumber" data-type="number" order="descending"/>
-      <xsl:if test="position() = 1">
-        <xsl:value-of select="ChargeNumber"/>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:variable>
+    <xsl:variable name="maxChargeNumber">
+      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory">
+        <xsl:sort select="ChargeNumber" data-type="number" order="descending"/>
+        <xsl:if test="position() = 1">
+          <xsl:value-of select="ChargeNumber"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
       <Event>
         <xsl:attribute name="EventID">
@@ -166,7 +168,7 @@
         <!--Charged Offense Date-->
         <Data Position='4' Length='8' Segment='CROCDT'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType/@Word='EWCVR']/EventDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
           </xsl:call-template>
         </Data>
         <!--Charge Offense Type (degree)-->
@@ -284,6 +286,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
