@@ -1,8 +1,11 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template name="HeaderForLeadAndRelatedCases">
-  <!-- ********************************************************************-->
-  <!-- ********** template for Lead and Related Cases         *************-->
-  <!-- ********************************************************************-->
+  <!-- ***********************************************************************-->
+  <!-- ********** template for Lead and Related Cases            *************-->
+  <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
+  <!-- ****         code as these will be prefixed with the County        ****-->
+  <!-- ****         number: ODY-346525                                    ****-->
+  <!-- ***********************************************************************-->
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
         <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
@@ -10,6 +13,9 @@
     </xsl:variable>
     <xsl:variable name="RelatedCaseNumber">
       <xsl:value-of select="/Integration/Case/CaseCrossReference[CaseCrossReferenceType/@CurrentIterator='True']/CrossCaseNumber"/>
+    </xsl:variable>
+    <xsl:variable name="CurrentSettingID">
+      <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')]/@InternalSettingID"/>
     </xsl:variable>
     <Header>
       <Data Position="1" Length="1" Segment="Flag">
@@ -59,14 +65,9 @@
       <Data Position="17" Length="6" Segment="CraiCreateSubSs" AlwaysNull="true"/>
       <Data Position="18" Length="6" Segment="CraiUpdateSubSs" AlwaysNull="true"/>
       <Data Position="19" Length="4" Segment="CraiHdrCourtroom">
-        <!-- We are not going to send hearing information for the moment as we will need to map there 973 ACIS codes -->
-        <!--<xsl:value-of select="/Integration/Case/Hearing[last()]/Setting/CourtResource[Type/@Word='LOC']/Code/@Word[1]"/>-->
+        <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/CourtResource[Type/@Word='LOC']/Code/@Word[1],'-')"/>
       </Data>
-      <Data Position="20" Length="6" Segment="CraiHdrCourtroomFiller">
-        <!-- They said they don't need this -->
-        <!-- <xsl:value-of select="/Integration/@MessageID"/> -->
-      </Data>
-      <!-- Filler to create total required length -->
+      <Data Position="20" Length="6" Segment="CraiHdrCourtroomFiller" AlwaysNull="true"/>
       <Data Position='21' Length='9' Segment='Filler' AlwaysNull="true"/>
     </Header>
   </xsl:template>
@@ -201,6 +202,9 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 

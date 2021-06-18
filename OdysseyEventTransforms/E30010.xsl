@@ -3,10 +3,16 @@
   <xsl:template name="E30010">
   <!-- ********************************************************************-->
   <!-- **** template for E30010 Trail Court Session Information Change*****-->
-  <!-- **** Note, this is only sent if it's a District CR case              -->
+  <!-- **** Note, this is only sent if it's a District CR case          ***-->
+  <!-- **** 6-18-21 Updated to only send part of the hearing location   ***-->
+  <!-- ****         code as these will be prefixed with the County      ***-->
+  <!-- ****         number: ODY-346525                                  ***-->
   <!-- ********************************************************************-->
     <xsl:variable name="CaseType">
       <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,3)"/>
+    </xsl:variable>
+    <xsl:variable name="CurrentSettingID">
+      <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')]/@InternalSettingID"/>
     </xsl:variable>
     <xsl:if test="$CaseType!='CRS'">
       <Event>
@@ -35,16 +41,16 @@
         <!--Hearing Date-->
         <Data Position='8' Length='8' Segment='CRRTDT'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/Hearing[last()]/Setting/HearingDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/HearingDate"/>
           </xsl:call-template>
         </Data>
         <!--Hearing Court Room Location-->
         <Data Position='9' Length='4' Segment='CRRRNO'>
-          <xsl:value-of select="/Integration/Case/Hearing[last()]/Setting/CourtResource[Type/@Word='LOC']/Code/@Word[1]"/>
+          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/CourtResource[Type/@Word='LOC']/Code/@Word[1],'-')"/>
         </Data>
         <!--Hearing Time Period Indicator (AM / PM)-->
         <Data Position='10' Length='2' Segment='CRRCRT'>
-          <xsl:value-of select="substring-after(/Integration/Case/Hearing[last()]/Setting/StartTime,' ')"/>
+          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/StartTime,' ')"/>
         </Data>
         <!--Padding at the end to form the total length-->
         <Data Position='11' Length='162' Segment='Filler' AlwaysNull="true" />
@@ -87,5 +93,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
