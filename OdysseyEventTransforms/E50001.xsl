@@ -8,8 +8,11 @@
   <!-- *** 6-07-2021: Updated to include offense 9955 to reflect CVR INT-5646 ***-->
   <!-- *** 6-18-2021: Update the CVR CROCDT value to tbe the first charge     ***-->
   <!-- ***            offense date instead of the case event date INT-5755    ***-->
+  <!-- *** 6-22-2021: Update the CROCDT value to be the offense date of the   ***-->
+  <!-- ***            first charge instead of the ofense date of that specific***-->
+  <!-- ***            offense INT-5779                                        ***-->
   <!-- **************************************************************************-->
-  <xsl:template name="E50001">
+    <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
       <xsl:for-each select="/Integration/Case/Charge/ChargeHistory">
         <xsl:sort select="ChargeNumber" data-type="number" order="descending"/>
@@ -43,7 +46,7 @@
         <!--Charged Offense Date-->
         <Data Position='4' Length='8' Segment='CROCDT'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="../ChargeOffenseDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
           </xsl:call-template>
         </Data>
         <!--Charge Offense Type (degree)-->
@@ -286,6 +289,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
