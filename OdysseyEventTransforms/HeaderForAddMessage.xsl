@@ -5,6 +5,8 @@
   <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
   <!-- ****         code as these will be prefixed with the County        ****-->
   <!-- ****         number: ODY-346525                                    ****-->
+  <!-- **** 6-23-21 Update logic that is used for the CraiCreatedDtTs and ****-->
+  <!-- ****         CraiUpdatedDtTs timestamps: INT-5777                  ****-->
   <!-- ***********************************************************************-->
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
@@ -36,12 +38,24 @@
         <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,2)"/>
       </Data>
       <Data Position="7" Length="14" Segment="CraiCreatedDtTs">
-        <xsl:value-of select="$UpdateTimeStamp+1"/>
+        <xsl:choose>
+          <xsl:when test="substring($UpdateTimeStamp,13,2)='59'">
+            <xsl:value-of select="$UpdateTimeStamp"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$UpdateTimeStamp + 1"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <Data Position="8" Length="14" Segment="CraiUpdatedDtTs">
-        <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
-          <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="substring($UpdateTimeStamp,13,2)='59'">
+            <xsl:value-of select="$UpdateTimeStamp - 1"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$UpdateTimeStamp"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <Data Position="9" Length="9" Segment="CraiOperatorId">
         <xsl:text>AWAR101</xsl:text>
@@ -199,6 +213,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
