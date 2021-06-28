@@ -20,7 +20,7 @@
         <Data Position='2' Length='2' Segment='CROLNO'>
           <xsl:call-template name="GetLeadZero">
             <xsl:with-param name="Nbr" select="ChargeNumber"/>
-          </xsl:call-template>&gt;
+          </xsl:call-template>
         </Data>
         <!--CraiOtherNumber-->
         <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
