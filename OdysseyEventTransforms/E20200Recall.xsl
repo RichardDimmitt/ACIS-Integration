@@ -4,7 +4,7 @@
   <!-- ************** template for E20200 FTA Date Change *****************-->
   <!-- ************** as a result of a recall INT-5803            *****************-->
   <!-- ********************************************************************-->
-  <xsl:template name="E20200">
+  <xsl:template name="E20200Recall">
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
       <Event>
         <xsl:attribute name="EventID">
@@ -70,6 +70,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
