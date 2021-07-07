@@ -28,7 +28,7 @@
     <!-- **** Provide a listing of all the possible case events added by the EW  ****-->
     <!-- **** integration that could trigger a message to ACIS                   ****-->
     <!-- ****************************************************************************-->
-    <xsl:variable name="EventTypeList" select="'EWA CSAROA WFAIP MO CS OFAI RO WFAI WFAREJ CSREJ OFAREJ ROREJ MOREJ WFARS CSS OFARS EWRS WFAR CSR OFAR EWR WFARI CSRI OFARI EWRI WFADEL CSDEL OFADEL RODEL MODEL WFAAR CSAR OFAAR ROAR EWAR WFARU CSU OFARU EWRU PD'"/>
+    <xsl:variable name="EventTypeList" select="'EWA CSA ROA WFAIP MO CS OFAI RO WFAI WFAREJ CSREJ OFAREJ ROREJ MOREJ WFARS CSS OFARS EWRS WFAR CSR OFAR EWR WFARI CSRI OFARI EWRI WFADEL CSDEL OFADEL RODEL MODEL WFAAR CSAR OFAAR ROAR EWAR WFARU CSU OFARU EWRU PD'"/>
     <!-- ****************************************************************************-->
     <!-- **** Set the variable for the Event ID of the Pipeline Complete Event   ****-->
     <!-- ****************************************************************************-->
@@ -40,7 +40,7 @@
       <xsl:when test="/Integration/Case/CaseEvent[@Op='A']/EventType[contains(concat(' ', $PipeLineCompleteEvent, ' '), concat(' ', @Word, ' '))]">
         <xsl:if test="/Integration/Case/CaseEvent[EventType[contains(concat(' ', $EventTypeList, ' '), concat(' ', @Word, ' '))] and Deleted='false' and @InternalEventID &lt; $PipelineCompleteEventID][last()]/EventType/@Word=$ProcessActionEvent">
           <xsl:if test="$CheckCourtNode='X'">
-            <xsl:if test="/Integration/Case[not(CaseFlag/@Word='ACISFILTER')]">
+            <xsl:if test="Integration/Case[not(CaseFlag/@Word='ACISFILTER')]">
               <ProcessType>
                 <xsl:value-of select="$ProcessType"/>
               </ProcessType>
@@ -57,12 +57,3 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
-
-
-
-
-
