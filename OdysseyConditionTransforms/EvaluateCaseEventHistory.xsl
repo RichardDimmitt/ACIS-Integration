@@ -40,7 +40,7 @@
       <xsl:when test="/Integration/Case/CaseEvent[@Op='A']/EventType[contains(concat(' ', $PipeLineCompleteEvent, ' '), concat(' ', @Word, ' '))]">
         <xsl:if test="/Integration/Case/CaseEvent[EventType[contains(concat(' ', $EventTypeList, ' '), concat(' ', @Word, ' '))] and Deleted='false' and @InternalEventID &lt; $PipelineCompleteEventID][last()]/EventType/@Word=$ProcessActionEvent">
           <xsl:if test="$CheckCourtNode='X'">
-            <xsl:if test="Integration/Case[not(CaseFlag/@Word='ACISFILTER')]">
+            <xsl:if test="/Integration/Case[not(CaseFlag/@Word='ACISFILTER')]">
               <ProcessType>
                 <xsl:value-of select="$ProcessType"/>
               </ProcessType>
