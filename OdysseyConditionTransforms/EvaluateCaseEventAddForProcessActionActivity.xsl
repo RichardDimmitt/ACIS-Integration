@@ -38,7 +38,7 @@
               <xsl:value-of select="$ProcessActionEvent"/>
             </ProcessActionType>
             <ProcessActionDate>
-              <xsl:value-of select="/Integration/Case/CaseEvent[@Op='A' and Deleted='false']/EventType[@Word='WFAI']/../EventDate"/>
+              <xsl:value-of select="/Integration/Case/CaseEvent[@Op='A' and Deleted='false']/EventType[@Word=$ProcessActionEvent]/../EventDate"/>
             </ProcessActionDate>
           </xsl:if>
         </xsl:if>
