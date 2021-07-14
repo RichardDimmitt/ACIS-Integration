@@ -11,6 +11,9 @@
   <!-- *** 6-22-2021: Update the CROCDT value to be the offense date of the   ***-->
   <!-- ***            first charge instead of the ofense date of that specific***-->
   <!-- ***            offense INT-5779                                        ***-->
+  <!-- *** 7-14-2021: Update the logic that includes the 9955 CVR offense to  ***-->
+  <!-- ***            to look for the precence of one of three case event     ***-->
+  <!-- ***            codes, EWCVR CVR PROVCVR                                ***-->
   <!-- **************************************************************************-->
     <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
@@ -146,7 +149,7 @@
     <!-- ***************************************************** -->
     <!-- Section to build CVR Offense based on case event data -->
     <!-- ***************************************************** -->
-    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType/@Word='EWCVR']">
+    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains('EWCVR CVR PROVCVR',@Word)]]">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E50001</xsl:text>
@@ -289,6 +292,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
