@@ -7,6 +7,8 @@
 <!-- ***          E30060 Superior Court Session Information Change              *** -->
 <!-- ***          E00730 Fingerprint Number, Date of Arrest Change              *** -->
 <!-- ***          E10110 Service Date Change                                    *** -->
+<!-- *** 7/13/21: Removed the following events per INT-5966                     *** -->
+<!-- ***          E30100 Case Reinstated Indicator Change                       *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
@@ -83,9 +85,10 @@
         <xsl:call-template name='E10100'/>
         <xsl:call-template name='E99000RO'/>
         <xsl:call-template name='E11410'/>
-        <xsl:call-template name='E30100'/>
+        <!-- <xsl:call-template name='E30100'/>  -->
         <xsl:call-template name="E20200"/>
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
