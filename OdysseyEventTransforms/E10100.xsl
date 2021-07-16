@@ -8,6 +8,13 @@
   <!-- ***            PC274 error provided by Andy                         *** -->
   <!-- ***            Added a rule to not send the arrest date if no check *** -->
   <!-- ***            digit number is available                            *** -->
+  <!-- *** 7/15/2021: Changes made due to ODY-349116                       *** -->
+  <!-- ***            Added rule to not send the check digit number if     *** -->
+  <!-- ***            there is not arrest date                             *** -->
+  <!-- ***            Added rule to not send the finger print reason code  *** -->
+  <!-- ***            if we are sending the check digit number             *** -->
+  <!-- ***            Updaed to pull the finger print information from the *** -->
+  <!-- ***            current offense history record.                      *** -->
   <!-- ************************************************************************-->
   <xsl:template name="E10100">
     <Event>
@@ -44,19 +51,27 @@
       </Data>
       <!--Fingerprint Number-->
       <Data Position='7' Length='8' Segment='CRSCDT' >
-        <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+       <!-- If there is not an arrest date do not sent the check digit number-->
+        <xsl:choose>
+          <xsl:when test="/Integration/Case/Charge/BookingAgency/ArrestDate[1]">
+            <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Date of Arrest-->
       <Data Position='8' Length='8' Segment='CRSDOA'>
         <xsl:choose>
            <!-- If a check digit number is available then send the arrest date-->
-          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]">
+          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]">
             <xsl:call-template name="formatDateYYYYMMDD">
               <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
             </xsl:call-template>
           </xsl:when>
           <!-- If the fingerprint override reason is NF then do not send the arrest date-->
-          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]='NF'">
+          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]='NF'">
             <xsl:call-template name="formatDateYYYYMMDD">
               <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
             </xsl:call-template>
@@ -69,7 +84,17 @@
       </Data>
       <!--FingerPrint Reason Code-->
       <Data Position='9' Length='2' Segment='CRRREA'>
-        <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+       <!-- If there is check digit number and arrest date available do not send the fingerprint override reason-->
+        <xsl:choose>
+          <xsl:when test="/Integration/Case[not(Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber)]">
+            <xsl:if test="/Integration/Case/Charge/BookingAgency/ArrestDate[1]">
+              <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--NA Vision Link Code-->
       <Data Position='10' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
@@ -135,6 +160,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
