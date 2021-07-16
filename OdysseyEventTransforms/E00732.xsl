@@ -4,6 +4,9 @@
   <!-- *** template for E00732 FingerPrint Reason Change *********-->
   <!-- ***************************************************************************-->
   <xsl:template name="E00732">
+
+    <xsl:if test="/Integration/Case[not(Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber)]">
+
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E00732</xsl:text>
@@ -23,11 +26,15 @@
       <Data Position='4' Length='2' Segment='CRRREA-OLD' AlwaysNull="true"/>
       <!-- FingerPrint Reason Code -->
       <Data Position='5' Length='2' Segment='CRRREA'>
-        <xsl:value-of select="/Integration/Case/Charge[1]/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word"/>
+        <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
       </Data>
       <!-- Filler -->
       <Data Position='6' Length='186' Segment='Filler' AlwaysNull="true"/>
     </Event>
+
+</xsl:if>
+
   </xsl:template>
 </xsl:stylesheet>
+
 

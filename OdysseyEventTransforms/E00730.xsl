@@ -26,7 +26,7 @@
         <Data Position='5' Length='8' Segment='CRSDOA-OLD' AlwaysNull="true"/>
         <!-- Fingerprint Number -->
         <Data Position='6' Length='7' Segment='CRSCDT'>
-          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
         </Data>
         <!-- Date of Arrest -->
         <Data Position='7' Length='8' Segment='CRSDOA'>
@@ -75,6 +75,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
