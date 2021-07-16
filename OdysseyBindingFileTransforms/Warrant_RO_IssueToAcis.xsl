@@ -6,6 +6,7 @@
 <!-- ***          E30010 Trial Court Session Information Change                 *** -->
 <!-- ***          E30060 Superior Court Session Information Change              *** -->
 <!-- ***          E00730 Fingerprint Number, Date of Arrest Change              *** -->
+<!-- ***          E00732 Fingerprint Reason Change                              *** -->
 <!-- ***          E10110 Service Date Change                                    *** -->
 <!-- *** 7/13/21: Removed the following events per INT-5966                     *** -->
 <!-- ***          E30100 Case Reinstated Indicator Change                       *** -->
@@ -91,3 +92,4 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
