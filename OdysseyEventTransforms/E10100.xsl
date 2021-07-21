@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ************************************************************************-->
-  <!-- **************** template for E10100 Service Record ********************-->
-  <!-- *** Change Log:                                                     *** -->
-  <!-- *** 4/22/2021: Removed default fingerprint override reason          *** -->
-  <!-- ***            Changed the  CRRDOMVL value for Y to D based on the  *** -->
-  <!-- ***            PC274 error provided by Andy                         *** -->
-  <!-- ***            Added a rule to not send the arrest date if no check *** -->
-  <!-- ***            digit number is available                            *** -->
-  <!-- *** 7/15/2021: Changes made due to ODY-349116                       *** -->
-  <!-- ***            Added rule to not send the check digit number if     *** -->
-  <!-- ***            there is not arrest date                             *** -->
-  <!-- ***            Added rule to not send the finger print reason code  *** -->
-  <!-- ***            if we are sending the check digit number             *** -->
-  <!-- ***            Updaed to pull the finger print information from the *** -->
-  <!-- ***            current offense history record.                      *** -->
-  <!-- ************************************************************************-->
+  <!-- ************************************************************************************-->
+  <!-- **************** template for E10100 Service Record ********************************-->
+  <!-- *** Change Log:                                                                  ***-->
+  <!-- *** 4/22/2021: Removed default fingerprint override reason                       ***-->
+  <!-- ***            Changed the  CRRDOMVL value for Y to D based on the               ***-->
+  <!-- ***            PC274 error provided by Andy                                      ***-->
+  <!-- ***            Added a rule to not send the arrest date if no check              ***-->
+  <!-- ***            digit number is available                                         ***-->
+  <!-- *** 7/15/2021: Changes made due to ODY-349116                                    ***-->
+  <!-- ***            Added rule to not send the check digit number if                  ***-->
+  <!-- ***            there is not arrest date                                          ***-->
+  <!-- ***            Added rule to not send the finger print reason code               ***-->
+  <!-- ***            if we are sending the check digit number                          ***-->
+  <!-- ***            Updaed to pull the finger print information from the              ***-->
+  <!-- ***            current offense history record.                                   ***-->
+  <!-- *** 7/20/2021: Implemented the following business logic rules based              ***-->
+  <!-- ***            on ALI error report information  INT-6103                         ***-->
+  <!-- ***             - ARREST DATE IS REQUIRED WHEN CHECK DIGIT IS ENTERED            ***-->
+  <!-- ***             - CHECK DIGIT IS REQUIRED WHEN ARREST DATE IS ENTERED            ***-->
+  <!-- ***             - REASON CODE IS ONLY ALLOWED WHEN CHECK DIGIT AND DOA ARE BLANK ***-->
+  <!-- ************************************************************************************-->
   <xsl:template name="E10100">
+    <xsl:variable name="ArrestDate">
+      <xsl:call-template name="formatDateYYYYMMDD">
+        <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="CheckDigit">
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+    </xsl:variable>
+    <xsl:variable name="FingerPrintReason">
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+    </xsl:variable>
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E10100</xsl:text>
@@ -51,10 +67,10 @@
       </Data>
       <!--Fingerprint Number-->
       <Data Position='7' Length='8' Segment='CRSCDT' >
-       <!-- If there is not an arrest date do not sent the check digit number-->
+       <!-- Only Send the Check Digit If An Arrest Date Is Available-->
         <xsl:choose>
-          <xsl:when test="/Integration/Case/Charge/BookingAgency/ArrestDate[1]">
-            <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+          <xsl:when test="$ArrestDate != ''">
+            <xsl:value-of select="$CheckDigit"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text/>
@@ -63,20 +79,11 @@
       </Data>
       <!--Date of Arrest-->
       <Data Position='8' Length='8' Segment='CRSDOA'>
+      <!-- Only Send the Arrest Date If A Check Digit Is Available -->
         <xsl:choose>
-           <!-- If a check digit number is available then send the arrest date-->
-          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]">
-            <xsl:call-template name="formatDateYYYYMMDD">
-              <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
-            </xsl:call-template>
+          <xsl:when test="$CheckDigit != ''">
+            <xsl:value-of select="$ArrestDate"/>
           </xsl:when>
-          <!-- If the fingerprint override reason is NF then do not send the arrest date-->
-          <xsl:when test="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]='NF'">
-            <xsl:call-template name="formatDateYYYYMMDD">
-              <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
-            </xsl:call-template>
-          </xsl:when>
-          <!-- If no check digit number is available then do not send the arrest date-->
           <xsl:otherwise>
             <xsl:text/>
           </xsl:otherwise>
@@ -84,12 +91,10 @@
       </Data>
       <!--FingerPrint Reason Code-->
       <Data Position='9' Length='2' Segment='CRRREA'>
-       <!-- If there is check digit number and arrest date available do not send the fingerprint override reason-->
+       <!-- Only Send the Finger Print Reason Code If We Are not Sending the Check Digit-->
         <xsl:choose>
-          <xsl:when test="/Integration/Case[not(Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber)]">
-            <xsl:if test="/Integration/Case/Charge/BookingAgency/ArrestDate[1]">
-              <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
-            </xsl:if>
+          <xsl:when test="$CheckDigit = ''">
+            <xsl:value-of select="$FingerPrintReason"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text/>
@@ -160,6 +165,10 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
 
