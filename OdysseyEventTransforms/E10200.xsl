@@ -19,23 +19,20 @@
 <!-- *** 10     Crai-Bond-Type                    X(03)                 ***-->
 <!-- *** 10     Crai-Bond-Amount                  9(07)                 ***-->
 <!-- ***        Crai-Bond-Amount-R                                      ***-->
-<!-- *** 10     Redefines Crai-Bond-Amount	  X(07)                 ***-->
-<!-- *** 10	Crai-Bond-Serial-Number           X(10)                 ***-->
-<!-- *** 10	Crai-Bond-Issue-Date              X(08)                 ***-->
-<!-- *** 10	Crai-Bond-Termination-Date        X(08)                 ***-->
-<!-- *** 10	Crai-Bondsman-Ssn                 X(09)                 ***-->
-<!-- *** 10	Crai-Surety-Name                  X(28)                 ***-->
-<!-- *** 10	Crai-Judge-Id                     X(06)                 ***-->
-<!-- *** 10	Crai-Bond-Vision-Link-Code        X(10)                 ***-->
-<!-- *** 10	Filler                            X(58)                 ***-->
+<!-- *** 10     Redefines Crai-Bond-Amount	  X(07)                     ***-->
+<!-- *** 10	Crai-Bond-Serial-Number           X(10)                     ***-->
+<!-- *** 10	Crai-Bond-Issue-Date              X(08)                     ***-->
+<!-- *** 10	Crai-Bond-Termination-Date        X(08)                     ***-->
+<!-- *** 10	Crai-Bondsman-Ssn                 X(09)                     ***-->
+<!-- *** 10	Crai-Surety-Name                  X(28)                     ***-->
+<!-- *** 10	Crai-Judge-Id                     X(06)                     ***-->
+<!-- *** 10	Crai-Bond-Vision-Link-Code        X(10)                     ***-->
+<!-- *** 10	Filler                            X(58)                     ***-->
 <!-- **********************************************************************-->
   <xsl:template name="E10200">
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E10200</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="TrailerRecord">
-        <xsl:text>TotalEventRec</xsl:text>
       </xsl:attribute>
       <!--Flag-->
       <Data Position="1" Length="1" Segment="Flag">
