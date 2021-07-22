@@ -1,7 +1,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<!-- ********************************************************************-->
-<!-- ************* template for E10227 Bond Amount / Type Change **********-->
-<!-- ********************************************************************-->
+<!-- **************************************************************************-->
+<!-- ************* template for E10227 Bond Amount / Type Change **************-->
+<!-- *** 7/21/21: Updated amount to not provide 'cent' information INT-5966 ***-->
+<!-- **************************************************************************-->
   <xsl:template name="E10227">
     <Event>
       <xsl:attribute name="EventID">
@@ -36,13 +37,13 @@
          <xsl:choose>
           <xsl:when test="contains($BondAmount,'.')='true'">
             <xsl:call-template name="PaddWithZeros">
-              <xsl:with-param name="Value" select="translate($BondAmount,'.','')"/>
+              <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
               <xsl:with-param name="Length" select="7"/>
             </xsl:call-template>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="PaddWithZeros">
-              <xsl:with-param name="Value" select="concat($BondAmount,'00')"/>
+              <xsl:with-param name="Value" select="$BondAmount"/>
               <xsl:with-param name="Length" select="7"/>
             </xsl:call-template>
           </xsl:otherwise>
@@ -186,6 +187,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
