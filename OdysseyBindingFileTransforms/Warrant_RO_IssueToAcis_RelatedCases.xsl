@@ -10,6 +10,8 @@
 <!-- ***          E10110 Service Date Change                                    *** -->
 <!-- *** 7/13/21: Removed the following events per INT-5966                     *** -->
 <!-- ***          E30100 Case Reinstated Indicator Change                       *** -->
+<!-- *** 7/21/21: Replaced the E10227 event with the new E10200 event           *** -->
+<!-- ***          per INT-5966                                                  *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
@@ -26,7 +28,7 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00732.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00730.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00705.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10227.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10200.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10110.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00740.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30300.xsl"/>
@@ -77,7 +79,8 @@
         <!-- <xsl:call-template name='E00732'/>  -->
         <!-- <xsl:call-template name='E00730'/>  -->
         <xsl:call-template name='E00705'/>
-        <xsl:call-template name='E10227'/>
+        <!-- <xsl:call-template name='E10227'/> -->
+        <xsl:call-template name='E10200'/>
         <!-- <xsl:call-template name='E10110'/>  -->
         <xsl:call-template name='E00740'/>
         <xsl:call-template name='E30300'/>
@@ -92,5 +95,7 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
