@@ -10,6 +10,8 @@
 <!-- ***       This event is being added at the request of the AOC      ***-->
 <!-- ***       against our recommendations.                             ***-->
 <!-- *** Change Log: 7-21-2021: RED Initial Creation                    ***-->
+<!-- ***             7-26-2021: RED Changed bond line number to be a    ***-->
+<!-- ***                        harcoded value of 01 INT-6156           ***-->
 <!-- **********************************************************************-->
 <!-- ***  Copybook: Crim.Prod.Copylib(CraiBonod)                        ***-->
 <!-- ***                                                                ***-->
@@ -19,15 +21,15 @@
 <!-- *** 10     Crai-Bond-Type                    X(03)                 ***-->
 <!-- *** 10     Crai-Bond-Amount                  9(07)                 ***-->
 <!-- ***        Crai-Bond-Amount-R                                      ***-->
-<!-- *** 10     Redefines Crai-Bond-Amount	  X(07)                     ***-->
-<!-- *** 10	Crai-Bond-Serial-Number           X(10)                     ***-->
-<!-- *** 10	Crai-Bond-Issue-Date              X(08)                     ***-->
-<!-- *** 10	Crai-Bond-Termination-Date        X(08)                     ***-->
-<!-- *** 10	Crai-Bondsman-Ssn                 X(09)                     ***-->
-<!-- *** 10	Crai-Surety-Name                  X(28)                     ***-->
-<!-- *** 10	Crai-Judge-Id                     X(06)                     ***-->
-<!-- *** 10	Crai-Bond-Vision-Link-Code        X(10)                     ***-->
-<!-- *** 10	Filler                            X(58)                     ***-->
+<!-- *** 10     Redefines Crai-Bond-Amount	  X(07)                 ***-->
+<!-- *** 10	Crai-Bond-Serial-Number           X(10)                 ***-->
+<!-- *** 10	Crai-Bond-Issue-Date              X(08)                 ***-->
+<!-- *** 10	Crai-Bond-Termination-Date        X(08)                 ***-->
+<!-- *** 10	Crai-Bondsman-Ssn                 X(09)                 ***-->
+<!-- *** 10	Crai-Surety-Name                  X(28)                 ***-->
+<!-- *** 10	Crai-Judge-Id                     X(06)                 ***-->
+<!-- *** 10	Crai-Bond-Vision-Link-Code        X(10)                 ***-->
+<!-- *** 10	Filler                            X(58)                 ***-->
 <!-- **********************************************************************-->
   <xsl:template name="E10200">
     <Event>
@@ -39,7 +41,9 @@
         <xsl:text>B</xsl:text>
       </Data>
       <!--Crai-Bond-Line-Number-->
-      <Data Position='2' Length='2' Segment='CraiBondLineNumber' AlwaysNull="true" />
+      <Data Position='2' Length='2' Segment='CraiBondLineNumber'>
+        <xsl:text>01</xsl:text>
+      </Data>
       <!--Crai-Bond-Type-->
       <Data Position='3' Length='3' Segment='CRRBONDT'>
         <xsl:call-template name="GetACISBondTypeCode">
@@ -51,7 +55,7 @@
         <xsl:value-of select="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/Amount"/>
       </xsl:variable>
       <Data Position='4' Length='7' Segment='CRRBONDA'>
-         <xsl:choose>
+        <xsl:choose>
           <xsl:when test="contains($BondAmount,'.')='true'">
             <xsl:call-template name="PaddWithZeros">
               <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
@@ -66,7 +70,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </Data>
-     <!-- Crai-Bond-Serial-Number -->
+      <!-- Crai-Bond-Serial-Number -->
       <Data Position='5' Length='10' Segment='CraiBondSerialNumber' AlwaysNull="true"/>
       <Data Position='6' Length='8' Segment='CraiBondIssueDate' AlwaysNull="true"/>
       <Data Position='7' Length='8' Segment='CraiBondTerminationDate' AlwaysNull="true"/>
@@ -211,6 +215,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
