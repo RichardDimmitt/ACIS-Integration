@@ -165,11 +165,11 @@
         <xsl:value-of select="'ALE'"/>
       </xsl:when>
       <!--International Airport Police-->
-      <xsl:when test="(contains($desc,'Airport'))">
+      <xsl:when test="(contains($desc,'Airport')) and not(contains($desc,'Communications'))">
         <xsl:value-of select="'APD'"/>
       </xsl:when>
       <!--City Police Department-->
-      <xsl:when test="(contains($desc,'Police Department'))">
+      <xsl:when test="(contains($desc,'Police Department')) and not(contains($desc,'College')) and not(contains($desc,'University')) and not(contains($desc,'Company')) and not(contains($desc,'Special')) and not(contains($desc,'Hospital')) and not(contains($desc,'Campus')) and not(contains($desc,'School')) and not(contains($desc,'Railway')) and not(contains($desc,'Harbor')) and not(contains($desc,'District')) and not(contains($desc,'NC ')) and not(contains($desc,'North Carolina')) and not(contains($desc,'TVA')) and not(contains($desc,'Healthcare')) and not(contains($desc,'County'))">
         <xsl:value-of select="'CPD'"/>
       </xsl:when>
       <!--Clerk of Superior Court-->
@@ -178,6 +178,9 @@
       </xsl:when>
       <!--Division of Community Corrections-->
       <xsl:when test="(contains($desc,'Correctional'))">
+        <xsl:value-of select="'DCC'"/>
+      </xsl:when>
+      <xsl:when test="(contains($desc,'Corrections'))">
         <xsl:value-of select="'DCC'"/>
       </xsl:when>
       <!--Division of Motor Vehicles-->
@@ -201,7 +204,7 @@
         <xsl:value-of select="'SBI'"/>
       </xsl:when>
       <!--County Sheriff Department-->
-      <xsl:when test="(contains($desc,'Sheriff'))">
+      <xsl:when test="(contains($desc,'Sheriff')) and not(contains($desc,' VA '))">
         <xsl:value-of select="'SFF'"/>
       </xsl:when>
       <!--State Highway Patrol-->
@@ -245,3 +248,4 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
