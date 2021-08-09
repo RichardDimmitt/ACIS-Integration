@@ -14,8 +14,9 @@
   <!-- *** 7-14-2021: Update the logic that includes the 9955 CVR offense to  ***-->
   <!-- ***            to look for the precence of one of three case event     ***-->
   <!-- ***            codes, EWCVR CVR PROVCVR                                ***-->
+  <!-- *** 8-07-2021: Corrected CVR offense logic INT-6272                    ***-->
   <!-- **************************************************************************-->
-    <xsl:template name="E50001">
+  <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
       <xsl:for-each select="/Integration/Case/Charge/ChargeHistory">
         <xsl:sort select="ChargeNumber" data-type="number" order="descending"/>
@@ -149,7 +150,8 @@
     <!-- ***************************************************** -->
     <!-- Section to build CVR Offense based on case event data -->
     <!-- ***************************************************** -->
-    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains('EWCVR CVR PROVCVR',@Word)]]">
+    <xsl:variable name="CVREventCodeList" select="'EWCVR CVR PROVCVR'"/>
+    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E50001</xsl:text>
@@ -292,6 +294,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
