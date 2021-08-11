@@ -20,6 +20,9 @@
   <!-- ***             - ARREST DATE IS REQUIRED WHEN CHECK DIGIT IS ENTERED            ***-->
   <!-- ***             - CHECK DIGIT IS REQUIRED WHEN ARREST DATE IS ENTERED            ***-->
   <!-- ***             - REASON CODE IS ONLY ALLOWED WHEN CHECK DIGIT AND DOA ARE BLANK ***-->
+  <!-- *** 8/11/2021: Updated hearing information to pull from the most recent hearing  ***-->
+  <!-- ***            and setting and also corrected substring logic on court room      ***-->
+  <!-- ***            location INT-6273                                                 ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E10100">
     <xsl:variable name="ArrestDate">
@@ -32,6 +35,9 @@
     </xsl:variable>
     <xsl:variable name="FingerPrintReason">
       <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+    </xsl:variable>
+    <xsl:variable name="CurrentSettingID">
+      <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')][last()]/@InternalSettingID"/>
     </xsl:variable>
     <Event>
       <xsl:attribute name="EventID">
@@ -49,17 +55,17 @@
       </Data>
       <!--Hearing Date-->
       <Data Position='3' Length='8' Segment='CRRTDT'>
-        <xsl:call-template name="formatDateYYYYMMDD">
-          <xsl:with-param name="date" select="/Integration/Case/Hearing[last()]/Setting/HearingDate"/>
-        </xsl:call-template>
+          <xsl:call-template name="formatDateYYYYMMDD">
+            <xsl:with-param name="date" select="/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/HearingDate"/>
+          </xsl:call-template>
       </Data>
       <!--Hearing Time Period Indicator (AM / PM)-->
       <Data Position='4' Length='2' Segment='CRRCRT'>
-        <xsl:value-of select="substring-after(/Integration/Case/Hearing[last()]/Setting/StartTime,' ')"/>
+          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]//StartTime,' ')"/>
       </Data>
       <!--Hearing Court Room Location-->
       <Data Position='5' Length='4' Segment='CRRRNO'>
-        <xsl:value-of select="/Integration/Case/Hearing[last()]/Setting/CourtResource[Type/@Word='LOC']/Code/@Word[1]"/>
+          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/CourtResource[Type/@Word='LOC']/Code/@Word[1],'-')"/>
       </Data>
       <!--Incident Number-->
       <Data Position='6' Length='20' Segment='CRRINC'>
@@ -165,6 +171,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

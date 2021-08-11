@@ -6,7 +6,7 @@
   <!-- *** 8/11/2021: Initial Creation: INT-6269                                        ***-->
   <!-- *** 8/11/2021: Updated hearing information to pull from the most recent hearing  ***-->
   <!-- ***            and setting and also corrected substring logic on court room      ***-->
-  <!-- ***            location INT-6273 -->
+  <!-- ***            location INT-6273                                                 ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E10100NonOFAService">
     <xsl:variable name="FelonyPresent">

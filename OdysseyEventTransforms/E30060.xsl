@@ -7,12 +7,16 @@
   <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
   <!-- ****         code as these will be prefixed with the County        ****-->
   <!-- ****         number: ODY-346525                                    ****-->
+  <!-- **** 8-11-21 Updated CurrentSettingID variable to grab the last    ****-->
+  <!-- ****         setting on the last hearing and corrected the start   ****-->
+  <!-- ****         time to account for the fact that the hearing may be  ****-->
+  <!-- ****         ad-hoc or scheduled in a session block                ****-->
   <!-- ***********************************************************************-->
     <xsl:variable name="CaseType">
       <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,3)"/>
     </xsl:variable>
     <xsl:variable name="CurrentSettingID">
-      <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')]/@InternalSettingID"/>
+      <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')][last()]/@InternalSettingID"/>
     </xsl:variable>
     <xsl:if test="$CaseType='CRS'">
       <Event>
@@ -50,7 +54,7 @@
         </Data>
         <!--Hearing Time Period Indicator (AM / PM)-->
         <Data Position='10' Length='2' Segment='CRRCRT'>
-          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]/StartTime,' ')"/>
+          <xsl:value-of select="substring-after(/Integration/Case/Hearing/Setting[@InternalSettingID=$CurrentSettingID]//StartTime,' ')"/>
         </Data>
         <!--Padding at the end to form the total length-->
         <Data Position='11' Length='162' Segment='Filler' AlwaysNull="true" />
@@ -93,6 +97,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
