@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ***************************************************************************-->
-  <!-- *** template for E00730 FingerPrint Number, Date of Arrest Change *********-->
-  <!-- ***************************************************************************-->
+  <!-- ************************************************************************************-->
+  <!-- *** template for E00730 FingerPrint Number, Date of Arrest Change ******************-->
+  <!-- *** Change Log:                                                                  ***-->
+  <!-- *** 7/20/2021: Implemented the following business logic rules based              ***-->
+  <!-- ***            on ALI error report information  INT-6268                         ***-->
+  <!-- ***             - ARREST DATE IS REQUIRED WHEN CHECK DIGIT IS ENTERED            ***-->
+  <!-- ***             - CHECK DIGIT IS REQUIRED WHEN ARREST DATE IS ENTERED            ***-->
+  <!-- ************************************************************************************-->
   <xsl:template name="E00730">
-    <xsl:if test="/Integration/Case/Charge[BookingAgency/ArrestDate][1]/BookingAgency/ArrestDate">
-      <Event>
-        <xsl:attribute name="EventID">
-          <xsl:text>E00730</xsl:text>
-        </xsl:attribute>
-        <xsl:attribute name="TrailerRecord">
-          <xsl:text>TotalEventRec</xsl:text>
-        </xsl:attribute>
-        <!-- Flag -->
-        <Data Position="1" Length="6" Segment="Flag">
-          <xsl:text>E00730</xsl:text>
-        </Data>
-        <!--CraiOffenseNumber-->
-        <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
-        <!--CraiOtherNumber-->
-        <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
-        <!-- Fingerprint Number Old -->
-        <Data Position='4' Length='7' Segment='CRSCDT-OLD' AlwaysNull="true"/>
-        <!-- Date of Arrest Old -->
-        <Data Position='5' Length='8' Segment='CRSDOA-OLD' AlwaysNull="true"/>
-        <!-- Fingerprint Number -->
-        <Data Position='6' Length='7' Segment='CRSCDT'>
-          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
-        </Data>
-        <!-- Date of Arrest -->
-        <Data Position='7' Length='8' Segment='CRSDOA'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/Charge[BookingAgency/ArrestDate][1]/BookingAgency/ArrestDate"/>
-          </xsl:call-template>
-        </Data>
-        <!-- Filler -->
-        <Data Position='8' Length='160' Segment='Filler' AlwaysNull="true"/>
-      </Event>
+    <xsl:variable name="ArrestDate">
+      <xsl:call-template name="formatDateYYYYMMDD">
+        <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="CheckDigit">
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+    </xsl:variable>
+    <xsl:if test="$ArrestDate != ''">
+      <xsl:if test="$CheckDigit != ''">
+        <Event>
+          <xsl:attribute name="EventID">
+            <xsl:text>E00730</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="TrailerRecord">
+            <xsl:text>TotalEventRec</xsl:text>
+          </xsl:attribute>
+          <!-- Flag -->
+          <Data Position="1" Length="6" Segment="Flag">
+            <xsl:text>E00730</xsl:text>
+          </Data>
+          <!--CraiOffenseNumber-->
+          <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
+          <!--CraiOtherNumber-->
+          <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+          <!-- Fingerprint Number Old -->
+          <Data Position='4' Length='7' Segment='CRSCDT-OLD' AlwaysNull="true"/>
+          <!-- Date of Arrest Old -->
+          <Data Position='5' Length='8' Segment='CRSDOA-OLD' AlwaysNull="true"/>
+          <!-- Fingerprint Number -->
+          <Data Position='6' Length='7' Segment='CRSCDT'>
+          <!-- Only Send the Check Digit If An Arrest Date Is Available-->
+            <xsl:value-of select="$CheckDigit"/>
+          </Data>
+          <!-- Date of Arrest -->
+          <Data Position='7' Length='8' Segment='CRSDOA'>
+          <!-- Only Send the Arrest Date If A Check Digit Is Available -->
+            <xsl:value-of select="$ArrestDate"/>
+          </Data>
+          <!-- Filler -->
+          <Data Position='8' Length='160' Segment='Filler' AlwaysNull="true"/>
+        </Event>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -75,6 +90,10 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
 
