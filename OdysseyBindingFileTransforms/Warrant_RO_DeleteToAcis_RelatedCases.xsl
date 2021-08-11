@@ -5,8 +5,6 @@
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10227.xsl"/>
-  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00730.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -39,6 +37,26 @@
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
+  <xsl:template name="E00730">
+    <Event>
+      <xsl:attribute name="EventID">
+        <xsl:text>E00730</xsl:text>
+      </xsl:attribute>
+      <xsl:attribute name="TrailerRecord">
+        <xsl:text>TotalEventRec</xsl:text>
+      </xsl:attribute>
+      <Data Position="1" Length="6" Segment="Flag">
+        <xsl:text>E00730</xsl:text>
+      </Data>
+      <Data Position='2' Length='2'   Segment='CraiOffenseNumber' AlwaysNull="true"/>
+      <Data Position='3' Length='2'   Segment='CraiOtherNumber'   AlwaysNull="true"/>
+      <Data Position='4' Length='7'   Segment='CRSCDT-OLD'        AlwaysNull="true"/>
+      <Data Position='5' Length='8'   Segment='CRSDOA-OLD'        AlwaysNull="true"/>
+      <Data Position='6' Length='7'   Segment='CRSCDT'            AlwaysNull="true"/>
+      <Data Position='7' Length='8'   Segment='CRSDOA'            AlwaysNull="true"/>
+      <Data Position='8' Length='160' Segment='Filler'            AlwaysNull="true"/>
+    </Event>
+  </xsl:template>
   <xsl:template name="E10227">
     <Event>
       <xsl:attribute name="EventID">
@@ -60,4 +78,5 @@
     </Event>
   </xsl:template>
 </xsl:stylesheet>
+
 
