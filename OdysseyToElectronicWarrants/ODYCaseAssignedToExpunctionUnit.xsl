@@ -24,7 +24,7 @@
                 <xsl:text>delete</xsl:text>
               </updateType>
               <deletionReason>
-                <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+                <xsl:text>Case was assigned to expuntion unit</xsl:text>
               </deletionReason>
             </xsl:if>
           </xsl:if>
