@@ -6,6 +6,8 @@
   <!-- *** 8-09-2021: Updated to provide a default value of 999 in the event  ***-->
   <!--                the Odyssey language code is not a valid ACIS code      ***-->
   <!-- ***            ODY-350220                                              ***-->
+  <!-- *** 8-13-2021: Updated to not provide a default value of 999 in the    ***-->
+  <!--                event there is no language specified in Odyssey INT-6313*** -->
   <!-- **************************************************************************-->
   <xsl:template name="E30300">
     <xsl:variable name="DefendantID">
@@ -15,6 +17,9 @@
       <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID and NeedsInterpreter='true']/Language[@PrimaryLanguage='true']/@Word"/>
     </xsl:variable>
     <xsl:variable name="ACISLanguageList" select="'999 AMH ARB ASE BOS CES CHK CLY CMN CMO FRA GUJ HAK HAT HAU HIN HND HNJ IBO IND JPN JRA KAR KHM KLU KOR KQO LAO MAH MNG MYA NEP PAN PBT PES POL POR RAD RUS SPA SRP SWH TGL THA TIR UND URD VIE YUE'"/>
+    <Langugage>
+      <xsl:value-of select="$LanguageCode"/>
+    </Langugage>
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E30300</xsl:text>
@@ -35,6 +40,9 @@
       <!-- Interpreter Flag (SP/OTS/ASL) -->
       <Data Position='5' Length='3' Segment='CRRINT'>
         <xsl:choose>
+          <xsl:when test="$LanguageCode = ''">
+            <xsl:value-of select="''"/>
+          </xsl:when>
           <xsl:when test="contains(concat(' ', $ACISLanguageList, ' '), concat(' ', $LanguageCode, ' '))">
             <xsl:value-of select="$LanguageCode"/>
           </xsl:when>
@@ -48,6 +56,8 @@
     </Event>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
