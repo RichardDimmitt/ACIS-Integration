@@ -1,9 +1,11 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<!-- **************************************************************************-->
-<!-- ************* template for E10227 Bond Amount / Type Change **************-->
-<!-- *** 7/21/21: Updated amount to not provide 'cent' information INT-5966 ***-->
-<!-- **************************************************************************-->
+<!-- *****************************************************************************-->
+<!-- ************* template for E10227 Bond Amount / Type Change *****************-->
+<!-- *** 7/21/21: Updated amount to not provide 'cent' information INT-5966    ***-->
+<!-- *** 8/17/21: Updated to not send if no bond setting is available INT-6325 ***-->
+<!-- *****************************************************************************-->
   <xsl:template name="E10227">
+    <xsl:if test="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType">
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E10227</xsl:text>
@@ -52,6 +54,7 @@
       <!-- Padding at the end to form the total length 200 -->
       <Data Position='8' Length='170' Segment='Filler' AlwaysNull="true"/>
     </Event>
+    </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
   <!-- ****************** template for padding zeros **********************-->
@@ -187,6 +190,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
