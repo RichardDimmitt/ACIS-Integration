@@ -1,12 +1,21 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<!-- ********************************************************************-->
-	<!-- **************** template for E00050 Case Add **********************-->
-	<!-- ********************************************************************-->
+	<!-- *************************************************************************-->
+	<!-- **************** template for E00050 Case Add ***************************-->
+	<!-- *** 08-17-21 Updated to provide the default value of N for the CRRCMV ***-->
+	<!-- ***          segment in the event that the commerical DL indicator    ***-->
+	<!-- ***          is provided but no commerical vehicle flag is provided   ***-->
+	<!-- ***          in the IXML INT-6319                                     ***-->
+	<!-- *************************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/Charge[1]/@InternalPartyID"/>
     </xsl:variable>
     <xsl:variable name="ZIP" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip,1,5)"/>
+    <xsl:variable name="CommercialDL">
+      <xsl:call-template name="GetACISCDLCode">
+        <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
+      </xsl:call-template>
+    </xsl:variable>
     <Event>
       <xsl:attribute name="EventID">
         <xsl:text>E00050</xsl:text>
@@ -193,9 +202,7 @@
       </Data>
       <!--Citation Commerical DL Indicator-->
       <Data Position="24" Length="1" Segment="CRRCDL">
-        <xsl:call-template name="GetACISCDLCode">
-          <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
-        </xsl:call-template>
+        <xsl:value-of select="$CommercialDL"/>
       </Data>
       <!--Citation Commerical Vehicle Indicator-->
       <Data Position="25" Length="1" Segment="CRRCMV">
@@ -204,6 +211,9 @@
             <xsl:value-of select="'Y'"/>
           </xsl:when>
           <xsl:when test="(/Integration/Citation[1]/Vehicle/CommercialVehicleFlag='false')">
+            <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:when test="($CommercialDL!='')">
             <xsl:value-of select="'N'"/>
           </xsl:when>
           <xsl:otherwise>
@@ -239,19 +249,19 @@
           <xsl:when test="(/Integration/Citation/Incident/Fatalities)">
             <xsl:value-of select="'F'"/>
             <!-- Fatality -->
-					</xsl:when>
+	  </xsl:when>
           <xsl:when test="(/Integration/Citation/Incident/NumberOfInjuries)">
             <xsl:value-of select="'I'"/>
             <!-- Personal Injury -->
-					</xsl:when>
+          </xsl:when>
           <xsl:when test="(/Integration/Citation/Incident/Property)">
             <xsl:value-of select="'P'"/>
             <!-- Property Damage -->
-					</xsl:when>
+          </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="'N'"/>
             <!-- Near Accident or No Accident -->
-					</xsl:otherwise>
+          </xsl:otherwise>
         </xsl:choose>
       </Data>
       <!--Citation Highway-->
@@ -590,6 +600,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
