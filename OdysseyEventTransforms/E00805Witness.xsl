@@ -1,6 +1,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- ********************************************************************-->
-  <!-- ******** template for E00805 Witness *****************-->
+  <!-- ******** template for E00805 Witness                         *******-->
+  <!-- *** 08-17-21 Updated to not send officer agency or badge number  ***-->
+  <!-- ***          information. INT-6337                               ***-->
   <!-- ********************************************************************-->
   <xsl:template name="E00805Witness">
     <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT VIC',@Word) and not(RemovedDate)]]">
@@ -118,15 +120,9 @@
         <!--Witness Home Phone Number-->
         <Data Position='9' Length='10' Segment='CRWPNO'  AlwaysNull="true" />
         <!--Witness Officer Agency-->
-        <Data Position='10' Length='3' Segment='CRWAGY'>
-          <xsl:call-template name="GetACISAgency">
-            <xsl:with-param name="desc" select = "/Integration/Party[@InternalPartyID=$complainantID]/Officer/Agency"/>
-          </xsl:call-template>
-        </Data>
+        <Data Position='10' Length='3' Segment='CRWAGY'  AlwaysNull="true" />
         <!--Witness Officer Number-->
-        <Data Position='11' Length='6' Segment='CRWONO'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/Officer/BadgeNumber"/>
-        </Data>
+        <Data Position='11' Length='6' Segment='CRWONO'  AlwaysNull="true" />
         <!--Witness Supoena Requested Indicator-->
         <Data Position='12' Length='1' Segment='CRWSCK' AlwaysNull="true" />
         <!--Witness Supoena Issue Date-->
@@ -149,76 +145,6 @@
         <Data Position='20' Length='47' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:for-each>
-  </xsl:template>
-  <!-- ********************************************************************-->
-  <!-- **************** template for mapping agency codes *****************-->
-  <!-- ********************************************************************-->
-  <xsl:template name="GetACISAgency">
-    <xsl:param name ="desc"/>
-    <xsl:choose>
-      <!--Alcohol Beverage Control-->
-      <xsl:when test="(contains($desc,'ABC'))">
-        <xsl:value-of select="'ABC'"/>
-      </xsl:when>
-      <!--State Alcohol Law Enforcement-->
-      <xsl:when test="(contains($desc,'Alcohol Law Enforcement'))">
-        <xsl:value-of select="'ALE'"/>
-      </xsl:when>
-      <!--International Airport Police-->
-      <xsl:when test="(contains($desc,'Airport')) and not(contains($desc,'Communications'))">
-        <xsl:value-of select="'APD'"/>
-      </xsl:when>
-      <!--City Police Department-->
-      <xsl:when test="(contains($desc,'Police Department')) and not(contains($desc,'College')) and not(contains($desc,'University')) and not(contains($desc,'Company')) and not(contains($desc,'Special')) and not(contains($desc,'Hospital')) and not(contains($desc,'Campus')) and not(contains($desc,'School')) and not(contains($desc,'Railway')) and not(contains($desc,'Harbor')) and not(contains($desc,'District')) and not(contains($desc,'NC ')) and not(contains($desc,'North Carolina')) and not(contains($desc,'TVA')) and not(contains($desc,'Healthcare')) and not(contains($desc,'County'))">
-        <xsl:value-of select="'CPD'"/>
-      </xsl:when>
-      <!--Clerk of Superior Court-->
-      <xsl:when test="(contains($desc,'Superior'))">
-        <xsl:value-of select="'CSC'"/>
-      </xsl:when>
-      <!--Division of Community Corrections-->
-      <xsl:when test="(contains($desc,'Correctional'))">
-        <xsl:value-of select="'DCC'"/>
-      </xsl:when>
-      <xsl:when test="(contains($desc,'Corrections'))">
-        <xsl:value-of select="'DCC'"/>
-      </xsl:when>
-      <!--Division of Motor Vehicles-->
-      <xsl:when test="(contains($desc,'Motor Vehicles'))">
-        <xsl:value-of select="'DMV'"/>
-      </xsl:when>
-      <!--Federal Bureau of Investigation-->
-      <xsl:when test="(contains($desc,'Federal Bureau of Investigation'))">
-        <xsl:value-of select="'FBI'"/>
-      </xsl:when>
-      <!--NC License & Theft Division-->
-      <xsl:when test="(contains($desc,'License And Theft'))">
-        <xsl:value-of select="'L-T'"/>
-      </xsl:when>
-      <!--Magistrate-->
-      <xsl:when test="(contains($desc,'Magistrate'))">
-        <xsl:value-of select="'MAG'"/>
-      </xsl:when>
-      <!--State Bureau of Investigation-->
-      <xsl:when test="(contains($desc,'State Bureau Of Investigation'))">
-        <xsl:value-of select="'SBI'"/>
-      </xsl:when>
-      <!--County Sheriff Department-->
-      <xsl:when test="(contains($desc,'Sheriff')) and not(contains($desc,' VA '))">
-        <xsl:value-of select="'SFF'"/>
-      </xsl:when>
-      <!--State Highway Patrol-->
-      <xsl:when test="(contains($desc,'State Highway Patrol'))">
-        <xsl:value-of select="'SHP'"/>
-      </xsl:when>
-      <!--Wildlife Resources Commission-->
-      <xsl:when test="(contains($desc,'Wildlife Resource Commission'))">
-        <xsl:value-of select="'WRC'"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="'OTH'"/>
-      </xsl:otherwise>
-    </xsl:choose>
   </xsl:template>
   <!-- ********************************************************************-->
   <!-- ************ template for mapping witness types ********************-->
@@ -248,4 +174,5 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
