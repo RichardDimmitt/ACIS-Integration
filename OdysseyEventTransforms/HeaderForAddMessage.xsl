@@ -1,5 +1,4 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:template name="HeaderForAddMessage">
   <!-- ***********************************************************************-->
   <!-- ********** template for Header Record for Add Messages    *************-->
   <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
@@ -7,7 +6,9 @@
   <!-- ****         number: ODY-346525                                    ****-->
   <!-- **** 6-23-21 Update logic that is used for the CraiCreatedDtTs and ****-->
   <!-- ****         CraiUpdatedDtTs timestamps: INT-5777                  ****-->
+  <!-- **** 8-17-21 Updated to send 24 hour time INT-6322                 ****-->
   <!-- ***********************************************************************-->
+  <xsl:template name="HeaderForAddMessage">
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
         <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
@@ -129,7 +130,7 @@
           <xsl:with-param name="Nbr" select="substring-before($TimeTemp,':')"/>
         </xsl:call-template>
       </xsl:variable>
-      <xsl:variable name="hhf">
+      <xsl:variable name="hh24">
         <xsl:if test="contains($dateTime, 'PM')">
           <xsl:value-of select="$hh+12"/>
         </xsl:if>
@@ -156,7 +157,7 @@
           </xsl:call-template>
         </xsl:if>
       </xsl:variable>
-      <xsl:value-of select="concat($year,$month,$day,$hh,$mm,$ss)"/>
+      <xsl:value-of select="concat($year,$month,$day,$hh24,$mm,$ss)"/>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -213,6 +214,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

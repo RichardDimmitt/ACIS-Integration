@@ -129,7 +129,7 @@
           <xsl:with-param name="Nbr" select="substring-before($TimeTemp,':')"/>
         </xsl:call-template>
       </xsl:variable>
-      <xsl:variable name="hhf">
+      <xsl:variable name="hh24">
         <xsl:if test="contains($dateTime, 'PM')">
           <xsl:value-of select="$hh+12"/>
         </xsl:if>
@@ -156,7 +156,7 @@
           </xsl:call-template>
         </xsl:if>
       </xsl:variable>
-      <xsl:value-of select="concat($year,$month,$day,$hh,$mm,$ss)"/>
+      <xsl:value-of select="concat($year,$month,$day,$hh24,$mm,$ss)"/>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -213,6 +213,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
