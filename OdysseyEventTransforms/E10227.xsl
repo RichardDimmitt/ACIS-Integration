@@ -3,57 +3,65 @@
 <!-- ************* template for E10227 Bond Amount / Type Change *****************-->
 <!-- *** 7/21/21: Updated amount to not provide 'cent' information INT-5966    ***-->
 <!-- *** 8/17/21: Updated to not send if no bond setting is available INT-6325 ***-->
+<!-- *** 8/30/21: RED Updated so that no bond amount is provided if the bond   ***-->
+<!-- ***          type is 'CUS' INT-6344                                       ***-->
 <!-- *****************************************************************************-->
   <xsl:template name="E10227">
     <xsl:if test="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType">
-    <Event>
-      <xsl:attribute name="EventID">
-        <xsl:text>E10227</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="TrailerRecord">
-        <xsl:text>TotalEventRec</xsl:text>
-      </xsl:attribute>
-      <!--Flag-->
-      <Data Position="1" Length="6" Segment="Flag">
-        <xsl:text>E10227</xsl:text>
-      </Data>
-      <!--CraiOffenseNumber-->
-      <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
-      <!--CraiOtherNumber-->
-      <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
-      <!-- Bond Type Old -->
-      <Data Position='4' Length='3' Segment='CRRBONDT-OLD' AlwaysNull="true"/>
-      <!-- Bond Amount Old -->
-      <Data Position='5' Length='7' Segment='CRRBONDA-OLD' AlwaysNull="true"/>
-      <!-- Bond Type -->
-      <Data Position='6' Length='3' Segment='CRRBONDT'>
-        <xsl:call-template name="GetACISBondTypeCode">
-          <xsl:with-param name="code" select ="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType/@Word"/>
-        </xsl:call-template>
-      </Data>
-      <!-- Bond Amount -->
-      <xsl:variable name="BondAmount">
-        <xsl:value-of select="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/Amount"/>
-      </xsl:variable>
-      <Data Position='7' Length='7' Segment='CRRBONDA'>
-         <xsl:choose>
-          <xsl:when test="contains($BondAmount,'.')='true'">
-            <xsl:call-template name="PaddWithZeros">
-              <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
-              <xsl:with-param name="Length" select="7"/>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="PaddWithZeros">
-              <xsl:with-param name="Value" select="$BondAmount"/>
-              <xsl:with-param name="Length" select="7"/>
-            </xsl:call-template>
-          </xsl:otherwise>
-        </xsl:choose>
-      </Data>
-      <!-- Padding at the end to form the total length 200 -->
-      <Data Position='8' Length='170' Segment='Filler' AlwaysNull="true"/>
-    </Event>
+      <Event>
+        <xsl:attribute name="EventID">
+          <xsl:text>E10227</xsl:text>
+        </xsl:attribute>
+        <xsl:attribute name="TrailerRecord">
+          <xsl:text>TotalEventRec</xsl:text>
+        </xsl:attribute>
+        <!--Flag-->
+        <Data Position="1" Length="6" Segment="Flag">
+          <xsl:text>E10227</xsl:text>
+        </Data>
+        <!--CraiOffenseNumber-->
+        <Data Position='2' Length='2' Segment='CraiOffenseNumber' AlwaysNull="true" />
+        <!--CraiOtherNumber-->
+        <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+        <!-- Bond Type Old -->
+        <Data Position='4' Length='3' Segment='CRRBONDT-OLD' AlwaysNull="true"/>
+        <!-- Bond Amount Old -->
+        <Data Position='5' Length='7' Segment='CRRBONDA-OLD' AlwaysNull="true"/>
+        <!-- Bond Type -->
+        <xsl:variable name="BondType">
+          <xsl:call-template name="GetACISBondTypeCode">
+            <xsl:with-param name="code" select ="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType/@Word"/>
+          </xsl:call-template>
+        </xsl:variable>
+        <Data Position='6' Length='3' Segment='CRRBONDT'>
+          <xsl:value-of select="$BondType"/>
+        </Data>
+        <!-- Bond Amount -->
+        <xsl:variable name="BondAmount">
+          <xsl:value-of select="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/Amount"/>
+        </xsl:variable>
+        <Data Position='7' Length='7' Segment='CRRBONDA'>
+          <xsl:choose>
+            <xsl:when test="$BondType='CUS'">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:when test="contains($BondAmount,'.')='true'">
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
+                <xsl:with-param name="Length" select="7"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="$BondAmount"/>
+                <xsl:with-param name="Length" select="7"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
+        </Data>
+        <!-- Padding at the end to form the total length 200 -->
+        <Data Position='8' Length='170' Segment='Filler' AlwaysNull="true"/>
+      </Event>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -190,6 +198,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 

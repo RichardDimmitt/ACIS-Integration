@@ -12,6 +12,9 @@
 <!-- *** Change Log: 7-21-2021: RED Initial Creation                    ***-->
 <!-- ***             7-26-2021: RED Changed bond line number to be a    ***-->
 <!-- ***                        harcoded value of 01 INT-6156           ***-->
+<!-- ***             8-30-2021: RED Updated so that no bond amount is   ***-->
+<!-- ***                        provided if the bond type is 'CUS'      ***-->
+<!-- ***                        INT-6344                                ***-->
 <!-- **********************************************************************-->
 <!-- ***  Copybook: Crim.Prod.Copylib(CraiBonod)                        ***-->
 <!-- ***                                                                ***-->
@@ -45,10 +48,13 @@
         <xsl:text>01</xsl:text>
       </Data>
       <!--Crai-Bond-Type-->
-      <Data Position='3' Length='3' Segment='CRRBONDT'>
+      <xsl:variable name="BondType">
         <xsl:call-template name="GetACISBondTypeCode">
           <xsl:with-param name="code" select ="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType/@Word"/>
         </xsl:call-template>
+      </xsl:variable>
+      <Data Position='3' Length='3' Segment='CRRBONDT'>
+        <xsl:value-of select="$BondType"/>
       </Data>
       <!--Crai-Bond-Amount-->
       <xsl:variable name="BondAmount">
@@ -56,6 +62,9 @@
       </xsl:variable>
       <Data Position='4' Length='7' Segment='CRRBONDA'>
         <xsl:choose>
+          <xsl:when test="$BondType='CUS'">
+            <xsl:value-of select="''"/>
+          </xsl:when>
           <xsl:when test="contains($BondAmount,'.')='true'">
             <xsl:call-template name="PaddWithZeros">
               <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
@@ -215,6 +224,9 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 
