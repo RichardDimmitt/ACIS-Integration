@@ -5,6 +5,8 @@
 	<!-- ***          segment in the event that the commerical DL indicator    ***-->
 	<!-- ***          is provided but no commerical vehicle flag is provided   ***-->
 	<!-- ***          in the IXML INT-6319                                     ***-->
+        <!-- *** 08-30-21 Updated to base the CRRCDL segemet off the CDL flag in   ***-->
+        <!-- ***          the Citation IXML as opposed to the DL Type INT-6351     *** -->
 	<!-- *************************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
@@ -12,9 +14,17 @@
     </xsl:variable>
     <xsl:variable name="ZIP" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Address[@PartyCurrent='true']/Zip,1,5)"/>
     <xsl:variable name="CommercialDL">
-      <xsl:call-template name="GetACISCDLCode">
-        <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/DriversLicense[@Current='true']/DriversLicenseType/@Word"/>
-      </xsl:call-template>
+      <xsl:choose>
+        <xsl:when test="/Integration/Citation[Citee/DriversLicense/IsCDL='true']">
+          <xsl:value-of select="'Y'"/>
+        </xsl:when>
+        <xsl:when test="/Integration/Citation[not(Citee/DriversLicense/IsCDL='true')]">
+          <xsl:value-of select="'N'"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="''"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <Event>
       <xsl:attribute name="EventID">
@@ -213,7 +223,7 @@
           <xsl:when test="(/Integration/Citation[1]/Vehicle/CommercialVehicleFlag='false')">
             <xsl:value-of select="'N'"/>
           </xsl:when>
-          <xsl:when test="($CommercialDL!='')">
+          <xsl:when test="($CommercialDL != '')">
             <xsl:value-of select="'N'"/>
           </xsl:when>
           <xsl:otherwise>
@@ -228,6 +238,9 @@
             <xsl:value-of select="'Y'"/>
           </xsl:when>
           <xsl:when test="(/Integration/Citation[1]/Vehicle/HazardousVehicleFlag='false')">
+            <xsl:value-of select="'N'"/>
+          </xsl:when>
+          <xsl:when test="($CommercialDL != '')">
             <xsl:value-of select="'N'"/>
           </xsl:when>
           <xsl:otherwise>
@@ -600,6 +613,10 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
 
