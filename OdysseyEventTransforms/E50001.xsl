@@ -15,6 +15,8 @@
   <!-- ***            to look for the precence of one of three case event     ***-->
   <!-- ***            codes, EWCVR CVR PROVCVR                                ***-->
   <!-- *** 8-07-2021: Corrected CVR offense logic INT-6272                    ***-->
+  <!-- *** 8-30-2021: Updated to support multiple speeding additional charge  ***-->
+  <!-- ***            components INT-6354                                     ***-->
   <!-- **************************************************************************-->
   <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
@@ -24,6 +26,38 @@
           <xsl:value-of select="ChargeNumber"/>
         </xsl:if>
       </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="ActualSpeed">
+      <xsl:choose>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/SpeedingFineCalculationByMPH">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/SpeedingFineCalculationByMPH/SpeedActual"/>
+        </xsl:when>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeedingExempt">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeedingExempt/Speed"/>
+        </xsl:when>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeeding">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeeding/Speed"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="'0'"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="PostedSpeed">
+      <xsl:choose>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/SpeedingFineCalculationByMPH">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/SpeedingFineCalculationByMPH/SpeedPosted"/>
+        </xsl:when>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeedingExempt">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeedingExempt/SpeedLimit"/>
+        </xsl:when>
+        <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeeding">
+          <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional/NCHighSpeeding/SpeedLimit"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="'0'"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
       <Event>
@@ -127,17 +161,31 @@
         </Data>
         <!--Charged Speed-->
         <Data Position='9' Length='3' Segment='CRICSP' >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="Additional//Speed[1]"/>
-            <xsl:with-param name="Length" select="3"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="Additional/*[contains(name(),'Speeding')]">
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="$ActualSpeed"/>
+                <xsl:with-param name="Length" select="3"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="'000'"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Posted Speed-->
         <Data Position='10' Length='2' Segment='CRICSZ'  >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="Additional//SpeedLimit[1]"/>
-            <xsl:with-param name="Length" select="2"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="Additional/*[contains(name(),'Speeding')]">
+              <xsl:call-template name="PaddWithZeros">
+                <xsl:with-param name="Value" select="$PostedSpeed"/>
+                <xsl:with-param name="Length" select="2"/>
+              </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="'00'"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </Data>
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true" />
@@ -198,21 +246,21 @@
         <!--Charged Speed-->
         <Data Position='9' Length='3' Segment='CRICSP' >
           <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional//Speed[1]"/>
+            <xsl:with-param name="Value" select="$ActualSpeed"/>
             <xsl:with-param name="Length" select="3"/>
           </xsl:call-template>
         </Data>
         <!--Posted Speed-->
         <Data Position='10' Length='2' Segment='CRICSZ'  >
           <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']/Additional//SpeedLimit[1]"/>
+            <xsl:with-param name="Value" select="$PostedSpeed"/>
             <xsl:with-param name="Length" select="2"/>
           </xsl:call-template>
         </Data>
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType/@Word='EWCVR']/EventDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
           </xsl:call-template>
         </Data>
         <!--NA Vision Link Code-->
@@ -294,6 +342,10 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
 
 
 
