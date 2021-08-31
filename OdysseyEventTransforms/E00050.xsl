@@ -6,7 +6,8 @@
 	<!-- ***          is provided but no commerical vehicle flag is provided   ***-->
 	<!-- ***          in the IXML INT-6319                                     ***-->
         <!-- *** 08-30-21 Updated to base the CRRCDL segemet off the CDL flag in   ***-->
-        <!-- ***          the Citation IXML as opposed to the DL Type INT-6351     *** -->
+        <!-- ***          the Citation IXML as opposed to the DL Type INT-6351     ***-->
+        <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
 	<!-- *************************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
@@ -40,7 +41,7 @@
       </Data>
       <!--Defendant Name-->
       <Data Position="3" Length="28" Segment="CRRNAM">
-        <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/PartyName[@Current='true']/FormattedName"/>
+        <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$DefendantID]/PartyName[@Current='true']/FormattedName,'.','')"/>
       </Data>
       <!--Defendant Race-->
       <Data Position="4" Length="1" Segment="CRRACE">
@@ -613,6 +614,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

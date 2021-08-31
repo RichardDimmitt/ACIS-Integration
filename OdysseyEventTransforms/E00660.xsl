@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ********************************************************************-->
-  <!-- ******** template for E00660 Defendant Name and Alias Name**********-->
-  <!-- ********************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- ******** template for E00660 Defendant Name and Alias Name     **********-->
+  <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
+  <!-- *************************************************************************-->
   <xsl:template name="E00660">
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/Charge[1]/@InternalPartyID"/>
@@ -21,7 +22,7 @@
         </Data>
         <!--Defendant Name-->
         <Data Position="2" Length="28" Segment="CRRNAM">
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$DefendantID]/PartyName[not(@Current='true')][1]/FormattedName"/>
+          <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$DefendantID]/PartyName[not(@Current='true')][1]/FormattedName,'.','')"/>
         </Data>
         <!--NA Vision Link Code-->
         <Data Position='3' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
@@ -31,6 +32,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

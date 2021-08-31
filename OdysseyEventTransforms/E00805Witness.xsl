@@ -1,9 +1,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ********************************************************************-->
-  <!-- ******** template for E00805 Witness                         *******-->
-  <!-- *** 08-17-21 Updated to not send officer agency or badge number  ***-->
-  <!-- ***          information. INT-6337                               ***-->
-  <!-- ********************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- ******** template for E00805 Witness                              *******-->
+  <!-- *** 08-17-21 Updated to not send officer agency or badge number       ***-->
+  <!-- ***          information. INT-6337                                    ***-->
+  <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
+  <!-- *************************************************************************-->
   <xsl:template name="E00805Witness">
     <xsl:for-each select="/Integration/Case/CaseParty[Connection[contains('D S WIT VIC',@Word) and not(RemovedDate)]]">
       <xsl:variable name="complainantID">
@@ -23,7 +24,7 @@
         </Data>
         <!--Witness Name-->
         <Data Position='2' Length='28' Segment='CRWNAM'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/PartyName[@Current='true']/FormattedName"/>
+          <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/PartyName[@Current='true']/FormattedName,'.','')"/>
         </Data>
         <!--Witness Type-->
         <Data Position='3' Length='1' Segment='CRWTYP'>
@@ -174,5 +175,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 

@@ -1,7 +1,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:user="http://tylertechnologies.com" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:reslib="urn:reslib" xmlns:CMCodeQueryHelper="urn:CMCodeQueryHelper" xmlns:ExternalReference="urn:ExternalReference" exclude-result-prefixes="xsl msxsl CMCodeQueryHelper ExternalReference">
-  <!-- ********************************************************************-->
-  <!-- ******** template for E00805 Complainant *****************-->
-  <!-- ********************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- ******** template for E00805 Complainant ********************************-->
+  <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
+  <!-- *************************************************************************-->
   <xsl:template name="E00805Complaintant">
     <xsl:variable name="complainantID">
       <xsl:choose>
@@ -85,7 +86,7 @@
         </Data>
         <!--Witness Name-->
         <Data Position='2' Length='28' Segment='CRWNAM'>
-          <xsl:value-of select="/Integration/Party[@InternalPartyID=$complainantID]/PartyName[@Current='true']/FormattedName"/>
+          <xsl:value-of select="translate(/Integration/Party[@InternalPartyID=$complainantID]/PartyName[@Current='true']/FormattedName,'.','')"/>
         </Data>
         <!--Witness Type-->
         <Data Position='3' Length='1' Segment='CRWTYP'>
@@ -265,6 +266,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
