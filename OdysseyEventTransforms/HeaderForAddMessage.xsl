@@ -1,14 +1,17 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ***********************************************************************-->
-  <!-- ********** template for Header Record for Add Messages    *************-->
-  <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
-  <!-- ****         code as these will be prefixed with the County        ****-->
-  <!-- ****         number: ODY-346525                                    ****-->
-  <!-- **** 6-23-21 Update logic that is used for the CraiCreatedDtTs and ****-->
-  <!-- ****         CraiUpdatedDtTs timestamps: INT-5777                  ****-->
-  <!-- **** 8-17-21 Updated to send 24 hour time INT-6322                 ****-->
-  <!-- ***********************************************************************-->
-  <xsl:template name="HeaderForAddMessage">
+  <!-- ************************************************************************-->
+  <!-- **********  Template for Header Record for Add Messages    *************-->
+  <!-- **** 06-18-21 Updated to only send part of the hearing location     ****-->
+  <!-- ****          code as these will be prefixed with the County        ****-->
+  <!-- ****          number: ODY-346525                                    ****-->
+  <!-- **** 06-23-21 Update logic that is used for the CraiCreatedDtTs and ****-->
+  <!-- ****          CraiUpdatedDtTs timestamps: INT-5777                  ****-->
+  <!-- **** 08-17-21 Updated to send 24 hour time INT-6322                 ****-->
+  <!-- **** 09-13-21 Corrected logic mistake regarding translating 12pm    ****-->
+  <!-- ****          to 24 and 12am to 12  INT:6543                        ****-->
+  <!-- ************************************************************************-->
+  <xsl:template match="Integration">
+  <!--<xsl:template name="HeaderForAddMessage">-->
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
         <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
@@ -131,12 +134,20 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="hh24">
-        <xsl:if test="contains($dateTime, 'PM')">
-          <xsl:value-of select="$hh+12"/>
-        </xsl:if>
-        <xsl:if test="not(contains($dateTime, 'PM') ) ">
-          <xsl:value-of select="$hh"/>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="contains($dateTime, 'AM') and (number($hh) = 12)">
+            <xsl:value-of select="00"/>
+          </xsl:when>
+          <xsl:when test="contains($dateTime, 'AM')">
+            <xsl:value-of select="$hh"/>
+          </xsl:when>
+          <xsl:when test="contains($dateTime, 'PM') and (number($hh) = 12)">
+            <xsl:value-of select="$hh"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$hh+12"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:variable>
       <xsl:variable name="mmTemp" select="substring-after($TimeTemp,':')"/>
       <xsl:variable name="mm">
@@ -214,25 +225,3 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
