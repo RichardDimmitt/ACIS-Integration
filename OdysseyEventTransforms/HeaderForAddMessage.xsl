@@ -10,8 +10,7 @@
   <!-- **** 09-13-21 Corrected logic mistake regarding translating 12pm    ****-->
   <!-- ****          to 24 and 12am to 12  INT:6543                        ****-->
   <!-- ************************************************************************-->
-  <xsl:template match="Integration">
-  <!--<xsl:template name="HeaderForAddMessage">-->
+  <xsl:template name="HeaderForAddMessage">
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
         <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
