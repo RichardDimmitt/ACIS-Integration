@@ -7,7 +7,9 @@
   <!-- **** 6-23-21 Update logic that is used for the CraiCreatedDtTs and ****-->
   <!-- ****         CraiUpdatedDtTs timestamps: INT-5777                  ****-->
   <!-- **** 8-17-21 Updated to send 24 hour time INT-6322                 ****-->
-  <!-- ***********************************************************************-->
+  <!-- **** 09-13-21 Corrected logic mistake regarding translating 12pm    ****-->
+  <!-- ****          to 24 and 12am to 12  INT:6543                        ****-->
+  <!-- ************************************************************************-->
   <xsl:template name="HeaderForLeadAndRelatedCases">
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
@@ -134,12 +136,20 @@
         </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="hh24">
-        <xsl:if test="contains($dateTime, 'PM')">
-          <xsl:value-of select="$hh+12"/>
-        </xsl:if>
-        <xsl:if test="not(contains($dateTime, 'PM') ) ">
-          <xsl:value-of select="$hh"/>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="contains($dateTime, 'AM') and (number($hh) = 12)">
+            <xsl:value-of select="00"/>
+          </xsl:when>
+          <xsl:when test="contains($dateTime, 'AM')">
+            <xsl:value-of select="$hh"/>
+          </xsl:when>
+          <xsl:when test="contains($dateTime, 'PM') and (number($hh) = 12)">
+            <xsl:value-of select="$hh"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="$hh+12"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:variable>
       <xsl:variable name="mmTemp" select="substring-after($TimeTemp,':')"/>
       <xsl:variable name="mm">
