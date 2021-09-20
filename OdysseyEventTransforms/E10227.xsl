@@ -42,9 +42,16 @@
         </xsl:variable>
         <Data Position='7' Length='7' Segment='CRRBONDA'>
           <xsl:choose>
+
+          <xsl:when test="/Integration/Case/CaseCrossReference/CaseCrossReferenceType/@CurrentIterator='True'">
+            <xsl:value-of select="'0000001'"/>
+          </xsl:when>
+
             <xsl:when test="$BondType='CUS'">
               <xsl:value-of select="''"/>
             </xsl:when>
+
+
             <xsl:when test="contains($BondAmount,'.')='true'">
               <xsl:call-template name="PaddWithZeros">
                 <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
@@ -198,6 +205,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

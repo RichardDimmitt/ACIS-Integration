@@ -15,6 +15,9 @@
 <!-- ***             8-30-2021: RED Updated so that no bond amount is   ***-->
 <!-- ***                        provided if the bond type is 'CUS'      ***-->
 <!-- ***                        INT-6344                                ***-->
+<!-- ***             9-20-2021: RED Updated to send the bond amount     ***-->
+<!-- ***                        of 1 if the event is sent for a related ***-->
+<!-- ***                        case INT-10200                          ***-->
 <!-- **********************************************************************-->
 <!-- ***  Copybook: Crim.Prod.Copylib(CraiBonod)                        ***-->
 <!-- ***                                                                ***-->
@@ -62,21 +65,31 @@
       </xsl:variable>
       <Data Position='4' Length='7' Segment='CRRBONDA'>
         <xsl:choose>
+
+          <xsl:when test="/Integration/Case/CaseCrossReference/CaseCrossReferenceType/@CurrentIterator='True'">
+            <xsl:value-of select="'0000001'"/>
+          </xsl:when>
+
           <xsl:when test="$BondType='CUS'">
             <xsl:value-of select="''"/>
           </xsl:when>
+
+
           <xsl:when test="contains($BondAmount,'.')='true'">
             <xsl:call-template name="PaddWithZeros">
               <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
               <xsl:with-param name="Length" select="7"/>
             </xsl:call-template>
           </xsl:when>
+
+
           <xsl:otherwise>
             <xsl:call-template name="PaddWithZeros">
               <xsl:with-param name="Value" select="$BondAmount"/>
               <xsl:with-param name="Length" select="7"/>
             </xsl:call-template>
           </xsl:otherwise>
+
         </xsl:choose>
       </Data>
       <!-- Crai-Bond-Serial-Number -->
@@ -224,6 +237,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
