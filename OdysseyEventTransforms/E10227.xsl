@@ -7,6 +7,8 @@
 <!-- ***          type is 'CUS' INT-6344                                       ***-->
 <!-- *** 9/20/21: RED Updated to send the bond amounto f 1 if the event is     ***-->
 <!-- ***          sent for a related case INT-10200                            ***-->
+<!-- *** 8/20/21: RED Updated so that no bond amount is provided if the bond   ***-->
+<!-- ***          type is 'WPA' INT-6542                                       ***-->
 <!-- *****************************************************************************-->
   <xsl:template name="E10227">
     <xsl:if test="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType">
@@ -44,16 +46,15 @@
         </xsl:variable>
         <Data Position='7' Length='7' Segment='CRRBONDA'>
           <xsl:choose>
-
-          <xsl:when test="/Integration/Case/CaseCrossReference/CaseCrossReferenceType/@CurrentIterator='True'">
-            <xsl:value-of select="'0000001'"/>
-          </xsl:when>
-
             <xsl:when test="$BondType='CUS'">
               <xsl:value-of select="''"/>
             </xsl:when>
-
-
+            <xsl:when test="$BondType='WPA'">
+              <xsl:value-of select="''"/>
+            </xsl:when>
+            <xsl:when test="/Integration/Case/CaseCrossReference/CaseCrossReferenceType/@CurrentIterator='True'">
+              <xsl:value-of select="'0000001'"/>
+            </xsl:when>
             <xsl:when test="contains($BondAmount,'.')='true'">
               <xsl:call-template name="PaddWithZeros">
                 <xsl:with-param name="Value" select="substring-before($BondAmount,'.')"/>
@@ -207,6 +208,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
