@@ -1,7 +1,9 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <!-- ********************************************************************-->
-  <!-- ************* template for E00635 Race/Gender Change ***************-->
-  <!-- ********************************************************************-->
+  <!-- *************************************************************************-->
+  <!-- ************* template for E00635 Race/Gender Change      ***************-->
+  <!-- *** 09/20/21 Updated to provide the default value of 'X' for the race ***-->
+  <!-- ***          and sex if the defendant is a business INT-6570          ***-->
+  <!-- *************************************************************************-->
   <xsl:template name="E00635">
     <xsl:variable name="DefendantID">
       <xsl:value-of select="/Integration/Case/Charge[1]/@InternalPartyID"/>
@@ -25,15 +27,29 @@
       <Data Position="5" Length="1" Segment="CRRSEX-OLD" AlwaysNull="true"/>
       <!--Defendant Race-->
       <Data Position="6" Length="1" Segment="CRRACE">
-        <xsl:call-template name="GetACISRaceCode">
-          <xsl:with-param name="code" select ="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+            <xsl:value-of select="'X'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="GetACISRaceCode">
+              <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Defendant Sex-->
       <Data Position="7" Length="1" Segment="CRRSEX">
-        <xsl:call-template name="GetACISSexCode">
-          <xsl:with-param name="code" select ="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+            <xsl:value-of select="'X'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="GetACISSexCode">
+              <xsl:with-param name="code" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!-- Padding at the end to form the total length -->
       <Data Position='8' Length='186' Segment='Filler' AlwaysNull="true"/>
@@ -98,6 +114,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 

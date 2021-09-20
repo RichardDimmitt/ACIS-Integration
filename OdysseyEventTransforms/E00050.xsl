@@ -8,6 +8,8 @@
         <!-- *** 08-30-21 Updated to base the CRRCDL segemet off the CDL flag in   ***-->
         <!-- ***          the Citation IXML as opposed to the DL Type INT-6351     ***-->
         <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
+        <!-- *** 09/20/21 Updated to provide the default value of 'X' for the race ***-->
+        <!-- ***          and sex if the defendant is a business INT-6570          ***-->
 	<!-- *************************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
@@ -45,15 +47,29 @@
       </Data>
       <!--Defendant Race-->
       <Data Position="4" Length="1" Segment="CRRACE">
-        <xsl:call-template name="GetACISRaceCode">
-          <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+            <xsl:value-of select="'X'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="GetACISRaceCode">
+              <xsl:with-param name="code" select="/Integration/Party[@InternalPartyID=$DefendantID]/Race/@Word"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Defendant Sex-->
       <Data Position="5" Length="1" Segment="CRRSEX">
-        <xsl:call-template name="GetACISSexCode">
-          <xsl:with-param name="code" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
-        </xsl:call-template>
+        <xsl:choose>
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+            <xsl:value-of select="'X'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:call-template name="GetACISSexCode">
+              <xsl:with-param name="code" select="substring(/Integration/Party[@InternalPartyID=$DefendantID]/Gender/@Word,1,1)"/>
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Defendant Address City-->
       <Data Position="6" Length="15" Segment="CRRCTY">
@@ -614,6 +630,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
