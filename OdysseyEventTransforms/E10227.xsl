@@ -5,6 +5,8 @@
 <!-- *** 8/17/21: Updated to not send if no bond setting is available INT-6325 ***-->
 <!-- *** 8/30/21: RED Updated so that no bond amount is provided if the bond   ***-->
 <!-- ***          type is 'CUS' INT-6344                                       ***-->
+<!-- *** 9/20/21: RED Updated to send the bond amounto f 1 if the event is     ***-->
+<!-- ***          sent for a related case INT-10200                            ***-->
 <!-- *****************************************************************************-->
   <xsl:template name="E10227">
     <xsl:if test="/Integration/BondSetting[Deleted='false'][last()]/BondSettingHistories[last()]/BondSettingHistory/Primary/SettingBondType/Specified/SpecifiedType">
