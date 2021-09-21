@@ -28,7 +28,7 @@
       <!--Defendant Race-->
       <Data Position="6" Length="1" Segment="CRRACE">
         <xsl:choose>
-          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business'">
             <xsl:value-of select="'X'"/>
           </xsl:when>
           <xsl:otherwise>
@@ -41,7 +41,7 @@
       <!--Defendant Sex-->
       <Data Position="7" Length="1" Segment="CRRSEX">
         <xsl:choose>
-          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business''">
+          <xsl:when test="/Integration/Party[@InternalPartyID=29120335]/PartyName[@Current='true']/NameType='Business'">
             <xsl:value-of select="'X'"/>
           </xsl:when>
           <xsl:otherwise>
@@ -114,6 +114,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
