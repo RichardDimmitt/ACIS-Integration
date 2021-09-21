@@ -25,6 +25,9 @@
   <!-- ***            location INT-6273                                                 ***-->
   <!-- *** 8/17/2021: Updated to send the date of the MO event as the service date when ***-->
   <!-- ***            the CIP package is triggered by a RO event.  INT-6339             ***-->
+  <!-- *** 9/20/2021: Updated to provide the fingerprint information from the most      ***-->
+  <!-- ***            recently created offense history which has fingerprint data       ***-->
+  <!-- ***            recorded INT-6554                                                 ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E10100">
     <xsl:variable name="ArrestDate">
@@ -32,11 +35,19 @@
         <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="maxOffenseHistoryIDWithFingerPrintInfo">
+      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[Additional/*[contains(name(),'NCFingerprint')]]">
+        <xsl:sort select="@InternalOffenseHistoryID" data-type="number" order="descending"/>
+        <xsl:if test="position() = 1">
+          <xsl:value-of select="@InternalOffenseHistoryID"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
     <xsl:variable name="CheckDigit">
-      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
     </xsl:variable>
     <xsl:variable name="FingerPrintReason">
-      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
     </xsl:variable>
     <xsl:variable name="CurrentSettingID">
       <xsl:value-of select="/Integration/Case/Hearing[Setting[not(Cancelled='True')]][last()]/Setting[not(Cancelled='True')][last()]/@InternalSettingID"/>
@@ -184,6 +195,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

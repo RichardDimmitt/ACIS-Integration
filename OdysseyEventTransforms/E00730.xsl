@@ -7,6 +7,9 @@
   <!-- ***            on ALI error report information  INT-6268                         ***-->
   <!-- ***             - ARREST DATE IS REQUIRED WHEN CHECK DIGIT IS ENTERED            ***-->
   <!-- ***             - CHECK DIGIT IS REQUIRED WHEN ARREST DATE IS ENTERED            ***-->
+  <!-- *** 9/20/2021: Updated to provide the fingerprint information from the most      ***-->
+  <!-- ***            recently created offense history which has fingerprint data       ***-->
+  <!-- ***            recorded INT-6554                                                 ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E00730">
     <xsl:variable name="ArrestDate">
@@ -14,8 +17,16 @@
         <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
       </xsl:call-template>
     </xsl:variable>
+    <xsl:variable name="maxOffenseHistoryIDWithFingerPrintInfo">
+      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[Additional/*[contains(name(),'NCFingerprint')]]">
+        <xsl:sort select="@InternalOffenseHistoryID" data-type="number" order="descending"/>
+        <xsl:if test="position() = 1">
+          <xsl:value-of select="@InternalOffenseHistoryID"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
     <xsl:variable name="CheckDigit">
-      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
     </xsl:variable>
     <xsl:if test="$ArrestDate != ''">
       <xsl:if test="$CheckDigit != ''">
@@ -90,6 +101,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 

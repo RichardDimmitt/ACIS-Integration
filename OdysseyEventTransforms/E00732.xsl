@@ -10,6 +10,9 @@
   <!-- ***            arrest date if the check digit is not available which should keep ***-->
   <!-- ***            this error from presenting itself                                 ***-->
   <!-- ***             - REASON CODE IS ONLY ALLOWED WHEN CHECK DIGIT AND DOA ARE BLANK ***-->
+  <!-- *** 9/20/2021: Updated to provide the fingerprint information from the most      ***-->
+  <!-- ***            recently created offense history which has fingerprint data       ***-->
+  <!-- ***            recorded INT-6554                                                 ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E00732">
     <xsl:variable name="ArrestDate">
@@ -17,12 +20,24 @@
         <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
       </xsl:call-template>
     </xsl:variable>
+
+
+    <xsl:variable name="maxOffenseHistoryIDWithFingerPrintInfo">
+      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[Additional/*[contains(name(),'NCFingerprint')]]">
+        <xsl:sort select="@InternalOffenseHistoryID" data-type="number" order="descending"/>
+        <xsl:if test="position() = 1">
+          <xsl:value-of select="@InternalOffenseHistoryID"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
     <xsl:variable name="CheckDigit">
-      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/CheckDigitNumber[1]"/>
     </xsl:variable>
     <xsl:variable name="FingerPrintReason">
-      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+      <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
     </xsl:variable>
+
+
      <xsl:if test="$FingerPrintReason != ''">
        <xsl:if test="$CheckDigit = ''">
         <Event>
@@ -44,7 +59,7 @@
           <Data Position='4' Length='2' Segment='CRRREA-OLD' AlwaysNull="true"/>
           <!-- FingerPrint Reason Code -->
           <Data Position='5' Length='2' Segment='CRRREA'>
-            <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@CurrentCharge='true']/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
+            <xsl:value-of select="$FingerPrintReason"/>
           </Data>
           <!-- Filler -->
           <Data Position='6' Length='186' Segment='Filler' AlwaysNull="true"/>
@@ -53,6 +68,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
