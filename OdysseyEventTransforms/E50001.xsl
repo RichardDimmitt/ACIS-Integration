@@ -18,7 +18,9 @@
   <!-- *** 8-30-2021: Updated to support multiple speeding additional charge  ***-->
   <!-- ***            components INT-6354                                     ***-->
   <!-- *** 9-20-2021: Updated to provide the 9953 Provisional offense based   ***-->
-  <!-- ***            on the existance of a PROCVR event code. INT-6484 -->
+  <!-- ***            on the existance of a PROCVR event code. INT-6484       ***-->
+  <!-- *** 9-21-2021: Corrected event code list variable names as these       ***-->
+  <!-- ***            cannot begin with an integer INT-6576                   ***-->
   <!-- **************************************************************************-->
   <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
@@ -200,8 +202,8 @@
     <!-- *******************************************(********** -->
     <!-- Section to build 9955 Offense based on case event data -->
     <!-- ****************************************************** -->
-    <xsl:variable name="9955EventCodeList" select="'EWCVR CVR'"/>
-    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $9955EventCodeList, ' '), concat(' ', @Word, ' '))]]">
+    <xsl:variable name="CVREventCodeList" select="'EWCVR CVR'"/>
+    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E50001</xsl:text>
@@ -262,7 +264,7 @@
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $9955EventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
           </xsl:call-template>
         </Data>
         <!--NA Vision Link Code-->
@@ -274,8 +276,8 @@
     <!-- *******************************************(********** -->
     <!-- Section to build 9953 Offense based on case event data -->
     <!-- ****************************************************** -->
-    <xsl:variable name="9953EventCodeList" select="'PROVCVR'"/>
-    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $9953EventCodeList, ' '), concat(' ', @Word, ' '))]]">
+    <xsl:variable name="PROCVREventCodeList" select="'PROVCVR'"/>
+    <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
       <Event>
         <xsl:attribute name="EventID">
           <xsl:text>E50001</xsl:text>
@@ -290,7 +292,7 @@
         <!--Offense Number-->
         <Data Position='2' Length='2' Segment='CROLNO'>
           <xsl:choose>
-            <xsl:when test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $9955EventCodeList, ' '), concat(' ', @Word, ' '))]]">
+            <xsl:when test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
               <xsl:call-template name="GetLeadZero">
                 <xsl:with-param name="Nbr" select="$maxChargeNumber+2"/>
               </xsl:call-template>
@@ -345,7 +347,7 @@
         <!--Civil Revocation Effective / EndDate-->
         <Data Position='11' Length='8' Segment='CRICVRE'>
           <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $9953EventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
+            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
           </xsl:call-template>
         </Data>
         <!--NA Vision Link Code-->
@@ -427,6 +429,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
