@@ -20,6 +20,18 @@
       <xsl:if test="$NodeID!='104000000'">
         <xsl:text>X</xsl:text>
       </xsl:if>
+      <xsl:if test="$NodeID!='101076000'">
+        <xsl:text>X</xsl:text>
+      </xsl:if>
+      <xsl:if test="$NodeID!='101076001'">
+        <xsl:text>X</xsl:text>
+      </xsl:if>
+      <xsl:if test="$NodeID!='101076002'">
+        <xsl:text>X</xsl:text>
+      </xsl:if>
+      <xsl:if test="$NodeID!='101076003'">
+        <xsl:text>X</xsl:text>
+      </xsl:if>
     </xsl:variable>
     <!-- ********************************************************************************************************-->
     <!-- **** Determine if:                                                                                  ****-->
