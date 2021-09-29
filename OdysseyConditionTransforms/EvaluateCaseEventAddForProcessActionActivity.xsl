@@ -1,4 +1,4 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:user="http://tylertechnologies.com" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:reslib="urn:reslib" xmlns:CMCodeQueryHelper="urn:CMCodeQueryHelper" xmlns:ExternalReference="urn:ExternalReference" version="1.0" exclude-result-prefixes="xsl msxsl CMCodeQueryHelper ExternalReference">
   <xsl:strip-space elements="*"/>
   <xsl:output omit-xml-declaration="yes"/>
   <!-- ********************************************************************************************************-->
@@ -6,20 +6,42 @@
   <!-- **** Each CIP condition calls this template with the correct set of case events                     ****-->
   <!-- **** Modification History.                                                                          ****-->
   <!-- **** 2021-07-09 RED initial creation                                                                ****-->
+  <!-- **** 2021-09-29 RED Updated to check the configuration of the Is Odyssey Live orgchart attribute in ****-->
+  <!-- ****            order to determine if a message should be published: INT-6579                       ****-->
   <!-- ********************************************************************************************************-->
   <xsl:template name="EvaluateCaseAdd">
     <xsl:param name="ProcessActionEvent"/>
     <xsl:param name="ProcessType"/>
     <xsl:param name="NodeID"/>
     <!-- ********************************************************************************************************-->
-    <!-- **** Check to see if the message was generated from a Node that is not live on Odyssey and not the  ****-->
-    <!-- **** AOC Expunction Unit. This exclusion list will grow as more Odyssey courts go live              ****-->
-    <!-- **** Ideally this needs to be updated to look at the new Is Odyssey Live orgchart attribute         ****-->
+    <!-- **** Check to see if the message was generated from a Node that is not live on Odyssey              ****-->
+    <!-- **** This check looks at the new Is Odyssey Live orgchart attribute                                 ****-->
+    <!-- **** Cases assigned to the 'AOC Expunction Unit' are also excluded                                  ****-->
     <!-- ********************************************************************************************************-->
-    <xsl:variable name="CheckCourtNode">
-      <xsl:if test="$NodeID!='104000000'">
-        <xsl:text>X</xsl:text>
-      </xsl:if>
+    <xsl:variable name="NodeIDFilterStart">
+      <xsl:text>/OrgMap/OrgChart//Node[@ID='</xsl:text>
+    </xsl:variable>
+    <xsl:variable name="NodeIDFilterEnd">
+      <xsl:text>']</xsl:text>
+    </xsl:variable>
+    <xsl:variable name="NodeIDFilter">
+      <xsl:value-of  select="concat($NodeIDFilterStart,$NodeID,$NodeIDFilterEnd)"/>
+    </xsl:variable>
+    <xsl:variable name="OdysseyLiveFlag">
+      <xsl:value-of select="CMCodeQueryHelper:GetOrgChartAttribute(string($NodeIDFilter),'OdysseyLiveFlag')"/>
+    </xsl:variable>
+    <xsl:variable name="PublishMessageToACIS">
+      <xsl:choose>
+        <xsl:when test="$NodeID='104000000'">
+          <xsl:text>false</xsl:text>
+        </xsl:when>
+        <xsl:when test="$OdysseyLiveFlag='1'">
+          <xsl:text>false</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>true</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:variable>
     <!-- ********************************************************************************************************-->
     <!-- **** Determine if:                                                                                  ****-->
@@ -29,7 +51,7 @@
     <!-- ********************************************************************************************************-->
     <xsl:choose>
       <xsl:when test="/Integration/Case/CaseEvent[@Op='A' and Deleted='false']/EventType[@Word=$ProcessActionEvent]">
-        <xsl:if test="$CheckCourtNode='X'">
+        <xsl:if test="$PublishMessageToACIS='true'">
           <xsl:if test="/Integration/Case[not(CaseFlag/@Word='ACISFILTER')]">
             <ProcessType>
               <xsl:value-of select="$ProcessType"/>
@@ -46,5 +68,6 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
