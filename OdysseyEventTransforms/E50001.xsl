@@ -21,6 +21,8 @@
   <!-- ***            on the existance of a PROCVR event code. INT-6484       ***-->
   <!-- *** 9-21-2021: Corrected event code list variable names as these       ***-->
   <!-- ***            cannot begin with an integer INT-6576                   ***-->
+  <!-- *** 10-6-2021: Updated to include new, not previously documented IMS   ***-->
+  <!-- ***            segements related to the 9953 offense code.             ***-->
   <!-- **************************************************************************-->
   <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
@@ -273,7 +275,7 @@
         <Data Position='13' Length='92' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
-    <!-- *******************************************(********** -->
+    <!-- ****************************************************** -->
     <!-- Section to build 9953 Offense based on case event data -->
     <!-- ****************************************************** -->
     <xsl:variable name="PROCVREventCodeList" select="'PROVCVR'"/>
@@ -345,15 +347,21 @@
           </xsl:call-template>
         </Data>
         <!--Civil Revocation Effective / EndDate-->
-        <Data Position='11' Length='8' Segment='CRICVRE'>
+        <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true"/>
+        <!--NA Vision Link Code-->
+        <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
+        <!-- Alcohol Content -->
+        <Data Position='13' Length='2' Segment='CRDAC' AlwaysNull="true"/>
+        <!-- Gang Related Indicator -->
+        <Data Position='14' Length='1' Segment='CRDGANG' AlwaysNull="true"/>
+        <!--CVR Provisional Date -->
+        <Data Position='15' Length='8' Segment='CRICVRP'>
           <xsl:call-template name="formatDateYYYYMMDD">
             <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
           </xsl:call-template>
         </Data>
-        <!--NA Vision Link Code-->
-        <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
         <!-- Padding at the end to form the total length -->
-        <Data Position='13' Length='92' Segment='Filler' AlwaysNull="true"/>
+        <Data Position='16' Length='81' Segment='Filler' AlwaysNull="true"/>
       </Event>
     </xsl:if>
   </xsl:template>
@@ -429,6 +437,7 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
