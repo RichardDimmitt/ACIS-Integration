@@ -9,6 +9,7 @@
   <!-- **** 08-17-21 Updated to send 24 hour time INT-6322                 ****-->
   <!-- **** 09-13-21 Corrected logic mistake regarding translating 12pm    ****-->
   <!-- ****          to 24 and 12am to 12  INT:6543                        ****-->
+  <!-- **** 10-11-21 Corrected formating issue with hh24 variable INT-6627 ****-->
   <!-- ************************************************************************-->
   <xsl:template name="HeaderForAddMessage">
     <xsl:variable name="UpdateTimeStamp">
@@ -135,7 +136,7 @@
       <xsl:variable name="hh24">
         <xsl:choose>
           <xsl:when test="contains($dateTime, 'AM') and (number($hh) = 12)">
-            <xsl:value-of select="00"/>
+            <xsl:value-of select="'00'"/>
           </xsl:when>
           <xsl:when test="contains($dateTime, 'AM')">
             <xsl:value-of select="$hh"/>
@@ -224,3 +225,4 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
