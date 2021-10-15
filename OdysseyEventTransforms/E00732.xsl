@@ -13,6 +13,9 @@
   <!-- *** 9/20/2021: Updated to provide the fingerprint information from the most      ***-->
   <!-- ***            recently created offense history which has fingerprint data       ***-->
   <!-- ***            recorded INT-6554                                                 ***-->
+  <!-- *** 10/15/2021: Updated the logic of the maxOffenseHistoryIDWithFingerPrintInfo  ***-->
+  <!-- ***             variable to account for partial charge component information     ***-->
+  <!-- ***             INT-6625                                                         ***-->
   <!-- ************************************************************************************-->
   <xsl:template name="E00732">
     <xsl:variable name="ArrestDate">
@@ -20,10 +23,8 @@
         <xsl:with-param name="date" select="/Integration/Case/Charge/BookingAgency/ArrestDate[1]"/>
       </xsl:call-template>
     </xsl:variable>
-
-
     <xsl:variable name="maxOffenseHistoryIDWithFingerPrintInfo">
-      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[Additional/*[contains(name(),'NCFingerprint')]]">
+      <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[Additional/*[contains(name(),'NCFingerprint')][CheckDigitNumber or Reason]]">
         <xsl:sort select="@InternalOffenseHistoryID" data-type="number" order="descending"/>
         <xsl:if test="position() = 1">
           <xsl:value-of select="@InternalOffenseHistoryID"/>
@@ -36,10 +37,8 @@
     <xsl:variable name="FingerPrintReason">
       <xsl:value-of select="/Integration/Case/Charge/ChargeHistory[@InternalOffenseHistoryID=$maxOffenseHistoryIDWithFingerPrintInfo]/Additional/*[contains(name(),'NCFingerprint')]/Reason/@Word[1]"/>
     </xsl:variable>
-
-
-     <xsl:if test="$FingerPrintReason != ''">
-       <xsl:if test="$CheckDigit = ''">
+    <xsl:if test="$FingerPrintReason != ''">
+      <xsl:if test="$CheckDigit = ''">
         <Event>
           <xsl:attribute name="EventID">
             <xsl:text>E00732</xsl:text>
@@ -68,6 +67,7 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
