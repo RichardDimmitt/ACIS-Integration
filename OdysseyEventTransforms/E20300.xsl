@@ -17,7 +17,7 @@
           </xsl:attribute>
           <!--Flag-->
           <Data Position="1" Length="6" Segment="Flag">
-            <xsl:text>E20200</xsl:text>
+            <xsl:text>E20300</xsl:text>
           </Data>
           <!--Offense Number-->
           <Data Position='2' Length='2' Segment='CROLNO'>
