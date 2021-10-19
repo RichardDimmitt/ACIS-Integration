@@ -1,7 +1,6 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:template name="HeaderForUpdateMessage">
   <!-- ***********************************************************************-->
-  <!-- ********** template for Header Record for Update Messages    **********-->
+  <!-- ********** Template for Header Record for Update Messages    **********-->
   <!-- **** 6-18-21 Updated to only send part of the hearing location     ****-->
   <!-- ****         code as these will be prefixed with the County        ****-->
   <!-- ****         number: ODY-346525                                    ****-->
@@ -10,7 +9,10 @@
   <!-- **** 09-13-21 Corrected logic mistake regarding translating 12pm    ****-->
   <!-- ****          to 24 and 12am to 12  INT:6543                        ****-->
   <!-- **** 10-11-21 Corrected formating issue with hh24 variable INT-6627 ****-->
+  <!-- **** 10-19-21 Corrected case nunmber formating issue for CRS case   ****-->
+  <!-- ****          numbers: INT-6619                                     ****-->
   <!-- ************************************************************************-->
+  <xsl:template name="HeaderForUpdateMessage">
     <xsl:variable name="UpdateTimeStamp">
       <xsl:call-template name="formatDateYYYYMMDDHHMMSS">
         <xsl:with-param name="dateTime" select="/Integration/ControlPoint/@Timestamp"/>
@@ -35,10 +37,30 @@
         <xsl:value-of select="substring(/Integration/Case/CaseNumber,1,2)"/>
       </Data>
       <Data Position="5" Length="6" Segment="CraiKeySequence">
-        <xsl:value-of select="substring(/Integration/Case/CaseNumber,5,6)"/>
+        <xsl:choose>
+          <xsl:when test="substring(/Integration/Case/CaseNumber,3,3)='CRS'">
+            <xsl:value-of select="substring(/Integration/Case/CaseNumber,6,6)"/>
+          </xsl:when>
+          <xsl:when test="substring(/Integration/Case/CaseNumber,3,2)='CR'">
+            <xsl:value-of select="substring(/Integration/Case/CaseNumber,5,6)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="substring(/Integration/Case/CaseNumber,5,6)"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <Data Position="6" Length="3" Segment="CraiKeyCaseType">
-        <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,2)"/>
+        <xsl:choose>
+          <xsl:when test="substring(/Integration/Case/CaseNumber,3,3)='CRS'">
+            <xsl:text>CRS</xsl:text>
+          </xsl:when>
+          <xsl:when test="substring(/Integration/Case/CaseNumber,3,2)='CR'">
+            <xsl:text>CR</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="substring(/Integration/Case/CaseNumber,3,2)"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <Data Position="7" Length="14" Segment="CraiCreatedDtTs">
         <xsl:choose>
@@ -224,6 +246,7 @@
     <xsl:value-of  select="$FinalValue"/>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
