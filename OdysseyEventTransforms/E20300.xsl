@@ -6,39 +6,77 @@
   <!-- *** 10-18-2021: Initial Creation, INT-6616                             ***-->
   <!-- **************************************************************************-->
   <xsl:template name="E20300">
-    <xsl:if test="/Integration/Case/CaseEvent[@Op='A']/ChargeID/@InternalChargeID">
-      <xsl:for-each select="/Integration/Case/Charge[not(@InternalChargeID=/Integration/Case/CaseEvent[@Op='A']/ChargeID/@InternalChargeID)]/ChargeHistory[@Stage='Case Filing']">
-        <Event>
-          <xsl:attribute name="EventID">
-            <xsl:text>E20300</xsl:text>
-          </xsl:attribute>
-          <xsl:attribute name="TrailerRecord">
-            <xsl:text>TotalEventRec</xsl:text>
-          </xsl:attribute>
-          <!--Flag-->
-          <Data Position="1" Length="6" Segment="Flag">
-            <xsl:text>E20300</xsl:text>
-          </Data>
-          <!--Offense Number-->
-          <Data Position='2' Length='2' Segment='CROLNO'>
-            <xsl:call-template name="GetLeadZero">
-              <xsl:with-param name="Nbr" select="ChargeNumber"/>
-            </xsl:call-template>
-          </Data>
-          <!--CraiOtherNumber-->
-          <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
-          <!--Probation Violation Date Before-->
-          <Data Position='4' Length='8' Segment='CRIVDT-OLD' AlwaysNull="true" />
-          <!--Probation Violation Date After-->
-          <Data Position='5' Length='8' Segment='CRIVDT'>
-            <xsl:call-template name="formatDateYYYYMMDD">
-              <xsl:with-param name="date" select="/Integration/Case/Charge[@InternalChargeID=/Integration/Case/CaseEvent[@Op='A']/ChargeID[1]/@InternalChargeID]/ChargeOffenseDate"/>
-            </xsl:call-template>
-          </Data>
-          <!-- Padding at the end to form the total length -->
-          <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
-        </Event>
-      </xsl:for-each>
+    <xsl:if test="/Integration/Case/CaseEvent[EventType/ @Word='PV' and Deleted='false']">
+      <xsl:variable name="probationViolationDate">
+        <xsl:call-template name="formatDateYYYYMMDD">
+          <xsl:with-param name="date" select="/Integration/Case/CaseEvent[EventType/ @Word='PV' and Deleted='false'][last()]/EventDate"/>
+        </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="probationViolationCodeList" select="'5030 5032 5033 5038 5040'"/>
+      <xsl:variable name="maxProbationViolationCountNumber">
+        <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing' and Statute/StatuteCode[contains(concat(' ', $probationViolationCodeList, ' '), concat(' ', @Word, ' '))]]">
+          <xsl:sort select="ChargeNumber" data-type="number" order="descending"/>
+          <xsl:if test="position() = 1">
+            <xsl:value-of select="ChargeNumber"/>
+          </xsl:if>
+        </xsl:for-each>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="/Integration/Case/CaseEvent[@Op='A']/ChargeID/@InternalChargeID">
+          <xsl:for-each select="/Integration/Case/CaseEvent[@Op='A']/ChargeID">
+            <xsl:variable name="chargeID">
+              <xsl:value-of select="@InternalChargeID"/>
+            </xsl:variable>
+            <Event>
+              <xsl:attribute name="EventID">
+                <xsl:text>E20300</xsl:text>
+              </xsl:attribute>
+              <xsl:attribute name="TrailerRecord">
+                <xsl:text>TotalEventRec</xsl:text>
+              </xsl:attribute>
+              <Data Position="1" Length="6" Segment="Flag">
+                <xsl:text>E20300</xsl:text>
+              </Data>
+              <Data Position='2' Length='2' Segment='CROLNO'>
+                <xsl:call-template name="GetLeadZero">
+                  <xsl:with-param name="Nbr" select="/Integration/Case/Charge[@InternalChargeID=$chargeID]/ChargeHistory[@CurrentCharge='true']/ChargeNumber"/>
+                </xsl:call-template>
+              </Data>
+              <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+              <Data Position='4' Length='8' Segment='CRIVDT-OLD' AlwaysNull="true" />
+              <Data Position='5' Length='8' Segment='CRIVDT'>
+                <xsl:value-of select="$probationViolationDate"/>
+              </Data>
+              <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
+            </Event>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:when test="$maxProbationViolationCountNumber!=''">
+          <Event>
+            <xsl:attribute name="EventID">
+              <xsl:text>E20300</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="TrailerRecord">
+              <xsl:text>TotalEventRec</xsl:text>
+            </xsl:attribute>
+            <Data Position="1" Length="6" Segment="Flag">
+              <xsl:text>E20300</xsl:text>
+            </Data>
+            <Data Position='2' Length='2' Segment='CROLNO'>
+              <xsl:call-template name="GetLeadZero">
+                <xsl:with-param name="Nbr" select="$maxProbationViolationCountNumber"/>
+              </xsl:call-template>
+            </Data>
+            <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true" />
+            <Data Position='4' Length='8' Segment='CRIVDT-OLD' AlwaysNull="true" />
+            <Data Position='5' Length='8' Segment='CRIVDT'>
+              <xsl:value-of select="$probationViolationDate"/>
+            </Data>
+            <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
+          </Event>
+        </xsl:when>
+        <xsl:otherwise/>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -77,6 +115,12 @@
     </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
+
+
+
 
 
 
