@@ -2,9 +2,11 @@
 <!-- ****************************************************************************** -->
 <!-- *** This templae addresses the binding files below                         *** -->
 <!-- *** OFAIssue.xml                                                           *** -->
+<!-- *** Included E50001OFA and E20300 templates to account for probation       *** -->
+<!-- *** violations added when an OFA is issued  (INT-6616)                     *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
-<xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30100.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00630.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00620.xsl"/>
@@ -12,6 +14,8 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E11410OFA.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E99000OFA.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E20200.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E50001OFA.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E20300.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -43,8 +47,8 @@
         <xsl:call-template name="E00630"/>
         <xsl:call-template name="E00620"/>
         <xsl:call-template name="E00621"/>
-        <!-- <xsl:call-template name="E50001"/> This is optional and can only be sent once for the lead case It represents the probation violation if applicable-->
-        <!--  <xsl:call-template name="E11410"/> There is an order for arrest data message specific to the probation violation offense.-->
+        <xsl:call-template name="E50001OFA"/>
+        <xsl:call-template name="E20300"/>
         <xsl:call-template name="E99000OFA"/>
         <xsl:call-template name="E11410OFA"/>
         <xsl:call-template name="E20200"/>
@@ -52,6 +56,9 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 
