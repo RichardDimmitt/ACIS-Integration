@@ -2,38 +2,79 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <!-- ********************************************************************-->
 <!-- ******** template for E11410 Order for Arrest Date Change **********-->
+<!-- *** 10/22/2021 - Updated to send information based on whether a  ***-->
+<!-- ***              probation violation exists on the case INT-6683 ***-->
 <!-- ********************************************************************-->
   <xsl:template name="E11410OFA">
-    <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
-      <Event>
-        <xsl:attribute name="EventID">
-          <xsl:text>E11410</xsl:text>
-        </xsl:attribute>
-        <xsl:attribute name="TrailerRecord">
-          <xsl:text>TotalEventRec</xsl:text>
-        </xsl:attribute>
-        <!--Flag-->
-        <Data Position="1" Length="6" Segment="Flag">
-          <xsl:text>E11410</xsl:text>
-        </Data>
-        <Data Position='2' Length='2' Segment='CraiOffenseNumber'>
-          <xsl:call-template name="GetLeadZero">
-            <xsl:with-param name="Nbr" select="ChargeNumber"/>
-          </xsl:call-template>
-        </Data>
-        <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true"/>
-        <!-- Order for Arrest Date Before -->
-        <Data Position='4' Length='8' Segment='CRIODT-OLD' AlwaysNull="true"/>
-        <!-- Order for Arrest Date -->
-        <Data Position='5' Length='8' Segment='CRIODT'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
-          </xsl:call-template>
-        </Data>
-        <!-- Padding at the end to form the total length 200 -->
-        <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
-      </Event>
-    </xsl:for-each>
+    <xsl:variable name="probationViolationCodeList" select="'5030 5032 5033 5038 5040'"/>
+    <!-- If there are probation violations on the case, only send a message for those offenses. -->
+    <xsl:choose>
+      <xsl:when test="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing' and Statute/StatuteCode[contains(concat(' ', $probationViolationCodeList, ' '), concat(' ', @Word, ' '))]]">
+        <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing' and Statute/StatuteCode[contains(concat(' ', $probationViolationCodeList, ' '), concat(' ', @Word, ' '))]]">
+          <Event>
+            <xsl:attribute name="EventID">
+              <xsl:text>E11410</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="TrailerRecord">
+              <xsl:text>TotalEventRec</xsl:text>
+            </xsl:attribute>
+            <!--Flag-->
+            <Data Position="1" Length="6" Segment="Flag">
+              <xsl:text>E11410</xsl:text>
+            </Data>
+            <Data Position='2' Length='2' Segment='CraiOffenseNumber'>
+              <xsl:call-template name="GetLeadZero">
+                <xsl:with-param name="Nbr" select="ChargeNumber"/>
+              </xsl:call-template>
+            </Data>
+            <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true"/>
+            <!-- Order for Arrest Date Before -->
+            <Data Position='4' Length='8' Segment='CRIODT-OLD' AlwaysNull="true"/>
+            <!-- Order for Arrest Date -->
+            <Data Position='5' Length='8' Segment='CRIODT'>
+              <xsl:call-template name="formatDateYYYYMMDD">
+                <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+              </xsl:call-template>
+            </Data>
+            <!-- Padding at the end to form the total length 200 -->
+            <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
+          </Event>
+        </xsl:for-each>
+      </xsl:when>
+      <!-- If there are no probation offenses on the case, send a message for each charge on the case. -->
+      <xsl:otherwise>
+        <xsl:for-each select="/Integration/Case/Charge/ChargeHistory[@Stage='Case Filing']">
+          <Event>
+            <xsl:attribute name="EventID">
+              <xsl:text>E11410</xsl:text>
+            </xsl:attribute>
+            <xsl:attribute name="TrailerRecord">
+              <xsl:text>TotalEventRec</xsl:text>
+            </xsl:attribute>
+            <!--Flag-->
+            <Data Position="1" Length="6" Segment="Flag">
+              <xsl:text>E11410</xsl:text>
+            </Data>
+            <Data Position='2' Length='2' Segment='CraiOffenseNumber'>
+              <xsl:call-template name="GetLeadZero">
+                <xsl:with-param name="Nbr" select="ChargeNumber"/>
+              </xsl:call-template>
+            </Data>
+            <Data Position='3' Length='2' Segment='CraiOtherNumber' AlwaysNull="true"/>
+            <!-- Order for Arrest Date Before -->
+            <Data Position='4' Length='8' Segment='CRIODT-OLD' AlwaysNull="true"/>
+            <!-- Order for Arrest Date -->
+            <Data Position='5' Length='8' Segment='CRIODT'>
+              <xsl:call-template name="formatDateYYYYMMDD">
+                <xsl:with-param name="date" select="/Integration/IntegrationConditions/IntegrationCondition/ProcessActionDate"/>
+              </xsl:call-template>
+            </Data>
+            <!-- Padding at the end to form the total length 200 -->
+            <Data Position='6' Length='174' Segment='Filler' AlwaysNull="true"/>
+          </Event>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
   <!-- ********************************************************************-->
   <!-- ****************** template for YYYYMMDD ***************************-->
@@ -71,6 +112,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
