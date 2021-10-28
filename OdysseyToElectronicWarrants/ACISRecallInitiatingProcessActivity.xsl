@@ -21,7 +21,7 @@
               <xsl:text>recall-unserved-initiating-process</xsl:text>
             </updateType>
             <reason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </reason>
           </xsl:if>
         </xsl:if>
