@@ -20,7 +20,7 @@
               <xsl:text>delete</xsl:text>
             </updateType>
             <deletionReason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </deletionReason>
           </xsl:if>
           <!-- *************************************************************** -->
@@ -31,7 +31,7 @@
               <xsl:text>delete</xsl:text>
             </updateType>
             <deletionReason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </deletionReason>
           </xsl:if>
           <!-- *************************************************************** -->
@@ -43,7 +43,7 @@
               <xsl:text>delete</xsl:text>
             </updateType>
             <deletionReason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </deletionReason>
           </xsl:if>
           <!-- *************************************************************** -->
@@ -54,7 +54,7 @@
               <xsl:text>recall-unserved-OFA</xsl:text>
             </updateType>
             <reason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </reason>
           </xsl:if>
           <!-- *************************************************************** -->
@@ -66,7 +66,7 @@
               <xsl:text>recall-unserved-initiating-process</xsl:text>
             </updateType>
             <reason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </reason>
           </xsl:if>
           <!-- *************************************************************** -->
@@ -83,7 +83,7 @@
               <xsl:value-of select="/Integration/Case/Charge[@InternalChargeID=/Integration/Case/CaseEvent[@Op='A']/ChargeID/@InternalChargeID]/ChargeHistory[@Stage='Case Filing']/ChargeNumber"/>
             </offenseCount>
             <reason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </reason>
           </xsl:if>
         </xsl:if>
