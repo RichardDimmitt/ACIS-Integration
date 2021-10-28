@@ -42,7 +42,7 @@
               <xsl:text>delete</xsl:text>
             </updateType>
             <deletionReason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </deletionReason>
           </xsl:if>
         </xsl:if>
