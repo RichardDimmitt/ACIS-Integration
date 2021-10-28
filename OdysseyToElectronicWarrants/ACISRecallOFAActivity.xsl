@@ -37,7 +37,7 @@
               <xsl:value-of select="/Integration/Case/Charge[@InternalChargeID=/Integration/Case/CaseEvent[@Op='A']/ChargeID/@InternalChargeID]/ChargeHistory[@Stage='Case Filing']/ChargeNumber"/>
             </offenseCount>
             <reason>
-              <xsl:text>Update To Odyssey Applied By ACIS</xsl:text>
+              <xsl:text>Court Update</xsl:text>
             </reason>
           </xsl:if>
         </xsl:if>
