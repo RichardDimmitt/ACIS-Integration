@@ -12,6 +12,8 @@
   <!-- **** 10-11-21 Corrected formating issue with hh24 variable INT-6627 ****-->
   <!-- **** 10-19-21 Corrected case nunmber formating issue for CRS case   ****-->
   <!-- ****          numbers: INT-6619                                     ****-->
+  <!-- **** 11-05-21 Updated to determine the case century based on the    ****-->
+  <!-- ****          case year: INT-6697                                   ****-->
   <!-- ************************************************************************-->
   <xsl:template name="HeaderForAddMessage">
     <xsl:variable name="UpdateTimeStamp">
@@ -32,7 +34,17 @@
         </xsl:call-template>
       </Data>
       <Data Position="3" Length="2" Segment="CraiKeyCentury">
-        <xsl:text>20</xsl:text>
+        <xsl:variable name="caseYear">
+          <xsl:value-of select="substring(/Integration/Case/CaseNumber,1,2)"/>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="$caseYear &gt; '50'">
+            <xsl:text>19</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>20</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <Data Position="4" Length="2" Segment="CraiKeyYear">
         <xsl:value-of select="substring(/Integration/Case/CaseNumber,1,2)"/>
