@@ -4,15 +4,15 @@
   <!-- **** 11-05-21 Initial Creation, INT-6692                            ****-->
   <!-- ************************************************************************-->
   <xsl:template name="ConversionFlagMessage">
+        <xsl:variable name="caseYear">
+          <xsl:value-of select="substring(/Integration/Case/CaseNumber,1,2)"/>
+        </xsl:variable>
       <Data Position="1" Length="3" Segment="CraiKeyCounty">
         <xsl:call-template name="FormatCountyKey">
           <xsl:with-param name="KeyValue" select="/Integration/Case/CaseNumber"/>
         </xsl:call-template>
       </Data>
       <Data Position="2" Length="2" Segment="CraiKeyCentury">
-        <xsl:variable name="caseYear">
-          <xsl:value-of select="substring(/Integration/Case/CaseNumber,1,2)"/>
-        </xsl:variable>
         <xsl:choose>
           <xsl:when test="$caseYear &gt; '50'">
             <xsl:text>19</xsl:text>
