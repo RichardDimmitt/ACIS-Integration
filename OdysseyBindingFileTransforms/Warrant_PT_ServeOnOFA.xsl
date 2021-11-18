@@ -50,7 +50,7 @@
         <xsl:call-template name="E30310"/>
         <xsl:call-template name="E30320"/>
         <xsl:call-template name="E11410OFAReset"/>
-        <xsl:call-template name="E30100"/>
+        <!-- <xsl:call-template name="E30100"/> -->
         <xsl:call-template name="E20200"/>
       </UpdateMessage>
     </OdysseyACISMessage>
