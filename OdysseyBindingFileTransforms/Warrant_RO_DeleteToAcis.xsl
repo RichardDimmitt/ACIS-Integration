@@ -2,9 +2,33 @@
 <!-- ****************************************************************************** -->
 <!-- *** This templae addresses the binding files below                         *** -->
 <!-- *** RODelete.xml                                                           *** -->
+<!-- *** 11/29/2021: Updated to no longer send just the E10227 and E00730 event *** -->
+<!-- ***             as previously instructed.  Based on new requirments, the   *** -->
+<!-- ***             following is provided instead (INT-6617)                   *** -->
+<!-- ***             E00705    Citation #, Check Digit, and Arrest #            *** -->
+<!-- ***             E00740    LID Number Change                                *** -->
+<!-- ***             E30300    Interpreter Flag Change                          *** -->
+<!-- ***             E30310    Interpreter Used Flag                            *** -->
+<!-- ***             E30320    Interpreter Freeform Language                    *** -->
+<!-- ***             E10100    Service Record                                   *** -->
+<!-- ***             E30010    Trial Court Session Information Change           *** -->
+<!-- ***             E30060    Superior Court Session Information Change        *** -->
+<!-- ***             E00732    FingerPrint Reason Change                        *** -->
+<!-- ***             E00730    FingerPrint Number, Date of Arrest Change        *** -->
+<!-- ***             E10227    Bond Amount / Type Change                        *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00705Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00730Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00732Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E00740Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E10227Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30010Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30060Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30300Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30310Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30320Delete.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -32,52 +56,23 @@
       </AddMessage>
       <UpdateMessage>
         <xsl:call-template name="HeaderForUpdateMessage"/>
-        <xsl:call-template name="E10227"/>
-        <xsl:call-template name="E00730"/>
+        <xsl:call-template name="E00705Delete"/>
+        <xsl:call-template name="E00730Delete"/>
+        <xsl:call-template name="E00732Delete"/>
+        <xsl:call-template name="E00740Delete"/>
+        <xsl:call-template name="E10227Delete"/>
+        <xsl:call-template name="E30010Delete"/>
+        <xsl:call-template name="E30060Delete"/>
+        <xsl:call-template name="E30300Delete"/>
+        <xsl:call-template name="E30310Delete"/>
+        <xsl:call-template name="E30320Delete"/>
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
-  <xsl:template name="E00730">
-    <Event>
-      <xsl:attribute name="EventID">
-        <xsl:text>E00730</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="TrailerRecord">
-        <xsl:text>TotalEventRec</xsl:text>
-      </xsl:attribute>
-      <Data Position="1" Length="6" Segment="Flag">
-        <xsl:text>E00730</xsl:text>
-      </Data>
-      <Data Position='2' Length='2'   Segment='CraiOffenseNumber' AlwaysNull="true"/>
-      <Data Position='3' Length='2'   Segment='CraiOtherNumber'   AlwaysNull="true"/>
-      <Data Position='4' Length='7'   Segment='CRSCDT-OLD'        AlwaysNull="true"/>
-      <Data Position='5' Length='8'   Segment='CRSDOA-OLD'        AlwaysNull="true"/>
-      <Data Position='6' Length='7'   Segment='CRSCDT'            AlwaysNull="true"/>
-      <Data Position='7' Length='8'   Segment='CRSDOA'            AlwaysNull="true"/>
-      <Data Position='8' Length='160' Segment='Filler'            AlwaysNull="true"/>
-    </Event>
-  </xsl:template>
-  <xsl:template name="E10227">
-    <Event>
-      <xsl:attribute name="EventID">
-        <xsl:text>E10227</xsl:text>
-      </xsl:attribute>
-      <xsl:attribute name="TrailerRecord">
-        <xsl:text>TotalEventRec</xsl:text>
-      </xsl:attribute>
-      <Data Position="1" Length="6" Segment="Flag">
-        <xsl:text>E10227</xsl:text>
-      </Data>
-      <Data Position='2' Length='2'   Segment='CraiOffenseNumber' AlwaysNull="true"/>
-      <Data Position='3' Length='2'   Segment='CraiOtherNumber'   AlwaysNull="true"/>
-      <Data Position='4' Length='3'   Segment='CRRBONDT-OLD'      AlwaysNull="true"/>
-      <Data Position='5' Length='7'   Segment='CRRBONDA-OLD'      AlwaysNull="true"/>
-      <Data Position='6' Length='3'   Segment='CRRBONDT'          AlwaysNull="true"/>
-      <Data Position='7' Length='7'   Segment='CRRBONDA'          AlwaysNull="true"/>
-      <Data Position='8' Length='170' Segment='Filler'            AlwaysNull="true"/>
-    </Event>
-  </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 
