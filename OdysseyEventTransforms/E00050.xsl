@@ -10,6 +10,9 @@
         <!-- *** 08/30/21 Updated to remove '.' from the formatted name INT-6382   ***-->
         <!-- *** 09/20/21 Updated to provide the default value of 'X' for the race ***-->
         <!-- ***          and sex if the defendant is a business INT-6570          ***-->
+        <!-- *** 11/29/21 Updated the logic of the CRRTTY segement to provide the  ***-->
+        <!-- ***          default value of 'U' if the CRRVTY is TTT and there is   ***-->
+        <!-- ***          no CRRTTY available INT-66990                            ***-->
 	<!-- *************************************************************************-->
   <xsl:template name="E00050">
     <xsl:variable name="DefendantID">
@@ -317,7 +320,14 @@
       </Data>
       <!--Citation Tailer Type-->
       <Data Position="35" Length="4" Segment="CRRTTY">
-        <xsl:value-of select="/Integration/Citation[1]/Vehicle/TrailerType/@Word"/>
+        <xsl:choose>
+          <xsl:when test="(/Integration/Citation[1]/Vehicle[VehicleType/@Word='TTT' and not(TrailerType/@Word)])">
+            <xsl:value-of select="'U'"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="/Integration/Citation[1]/Vehicle/TrailerType/@Word"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </Data>
       <!--Vision Link Code-->
       <Data Position="36" Length="10" Segment="NA-VISIONLINKCODE" AlwaysNull="true"/>
@@ -630,6 +640,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
