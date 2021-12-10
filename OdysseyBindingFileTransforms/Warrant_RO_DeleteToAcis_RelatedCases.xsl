@@ -16,6 +16,13 @@
 <!-- ***             E00732    FingerPrint Reason Change                        *** -->
 <!-- ***             E00730    FingerPrint Number, Date of Arrest Change        *** -->
 <!-- ***             E10227    Bond Amount / Type Change                        *** -->
+<!-- *** 12/9/2021: Updated to no longer send the events below if the RO is a   *** -->
+<!-- ***            'Subsequent' RO that is issued after the OFA (INT-6541)     *** -->
+<!-- ***             E00705    Citation #, Check Digit, and Arrest #            *** -->
+<!-- ***             E10100    Service Record                                   *** -->
+<!-- ***             E00732     FingerPrint Reason Change                        *** -->
+<!-- ***             E00730    FingerPrint Number, Date of Arrest Change        *** -->
+<!-- ***             E10227    Bond Amount / Type Change                        *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
@@ -32,6 +39,43 @@
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
+    <xsl:variable name="OFAIssued">
+      <xsl:choose>
+        <xsl:when test="/Integration/Case/CaseEvent[Deleted='false']/EventType/@Word='OFAI'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="NonOFAProcessList" select="'CS MO WFAI'"/>
+    <xsl:variable name="NonOFAInitiatingProcess">
+      <xsl:choose>
+        <xsl:when test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $NonOFAProcessList, ' '), concat(' ', @Word, ' '))]]">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="RoType">
+      <xsl:choose>
+        <xsl:when test="$NonOFAInitiatingProcess='true' and $OFAIssued='false'">
+          <xsl:text>regular</xsl:text>
+        </xsl:when>
+        <xsl:when test="$NonOFAInitiatingProcess='true' and $OFAIssued='true'">
+          <xsl:text>subsequent</xsl:text>
+        </xsl:when>
+        <xsl:when test="$NonOFAInitiatingProcess='false' and $OFAIssued='true'">
+          <xsl:text>regular</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>regular</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <OdysseyACISMessage>
       <xsl:attribute name="MessageGUID">
         <xsl:value-of select="/Integration/@MessageGUID"/>
@@ -51,16 +95,21 @@
       <xsl:attribute name="CaseNumber">
         <xsl:value-of select="/Integration/Case/CaseNumber"/>
       </xsl:attribute>
+      <xsl:attribute name="ReleaseOrderType">
+        <xsl:value-of select="$RoType"/>
+      </xsl:attribute>
       <AddMessage>
         <xsl:call-template name="HeaderForAddMessage"/>
       </AddMessage>
       <UpdateMessage>
-        <xsl:call-template name="HeaderForLeadAndRelatedCases"/>
-        <xsl:call-template name="E00705Delete"/>
-        <xsl:call-template name="E00730Delete"/>
-        <xsl:call-template name="E00732Delete"/>
+        <xsl:call-template name="HeaderForUpdateMessage"/>
+        <xsl:if test="$RoType='regular'">
+          <xsl:call-template name="E00705Delete"/>
+          <xsl:call-template name="E10227Delete"/>
+          <xsl:call-template name="E00730Delete"/>
+          <xsl:call-template name="E00732Delete"/>
+        </xsl:if>
         <xsl:call-template name="E00740Delete"/>
-        <xsl:call-template name="E10227Delete"/>
         <xsl:call-template name="E30010Delete"/>
         <xsl:call-template name="E30060Delete"/>
         <xsl:call-template name="E30300Delete"/>
@@ -70,6 +119,7 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
 
 
 
