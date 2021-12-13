@@ -23,6 +23,9 @@
 <!-- ***             E00732     FingerPrint Reason Change                        *** -->
 <!-- ***             E00730    FingerPrint Number, Date of Arrest Change        *** -->
 <!-- ***             E10227    Bond Amount / Type Change                        *** -->
+<!-- *** 12/13/2021: Updated to send the E30010 or E30060 event if the release  *** -->
+<!-- ***             order being deleted is a subsequent release order.  This   *** -->
+<!-- ***             will reset it to what it was in ACIS before. INT-6541      *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForUpdateMessage.xsl"/>
@@ -36,6 +39,8 @@
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30300Delete.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30310Delete.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30320Delete.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30010.xsl"/>
+  <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/E30060.xsl"/>
   <xsl:strip-space elements="*"/>
   <xsl:output method="xml" indent="no"/>
   <xsl:template match="Integration">
@@ -108,17 +113,28 @@
           <xsl:call-template name="E10227Delete"/>
           <xsl:call-template name="E00730Delete"/>
           <xsl:call-template name="E00732Delete"/>
+          <xsl:call-template name="E30010Delete"/>
+          <xsl:call-template name="E30060Delete"/>
+          <xsl:call-template name="E00740Delete"/>
+          <xsl:call-template name="E30300Delete"/>
+          <xsl:call-template name="E30310Delete"/>
+          <xsl:call-template name="E30320Delete"/>
         </xsl:if>
-        <xsl:call-template name="E00740Delete"/>
-        <xsl:call-template name="E30010Delete"/>
-        <xsl:call-template name="E30060Delete"/>
-        <xsl:call-template name="E30300Delete"/>
-        <xsl:call-template name="E30310Delete"/>
-        <xsl:call-template name="E30320Delete"/>
+        <xsl:if test="$RoType='subsequent'">
+          <xsl:call-template name="E00740Delete"/>
+          <xsl:call-template name="E30010"/>
+          <xsl:call-template name="E30060"/>
+          <xsl:call-template name="E30300Delete"/>
+          <xsl:call-template name="E30310Delete"/>
+          <xsl:call-template name="E30320Delete"/>
+        </xsl:if>
       </UpdateMessage>
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
+
 
 
 
