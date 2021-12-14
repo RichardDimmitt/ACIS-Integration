@@ -23,6 +23,8 @@
   <!-- ***            cannot begin with an integer INT-6576                   ***-->
   <!-- *** 10-6-2021: Updated to include new, not previously documented IMS   ***-->
   <!-- ***            segements related to the 9953 offense code.             ***-->
+  <!-- *** 12-14-2021: Update to not generate the 9955 or 9953 offense if that*** -->
+  <!-- ***             offense code is recorded on the case. INT-6777         *** -->
   <!-- **************************************************************************-->
   <xsl:template name="E50001">
     <xsl:variable name="maxChargeNumber">
@@ -206,163 +208,167 @@
     <!-- ****************************************************** -->
     <xsl:variable name="CVREventCodeList" select="'EWCVR CVR'"/>
     <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
-      <Event>
-        <xsl:attribute name="EventID">
-          <xsl:text>E50001</xsl:text>
-        </xsl:attribute>
-        <xsl:attribute name="TrailerRecord">
-          <xsl:text>TotalOffenseRec</xsl:text>
-        </xsl:attribute>
-        <!--Flag-->
-        <Data Position="1" Length="1" Segment="Flag">
-          <xsl:text>O</xsl:text>
-        </Data>
-        <!--Offense Number-->
-        <Data Position='2' Length='2' Segment='CROLNO'>
-          <xsl:call-template name="GetLeadZero">
-            <xsl:with-param name="Nbr" select="$maxChargeNumber+1"/>
-          </xsl:call-template>
-        </Data>
-        <!--Charged Offense Code-->
-        <Data Position='3' Length='6' Segment='CROFFC'>
-          <xsl:text>9955</xsl:text>
-        </Data>
-        <!--Charged Offense Date-->
-        <Data Position='4' Length='8' Segment='CROCDT'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
-          </xsl:call-template>
-        </Data>
-        <!--Charge Offense Type (degree)-->
-        <Data Position='5' Length='1' Segment='CRFCTP'>
-          <xsl:text>T</xsl:text>
-        </Data>
-        <!--Charged Freeform Offense Text-->
-        <Data Position='6' Length='45' Segment='CRFCOF45'>
-          <xsl:text>CIVIL REVOCATION DRIVER'S LICENSE (30 DAYS)</xsl:text>
-        </Data>
-        <!--Charged Freeform Offense General Statute Number-->
-        <Data Position='7' Length='15' Segment='CRFCGS'>
-          <xsl:text>20-16.5</xsl:text>
-        </Data>
-        <!--Worthless Check Amount-->
-        <Data Position='8' Length='7' Segment='CRIWCA-X' >
-          <xsl:text>0000000</xsl:text>
-        </Data>
-        <!--Charged Speed-->
-        <Data Position='9' Length='3' Segment='CRICSP' >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="$ActualSpeed"/>
-            <xsl:with-param name="Length" select="3"/>
-          </xsl:call-template>
-        </Data>
-        <!--Posted Speed-->
-        <Data Position='10' Length='2' Segment='CRICSZ'  >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="$PostedSpeed"/>
-            <xsl:with-param name="Length" select="2"/>
-          </xsl:call-template>
-        </Data>
-        <!--Civil Revocation Effective / EndDate-->
-        <Data Position='11' Length='8' Segment='CRICVRE'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
-          </xsl:call-template>
-        </Data>
-        <!--NA Vision Link Code-->
-        <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
-        <!-- Padding at the end to form the total length -->
-        <Data Position='13' Length='92' Segment='Filler' AlwaysNull="true"/>
-      </Event>
+      <xsl:if test="/Integration/Case[not(Charge/ChargeHistory[@Stage='Case Filing']/Statute/StatuteCode/@Word='9955')]">
+        <Event>
+          <xsl:attribute name="EventID">
+            <xsl:text>E50001</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="TrailerRecord">
+            <xsl:text>TotalOffenseRec</xsl:text>
+          </xsl:attribute>
+          <!--Flag-->
+          <Data Position="1" Length="1" Segment="Flag">
+            <xsl:text>O</xsl:text>
+          </Data>
+          <!--Offense Number-->
+          <Data Position='2' Length='2' Segment='CROLNO'>
+            <xsl:call-template name="GetLeadZero">
+              <xsl:with-param name="Nbr" select="$maxChargeNumber+1"/>
+            </xsl:call-template>
+          </Data>
+          <!--Charged Offense Code-->
+          <Data Position='3' Length='6' Segment='CROFFC'>
+            <xsl:text>9955</xsl:text>
+          </Data>
+          <!--Charged Offense Date-->
+          <Data Position='4' Length='8' Segment='CROCDT'>
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
+            </xsl:call-template>
+          </Data>
+          <!--Charge Offense Type (degree)-->
+          <Data Position='5' Length='1' Segment='CRFCTP'>
+            <xsl:text>T</xsl:text>
+          </Data>
+          <!--Charged Freeform Offense Text-->
+          <Data Position='6' Length='45' Segment='CRFCOF45'>
+            <xsl:text>CIVIL REVOCATION DRIVER'S LICENSE (30 DAYS)</xsl:text>
+          </Data>
+          <!--Charged Freeform Offense General Statute Number-->
+          <Data Position='7' Length='15' Segment='CRFCGS'>
+            <xsl:text>20-16.5</xsl:text>
+          </Data>
+          <!--Worthless Check Amount-->
+          <Data Position='8' Length='7' Segment='CRIWCA-X' >
+            <xsl:text>0000000</xsl:text>
+          </Data>
+          <!--Charged Speed-->
+          <Data Position='9' Length='3' Segment='CRICSP' >
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="$ActualSpeed"/>
+              <xsl:with-param name="Length" select="3"/>
+            </xsl:call-template>
+          </Data>
+          <!--Posted Speed-->
+          <Data Position='10' Length='2' Segment='CRICSZ'  >
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="$PostedSpeed"/>
+              <xsl:with-param name="Length" select="2"/>
+            </xsl:call-template>
+          </Data>
+          <!--Civil Revocation Effective / EndDate-->
+          <Data Position='11' Length='8' Segment='CRICVRE'>
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
+            </xsl:call-template>
+          </Data>
+          <!--NA Vision Link Code-->
+          <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
+          <!-- Padding at the end to form the total length -->
+          <Data Position='13' Length='92' Segment='Filler' AlwaysNull="true"/>
+        </Event>
+      </xsl:if>
     </xsl:if>
     <!-- ****************************************************** -->
     <!-- Section to build 9953 Offense based on case event data -->
     <!-- ****************************************************** -->
     <xsl:variable name="PROCVREventCodeList" select="'PROVCVR'"/>
     <xsl:if test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
-      <Event>
-        <xsl:attribute name="EventID">
-          <xsl:text>E50001</xsl:text>
-        </xsl:attribute>
-        <xsl:attribute name="TrailerRecord">
-          <xsl:text>TotalOffenseRec</xsl:text>
-        </xsl:attribute>
-        <!--Flag-->
-        <Data Position="1" Length="1" Segment="Flag">
-          <xsl:text>O</xsl:text>
-        </Data>
-        <!--Offense Number-->
-        <Data Position='2' Length='2' Segment='CROLNO'>
-          <xsl:choose>
-            <xsl:when test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
-              <xsl:call-template name="GetLeadZero">
-                <xsl:with-param name="Nbr" select="$maxChargeNumber+2"/>
-              </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:call-template name="GetLeadZero">
-                <xsl:with-param name="Nbr" select="$maxChargeNumber+1"/>
-              </xsl:call-template>
-            </xsl:otherwise>
-          </xsl:choose>
-        </Data>
-        <!--Charged Offense Code-->
-        <Data Position='3' Length='6' Segment='CROFFC'>
-          <xsl:text>9953</xsl:text>
-        </Data>
-        <!--Charged Offense Date-->
-        <Data Position='4' Length='8' Segment='CROCDT'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
-          </xsl:call-template>
-        </Data>
-        <!--Charge Offense Type (degree)-->
-        <Data Position='5' Length='1' Segment='CRFCTP'>
-          <xsl:text>T</xsl:text>
-        </Data>
-        <!--Charged Freeform Offense Text-->
-        <Data Position='6' Length='45' Segment='CRFCOF45'>
-          <xsl:text>HEARING TO CONTEST PROVISIONAL LICENSE REVOCA</xsl:text>
-        </Data>
-        <!--Charged Freeform Offense General Statute Number-->
-        <Data Position='7' Length='15' Segment='CRFCGS'>
-          <xsl:text>20-13.3</xsl:text>
-        </Data>
-        <!--Worthless Check Amount-->
-        <Data Position='8' Length='7' Segment='CRIWCA-X' >
-          <xsl:text>0000000</xsl:text>
-        </Data>
-        <!--Charged Speed-->
-        <Data Position='9' Length='3' Segment='CRICSP' >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="$ActualSpeed"/>
-            <xsl:with-param name="Length" select="3"/>
-          </xsl:call-template>
-        </Data>
-        <!--Posted Speed-->
-        <Data Position='10' Length='2' Segment='CRICSZ'  >
-          <xsl:call-template name="PaddWithZeros">
-            <xsl:with-param name="Value" select="$PostedSpeed"/>
-            <xsl:with-param name="Length" select="2"/>
-          </xsl:call-template>
-        </Data>
-        <!--Civil Revocation Effective / EndDate-->
-        <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true"/>
-        <!--NA Vision Link Code-->
-        <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
-        <!-- Alcohol Content -->
-        <Data Position='13' Length='2' Segment='CRDAC' AlwaysNull="true"/>
-        <!-- Gang Related Indicator -->
-        <Data Position='14' Length='1' Segment='CRDGANG' AlwaysNull="true"/>
-        <!--CVR Provisional Date -->
-        <Data Position='15' Length='8' Segment='CRICVRP'>
-          <xsl:call-template name="formatDateYYYYMMDD">
-            <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
-          </xsl:call-template>
-        </Data>
-        <!-- Padding at the end to form the total length -->
-        <Data Position='16' Length='81' Segment='Filler' AlwaysNull="true"/>
-      </Event>
+      <xsl:if test="/Integration/Case[not(Charge/ChargeHistory[@Stage='Case Filing']/Statute/StatuteCode/@Word='9953')]">
+        <Event>
+          <xsl:attribute name="EventID">
+            <xsl:text>E50001</xsl:text>
+          </xsl:attribute>
+          <xsl:attribute name="TrailerRecord">
+            <xsl:text>TotalOffenseRec</xsl:text>
+          </xsl:attribute>
+          <!--Flag-->
+          <Data Position="1" Length="1" Segment="Flag">
+            <xsl:text>O</xsl:text>
+          </Data>
+          <!--Offense Number-->
+          <Data Position='2' Length='2' Segment='CROLNO'>
+            <xsl:choose>
+              <xsl:when test="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $CVREventCodeList, ' '), concat(' ', @Word, ' '))]]">
+                <xsl:call-template name="GetLeadZero">
+                  <xsl:with-param name="Nbr" select="$maxChargeNumber+2"/>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:call-template name="GetLeadZero">
+                  <xsl:with-param name="Nbr" select="$maxChargeNumber+1"/>
+                </xsl:call-template>
+              </xsl:otherwise>
+            </xsl:choose>
+          </Data>
+          <!--Charged Offense Code-->
+          <Data Position='3' Length='6' Segment='CROFFC'>
+            <xsl:text>9953</xsl:text>
+          </Data>
+          <!--Charged Offense Date-->
+          <Data Position='4' Length='8' Segment='CROCDT'>
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/Case/Charge[1]/ChargeOffenseDate"/>
+            </xsl:call-template>
+          </Data>
+          <!--Charge Offense Type (degree)-->
+          <Data Position='5' Length='1' Segment='CRFCTP'>
+            <xsl:text>T</xsl:text>
+          </Data>
+          <!--Charged Freeform Offense Text-->
+          <Data Position='6' Length='45' Segment='CRFCOF45'>
+            <xsl:text>HEARING TO CONTEST PROVISIONAL LICENSE REVOCA</xsl:text>
+          </Data>
+          <!--Charged Freeform Offense General Statute Number-->
+          <Data Position='7' Length='15' Segment='CRFCGS'>
+            <xsl:text>20-13.3</xsl:text>
+          </Data>
+          <!--Worthless Check Amount-->
+          <Data Position='8' Length='7' Segment='CRIWCA-X' >
+            <xsl:text>0000000</xsl:text>
+          </Data>
+          <!--Charged Speed-->
+          <Data Position='9' Length='3' Segment='CRICSP' >
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="$ActualSpeed"/>
+              <xsl:with-param name="Length" select="3"/>
+            </xsl:call-template>
+          </Data>
+          <!--Posted Speed-->
+          <Data Position='10' Length='2' Segment='CRICSZ'  >
+            <xsl:call-template name="PaddWithZeros">
+              <xsl:with-param name="Value" select="$PostedSpeed"/>
+              <xsl:with-param name="Length" select="2"/>
+            </xsl:call-template>
+          </Data>
+          <!--Civil Revocation Effective / EndDate-->
+          <Data Position='11' Length='8' Segment='CRICVRE' AlwaysNull="true"/>
+          <!--NA Vision Link Code-->
+          <Data Position='12' Length='10' Segment='NA-VISIONLINKCODE' AlwaysNull="true" />
+          <!-- Alcohol Content -->
+          <Data Position='13' Length='2' Segment='CRDAC' AlwaysNull="true"/>
+          <!-- Gang Related Indicator -->
+          <Data Position='14' Length='1' Segment='CRDGANG' AlwaysNull="true"/>
+          <!--CVR Provisional Date -->
+          <Data Position='15' Length='8' Segment='CRICVRP'>
+            <xsl:call-template name="formatDateYYYYMMDD">
+              <xsl:with-param name="date" select="/Integration/Case/CaseEvent[Deleted='false' and EventType[contains(concat(' ', $PROCVREventCodeList, ' '), concat(' ', @Word, ' '))]]/EventDate"/>
+            </xsl:call-template>
+          </Data>
+          <!-- Padding at the end to form the total length -->
+          <Data Position='16' Length='81' Segment='Filler' AlwaysNull="true"/>
+        </Event>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
   <!-- ********************************************************************-->
@@ -437,6 +443,8 @@
     </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
