@@ -26,6 +26,9 @@
 <!-- *** 12/13/2021: Updated to send the E30010 or E30060 event if the release  *** -->
 <!-- ***             order being deleted is a subsequent release order.  This   *** -->
 <!-- ***             will reset it to what it was in ACIS before. INT-6541      *** -->
+<!-- *** 12/14/2021: Updated to only delete the fingerprint and court appearance*** -->
+<!-- ***             information if the case does not show any history of a     *** -->
+<!-- ***             Magistrate/Fugitive Order being issued. INT-6791           *** -->
 <!-- ****************************************************************************** -->
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForAddMessage.xsl"/>
   <xsl:import href="https://raw.githubusercontent.com/RichardDimmitt/ACIS-Integration/main/OdysseyEventTransforms/HeaderForLeadAndRelatedCases.xsl"/>
@@ -111,10 +114,12 @@
         <xsl:if test="$RoType='regular'">
           <xsl:call-template name="E00705Delete"/>
           <xsl:call-template name="E10227Delete"/>
-          <xsl:call-template name="E00730Delete"/>
-          <xsl:call-template name="E00732Delete"/>
-          <xsl:call-template name="E30010Delete"/>
-          <xsl:call-template name="E30060Delete"/>
+          <xsl:if test="/Integration/Case[not (CaseEvent/Deleted='false' and CaseEvent/EventType/@Word='MO')]">
+            <xsl:call-template name="E00730Delete"/>
+            <xsl:call-template name="E00732Delete"/>
+            <xsl:call-template name="E30010Delete"/>
+            <xsl:call-template name="E30060Delete"/>
+          </xsl:if>
           <xsl:call-template name="E00740Delete"/>
           <xsl:call-template name="E30300Delete"/>
           <xsl:call-template name="E30310Delete"/>
@@ -132,6 +137,8 @@
     </OdysseyACISMessage>
   </xsl:template>
 </xsl:stylesheet>
+
+
 
 
 
